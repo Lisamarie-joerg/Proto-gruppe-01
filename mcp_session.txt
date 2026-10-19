@@ -1,0 +1,37 @@
+initialize: HTTP 200
+  mcp-session-id: None
+  {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"rhino-mcp","version":"0.3.0.0"},"capabilities":{"tools":{"listChanged":false},"resources":{"subscribe":false,"listChanged":false}}}}
+notifications/initialized: HTTP 204
+tools/list: HTTP 200
+  31 tools available:
+    - close_doc: Close the current Rhino document. If path is given, save to that .3dm path first; otherwis
+    - get_commands: Discover Rhino command names available to run_command. Returns English names from all regi
+    - get_context: One round-trip grounding snapshot of current state: the active-doc selection (ids/types/la
+    - get_selection: Return all currently selected objects in Rhino.
+    - get_viewport_image: Capture the active Rhino viewport as JPG. Returns the image plus a JSON metadata block des
+    - g1_apply_graph: Place sliders + components and wire them in one call. References between objects use calle
+    - g1_clear_canvas: Remove every object from the active GH1 canvas. Destructive — requires confirm=true.
+    - g1_connect_many: Wire multiple output→input connections in one call. Same selector semantics as 'g1_connect
+    - g1_connect: Wire an output parameter to an input parameter on the active GH1 canvas. 'src' and 'dst' m
+    - g1_delete_component: Delete a Grasshopper component on the active GH1 canvas.
+    - g1_describe_component: Look up a Grasshopper component by name and return its category, description, and input/ou
+    - g1_get_canvas_graph: Return a structured snapshot of the active GH1 canvas: objects (with messages, inputs/outp
+    - g1_place_component: Place a Grasshopper component onto the active GH1 canvas. 'selector' may be a Guid (proxy 
+    - g1_place_slider: Place a Number Slider on the active GH1 canvas with the given range and current value. typ
+    - g1_search_components: Search the Grasshopper component library. The query is split into words and every word mus
+    - g1_solve_graph: Solves the active GH canvas. zoom_views controls whether Rhino viewports zoom to the new p
+    - g1_start: Starts Grasshopper
+    - list_objects: List objects in the active document. Filter by name, layer, or geometry type. Pure query —
+    - open_doc: Import a .3dm (or other supported) file into the current document. Headless — no dialogs. 
+    - run_command: Execute any Rhino command string and return command window output. Example: "_Box 0,0,0 10
+    - run_csharp: Execute a C# script targeted at this slot's document. The script editor injects `__rhino_d
+    - run_python: Execute a Python 3 script targeted at this slot's document. The script editor injects `__r
+    - save_doc: Write the current document to the given .3dm path. Headless — no dialogs. Overwrites any e
+    - set_camera: Set the active viewport camera. Any subset of position, target, up vector, lens length, pr
+    - set_layer_material: Set the render material on a layer. Accepts diffuse color, transparency, and gloss. Option
+    - set_selection: Select objects by filter (IDs, names, layer, geometry type). Clears existing selection.
+    - zoom_to_layer: Zoom the active viewport to fit all objects on a layer (full path).
+    - zoom_to_object: Zoom the active viewport to fit one or more objects by GUID.
+    - _router_spawn_listener: Router-internal: create a new RhinoDoc and start an MCP listener bound to it. Returns { po
+    - _router_close_listener: Router-internal: stop the MCP listener on the given port and close its associated doc with
+    - _router_quit_app: Router-internal: schedule a graceful Rhino exit via _Exit. Returns immediately; the actual

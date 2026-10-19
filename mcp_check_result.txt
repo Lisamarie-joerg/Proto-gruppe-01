@@ -1,0 +1,10 @@
+=== Rhino processes ===
+  Rhino.exe                    15576 Console                    2       420.108 K
+  Rhino.exe                    21912 Console                    2       874.512 K
+=== Port 1999 (RhinoMCP default) ===
+  127.0.0.1:1999 -> CLOSED (error 10061)
+  ::1:1999 -> CLOSED (error 10061)
+=== LISTENING TCP ports (netstat) ===
+  (0 listening entries total)
+=== MCP handshake test ===
+  Skipped - port 1999 is closed, nothing to talk to.

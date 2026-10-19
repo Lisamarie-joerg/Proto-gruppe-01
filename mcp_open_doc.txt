@@ -1,0 +1,9 @@
+schema get_context: props=[]
+schema list_objects: props=['names', 'layer', 'geometryType', 'includeHidden', 'includeLocked', 'limit']
+schema run_python: props=['script']
+
+=== get_context ===
+HTTP 200
+{"selection":[],"activeViewport":{"name":"Perspective","displayMode":"Shaded","camera":{"location":[-6.494506503283432,-25.780918338815333,15.721105123463227],"target":[13.423193238785153,-5.010933093361231,0.8682656984861445],"up":[0.3174511583350216,0.33103500706181166,0.8886172326549489],"lensLength":50.00000000000136,"projection":"perspective"}},"document":{"objectCount":2986,"layerCount":330},"grasshopper":[{"version":"GH1","canvasOpen":false,"componentCount":0,"wireCount":0}]}
+
+=== run_python doc summary ===

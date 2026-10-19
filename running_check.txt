@@ -1,0 +1,9 @@
+=== rhino-mcp-router processes ===
+  (no rhino-mcp-router process found)
+
+=== Ports 10500-10510 ===
+  10501: OPEN
+
+=== netstat lines for 1050x ===
+  TCP    0.0.0.0:10501          0.0.0.0:0              ABH™REN         4
+  TCP    127.0.0.1:10501        0.0.0.0:0              ABH™REN         4

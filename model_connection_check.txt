@@ -1,0 +1,17 @@
+=== 1) Live MCP bridge (Rhino 8 plugin, port 1999) ===
+  CLOSED (error 10061) - Rhino MCP server is NOT listening.
+=== 2) Model file via rhino3dm ===
+  File: C:\Users\lisam\Documents\Universität_Innsbruck\GitHub_Clone\struktur-oekologie-gruppe-xx\Data\RH7 Stockerau Rhino Export from RFEM.3dm
+  Size: 18.39 MB
+  rhino3dm version: 8.35.0
+  READ OK - 2986 objects in the model
+    LineCurve: 1462
+    Text: 642
+    Brep: 561
+    Hatch: 245
+    NurbsCurve: 39
+    PolylineCurve: 13
+    ArcCurve: 11
+    GeometryBase: 10
+    PolyCurve: 3
+  Layers (330): 1__EXTERN, __REF_point, 2D, yymmdd, original file name, 3D, yymmdd, original file name, 2__B+G, 00_WORK, clipping planes, comments, dimensions, help, 01_GH, yymmdd, GH_bake, 01-Karamba, CS, Deformation, Utilisation, GH_input, 01-CRVS, 01-PTS, 01-SRFS

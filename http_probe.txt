@@ -1,0 +1,24 @@
+=== GET probes ===
+  GET /: HTTP 405
+    content-type: ?
+  GET /mcp: HTTP 404
+    content-type: ?
+  GET /sse: HTTP 404
+    content-type: ?
+  GET /messages: HTTP 404
+    content-type: ?
+  GET /status: HTTP 404
+    content-type: ?
+  GET /health: HTTP 404
+    content-type: ?
+  GET /api: HTTP 404
+    content-type: ?
+
+=== POST /mcp (MCP initialize) ===
+  POST /mcp: HTTP 404
+    content-type: ?
+  POST /: HTTP 200
+    content-type: application/json
+    body: {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","serverInfo":{"name":"rhino-mcp","version":"0.3.0.0"},"capabilities":{"tools":{"listChanged":false},"resources":{"subscribe":false,"listChanged":false}}}}
+  POST /messages: HTTP 404
+    content-type: ?

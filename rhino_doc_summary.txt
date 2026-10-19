@@ -1,0 +1,65 @@
+== initialize ==
+
+== get_context ==
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"selection\":[],\"activeViewport\":{\"name\":\"Perspective\",\"displayMode\":\"Shaded\",\"camera\":{\"location\":[-6.494506503283432,-25.780918338815333,15.721105123463227],\"target\":[13.423193238785153,-5.010933093361231,0.8682656984861445],\"up\":[0.3174511583350216,0.33103500706181166,0.8886172326549489],\"lensLength\":50.00000000000136,\"projection\":\"perspective\"}},\"document\":{\"objectCount\":2986,\"layerCount\":330},\"grasshopper\":[{\"version\":\"GH1\",\"canvasOpen\":false,\"componentCount\":0,\"wireCount\":0}]}"
+    }
+  ]
+}
+
+== run_python doc summary ==
+DOC NAME   : RH7 Stockerau Rhino Export from RFEM.3dm
+DOC PATH   : C:\Users\lisam\Documents\Universität_Innsbruck\GitHub_Clone\struktur-oekologie-gruppe-xx\Data\RH7 Stockerau Rhino Export from RFEM.3dm
+UNITS      : Meters
+OBJECTS    : 2913
+   Curve: 1528
+   Annotation: 570
+   Brep: 561
+   Hatch: 245
+   Detail: 9
+LAYERS     : 330
+   1__EXTERN
+   1__EXTERN::__REF_point
+   1__EXTERN::2D
+   1__EXTERN::2D::yymmdd
+   1__EXTERN::2D::yymmdd::original file name
+   1__EXTERN::3D
+   1__EXTERN::3D::yymmdd
+   1__EXTERN::3D::yymmdd::original file name
+   2__B+G
+   2__B+G::00_WORK
+   2__B+G::00_WORK::clipping planes
+   2__B+G::00_WORK::comments
+   2__B+G::00_WORK::dimensions
+   2__B+G::00_WORK::help
+   2__B+G::01_GH
+   2__B+G::01_GH::yymmdd
+   2__B+G::01_GH::yymmdd::GH_bake
+   2__B+G::01_GH::yymmdd::GH_bake::01-Karamba
+   2__B+G::01_GH::yymmdd::GH_bake::01-Karamba::CS
+   2__B+G::01_GH::yymmdd::GH_bake::01-Karamba::Deformation
+   2__B+G::01_GH::yymmdd::GH_bake::01-Karamba::Utilisation
+   2__B+G::01_GH::yymmdd::GH_input
+   2__B+G::01_GH::yymmdd::GH_input::01-CRVS
+   2__B+G::01_GH::yymmdd::GH_input::01-PTS
+   2__B+G::01_GH::yymmdd::GH_input::01-SRFS
+   2__B+G::02_AXES MODEL
+   2__B+G::02_AXES MODEL::Structure
+   2__B+G::02_AXES MODEL::Structure::Support
+   2__B+G::02_AXES MODEL::Structure::Support::Tx|Ty|Tz
+   2__B+G::02_AXES MODEL::Structure::Support::Tx|Ty|Tz|Rx|Ry|Rz
+   2__B+G::02_AXES MODEL::Structure::Support::Tz
+   2__B+G::02_AXES MODEL::Structure::Element
+   2__B+G::02_AXES MODEL::Structure::Element::Beam
+   2__B+G::02_AXES MODEL::Structure::Element::Bracing
+   2__B+G::02_AXES MODEL::Structure::Element::Column
+   2__B+G::02_AXES MODEL::Structure::Element::Core
+   2__B+G::02_AXES MODEL::Structure::Element::Core Coupling
+   2__B+G::02_AXES MODEL::Structure::Element::Slab
+   2__B+G::02_AXES MODEL::Structure::Element::Truss Chord
+   2__B+G::02_AXES MODEL::Structure::Element::Truss Diagonal
+   ... (+290 more)
+
