@@ -124,8 +124,32 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 **Test:** Rechnet einen Stab von seiner Länge bis zu kg CO₂e (A1–A3) von Hand nach.
 
+**Ergebnis (Test bestanden):**
+- **Handrechnung:** Flachstab „Flat Bar 175/12" (175 × 12 mm), Achslänge L = 0,8453 m (aus dem Modell gemessen). A = 175 mm × 12 mm = 2100 mm² → V = A × L = 2100 mm² × 0,8453 m × 10⁻⁶ = 0,001775 m³ → m = V × ρ = 0,001775 m³ × 7850 kg/m³ = 13,935 kg → CO₂e (A1–A3) = m × GWP = 13,935 kg × 0,560287 kg CO₂e/kg = **7,807 kg CO₂e** ✓ (automatisierte Rechnung identisch).
+- **Gesamtergebnis: 6.872,70 kg CO₂e (A1–A3) = 6,87 t CO₂e** für alle 736 Stäbe:
+  - **Baustahl** (689 Stäbe: 502 Flachstäbe + 175 RD 12 + 12 RO): V = 0,944 m³, 7.411 kg Stahl → **4.152,33 kg CO₂e (60,4 %)**
+  - **Beton** (47 Fundamente „Rectangle 500/500"): 11,756 m³, 28.214 kg Beton → 2.127,81 kg CO₂e; Bewehrung pauschal 85 kg/m³ = 999 kg Betonstahl → 592,55 kg CO₂e; zusammen **2.720,37 kg CO₂e (39,6 %)**
+
+**ÖKOBAU.DAT-Datensätze (live über die Open-API abgefragt, Indikator GWP-total, Modul A1–A3):**
+
+| Materialgruppe | Datensatz | UUID | Bezugseinheit | GWP normiert |
+|---|---|---|---|---|
+| Baustahl (Flachstäbe, Rohre, Zugstäbe) | Baustahl: Profile und Stabstahl (Standard) | 20c29cbd-f9a2-4518-a1ce-c681246c29c8 | 1000 kg/Datensatz | 0,560287 kg CO₂e/kg |
+| Baustahl (Alternative) | Baustahl: Grobblech | 04d1311a-ae38-4bfb-8e11-8992f1ddb14f | 1000 kg/Datensatz | 2,528984 kg CO₂e/kg |
+| Beton (Fundamente) | Beton der Druckfestigkeitsklasse C25/30 (Standard) | 8347f9a7-f4ec-4a36-a266-a0281f5fd16d | 1 m³/Datensatz | 181,0 kg CO₂e/m³ |
+| Beton (Alternative) | Beton C25/30 X0 C1 16 L EcoPact (Hersteller) | 69dc12cf-ce4d-4251-8ea3-330ed72f2f79 | 1 m³/Datensatz | 98,939 kg CO₂e/m³ |
+| Betonstahl (Bewehrung) | Betonstahl in Stäben (Standard) | a8ebf8f2-2fcc-4431-b730-93bf5efd8111 | 1 kg/Datensatz | 0,5930 kg CO₂e/kg |
+
+**Was wir gemacht haben:**
+- Die 5 Datensätze live über `https://oekobaudat.de/OEKOBAU.DAT/resource/processes/<UUID>?format=json&view=extended` abgefragt; Referenzfluss, Bezugseinheit, Referenzmenge, Dichte und GWP-total (A1–A3) extrahiert und auf die Bezugseinheit normiert.
+- 736 Stabachsen (Layer „MemberAxes") aus dem RFEM-Export ausgelesen; Querschnittsflächen nominal aus den Profilbezeichnungen; Volumen V = A × L; Masse (Stahl 7850 kg/m³) bzw. Betonvolumen; Bewehrung pauschal 85 kg/m³.
+- Pro Stab: CO₂e = CO₂e(Stahl) + CO₂e(Beton) + CO₂e(Bewehrung). Ergebnisse: `Abgabe_23.10/EmbodiedCarbon_Staebe_Liste.xlsx` (Sheets: Pro Stab / Querschnitte / Materialgruppen / OEKOBAU.DAT), `Abgabe_23.10/EmbodiedCarbon_Analyse.json` (Rohdaten), `Abgabe_23.10/EmbodiedCarbon_Oekobaudat_Analyse.docx` (Dokumentation), Skripte `etappe4_oekobaudat.py`, `etappe4_excel.py`, `etappe4_word.py`.
 
 **Learning oder Besonderheit:**
+- **Bezugseinheit ist die häufigste Fehlerquelle:** Der Baustahl-Datensatz meldet 560,287 kg CO₂e „je Datensatz“ – ist aber auf 1000 kg bezogen (Referenzfluss „structural steel sections and merchant bars“, Menge 1000 kg) → korrekt sind 0,560287 kg CO₂e/kg. Der Betonstahl-Datensatz ist auf 1 kg bezogen; sein GWP-total ergibt sich aus der Summe der Einzelmodule (A1: 0,0558 + A2: 0,0182 + A3: 0,5190 = 0,5930 kg CO₂e/kg).
+- **Rundrohr RO 139.7x8.0 wird im RFEM-Export als Vollzylinder dargestellt** (Solids summieren 0,629 m³) – für die CO₂e-Bilanz ist der Hohlquerschnitt maßgeblich: A = π/4 × (D² − d²) = 3310,1 mm² → V = 0,136 m³.
+- **Nominalvolumina (A × L)** liegen wegen der Anfassungen an den Stabanschlüssen ca. 5–15 % über den Solids im 3D-Modell → das Ergebnis ist eine leicht konservative Obergrenze.
+- Die Fundamente (Rectangle 500/500) sind die einzigen Betonstäbe; die Flachstäbe, Rundrohre und RD-12-Zugstäbe werden laut Aufgabenstellung als Baustahl bilanziert.
 
 
 ## Etappe 5: Web-App
