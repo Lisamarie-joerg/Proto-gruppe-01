@@ -47,8 +47,36 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 **Test:** Rechnet einen Stab, dessen Querschnitt sich über die Länge ändert, von Hand nach und vergleicht mit eurem Programm.
 
+**Ergebnis (Test bestanden):**
+- **Handnachrechnung:** taperter Flachstahl T316 (BeamId 669, Flat Bar 275/12 → 225/12), L = 0,8452 m. V_manuell = L × (b_S + b_E)/2 × t = 0,8452 m × 250,0 mm × 12 mm = 0,002536 m³. V_Rhino = 0,002528 m³ → **Abweichung −0,30 %** ✓ (Stichprobe T316/T334/T340, alle −0,30 %).
+- **Querschnitt-Check (im Rhino-Modell):** 445/445 Haupt-Solids stimmen im lokalen Stab-Koordinatensystem (Curve.FrameAt + Brep.GetBoundingBox) exakt mit dem Nennprofil überein (Rectangle 500/500 → 500×500 mm; RO 139.7x8.0 → Ø139,7 mm; Flat Bar 275/12 → 275×12 mm) – bestätigt den Maßstab 1 Modelleinheit = 1 m aus Etappe 0/1. Länge: Achse = Solid-Länge (Abweichung 0 %).
+- **Träger nummeriert:** alle 736 Stäbe T001–T736 (User-String „Etappe02_TraegerNr" + TextDot auf Layer „Etappe02_TraegerNr").
+- **Rahmenausführungen:** Tragwerk = **ein zusammenhängendes System** (alle 736 Stäbe über ihre Endpunkte verbunden, Konnektivitäts-Analyse bei Toleranz 0,02 und 0,25 Einheiten). **12 Stützgruppen** an den RO 139.7x8.0-Stützen (x = 7/10/13/16 m, y = −10/−5/0 m), je 9–26 Stäbe (RD-12-Dachstäbe, getaperte Flachstahl-Hauptstäbe 200–275/20, Knotenstäbe, Fundamentblöcke); Höhe z: 0,3–4,3 m, Dachhöhe 4,32 m, Grundriss ca. 9 × 10 m. Details: etappen/etappe_02/rahmen_etappe02.md.
+- **Auffälligkeiten für Etappe 3:** (1) Die 116 „Flat Bar 33.3/20"-Knotenstäbe sind geometrisch 20×20 mm quaderförmig (nicht 33,3×20 mm), ihre Solids ca. 1,7× länger als die Achse (Überdeckung an Knoten). (2) 175 „RD 12"-Dachstäbe existieren nur als Achse ohne Solid (Volumen/Masse aus Profilnamen rechnen). (3) 47 „Rectangle 500/500" sind Fundamentblöcke (z ≈ 0,3–0,8 m) – gehören nicht zur Stahl-Inventur.
+
+**Was wir gemacht haben:**
+- Rhino-Modell über MCP angesprochen; 736 MemberAxes-Kurven und 561 Member-Solids per BeamId-UserString 1:1 zugeordnet.
+- Querschnitte im lokalen Stab-Koordinatensystem gemessen und gegen Nennprofile geprüft; taperten Stab von Hand nachgerechnet.
+- Träger nummeriert; Rahmenausführungen per Endpunkt-Konnektivität und Stützgruppenzuordnung dokumentiert.
+- Ergebnisse in etappen/etappe_02/: staebe_etappe02.csv (736 Zeilen), querschnitt_check.csv (561 Zeilen), querschnitt_pruefung.md, rahmen_etappe02.md.
+
+**Wichtigste Prompts** (wörtlich kopieren):
+- "arbeite in einer Test etappe 2 variante: Prüfe die Querschnitte und länge der stäbe in dem rhino programm das du unter data findest. nummeriere die träger. dokumentiere die rahmenausführungen im logbuch"
+
+**Was schiefging und woran wir es gemerkt haben:**
+- Achsenausgerichtete BoundingBox überschätzt Querschnitte bei schräg liegenden Stäben → lokales Stab-Koordinatensystem (FrameAt) verwendet.
+- Erster Prüfungs-Entwurf mit falschem Umrechnungsfaktor (0,0012 statt 0,001) zeigte 561/561 systematische Abweichungen von −16,7 % → Faktor geprüft, Modell ist 1:1 in Metern.
+- Handnachrechnung erst mit 10⁻⁹ statt 10⁻⁶ umgerechnet (Länge war schon in m) → „99600 % Abweichung" als Warnsignal erkannt und korrigiert.
+
+**Was wir selbst geprüft haben** (von Hand, im Plan, im Modell):
+- Handnachrechnung taperter Stab: −0,30 % Abweichung (Test bestanden).
+- Stichproben: Rectangle 500/500 = 500×500 mm exakt; RO 139.7x8.0 = Ø139,7 mm exakt; Flat Bar 275/12 = 275×12 mm exakt.
+- Plausibilität: Dachhöhe z ≈ 4,32 m, Grundriss ca. 9 × 10 m (x = 7–16 m, y = −10–0 m) – passt zum Modell und zu Etappe 1 (Gesamtlänge 686,377 m ✓).
 
 **Learning oder Besonderheit:**
+- Querschnitte stimmen exakt mit den Profilnamen überein – Etappe 3 kann direkt mit den Profilnamen (und dem Maßstab 1:1 m) rechnen.
+- RFEM-Export liefert MemberAxes (736, immer vorhanden) und Member-Solids (561): RD-12-Stäbe haben nur Achsen.
+- User-Strings sind der Schlüssel: BG_RFEM_Exchange_BeamId (1:1-Zuordnung Achse↔Solid), CrosSec_S/CrosSec_E (Taper-Information), Etappe02_TraegerNr (Nummerierung).
 
 
 ## Etappe 3: Material zuordnen
