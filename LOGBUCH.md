@@ -83,8 +83,41 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 **Test:** Sind die Materialangaben, die schon im Modell stehen, plausibel? Zeigt an einem Stab, wie ihr das geprüft habt.
 
+**Ergebnis:**
+- **Zuordnung aller 736 Stäbe über die Entscheidungsleiter (1. Regeln → 2. Sprachmodell → 3. Agent):**
+  - **Regel 1 (Kurs-Vorgabe):** T678–T724 → **Beton** (47 Stäbe, „Rectangle 500/500" = massive Fundamentblöcke)
+  - **Regel 2 (Kurs-Vorgabe):** T725–T736 → **Metall** (12 Stäbe, „RO 139.7x8.0" = Rundhohlprofil-Spalten)
+  - **Regel 3 (Kurs-Vorgabe):** Rest → **Holz** (502 Stäbe, T001–T502; Pergola = Holzbau)
+  - **Regel 3 – Ausnahme:** T503–T677 → **Stahlseil** (175 Stäbe, „RD 12"): diese Stäbe sind im Modell **nur als Linie (Achse ohne Solid)** hinterlegt und im RFEM als Typ **„Tension" (Zugstab)** geführt → „die Linien sind Stahlseile"
+  - **Summe: 502 Holz + 175 Stahlseil + 47 Beton + 12 Metall = 736 ✓**
+- **Test – Materialangaben im Modell (UserString `BG_Dlubal-Name (Material)`), geprüft an zwei Stäben:**
+  - **T730** (BeamId 1477, RO 139.7x8.0): Modell sagt „Steel S 355". Prüfung: Profil = Rundhohlprofil (Sprache: Stahl) + Regel 2 sagt Metall + RFEM-Material sagt Stahl → **alle drei Stufen der Leiter stimmen überein → plausibel** ✓
+  - **T040** (BeamId 94, Flat Bar 162.5/20): Modell sagt „Concrete C25/30". Prüfung: ein 162,5 × 20 mm Flachstab ist kein Betonbauteil (Sprache: Widerspruch); Regel 3 (Rest → Holz) ist die höchste Stufe und gilt → **nicht plausibel**. Betrifft T036–T053 (18 Stäbe); der Konflikt ist im UserString `Etappe03_Quelle` dieser Stäbe vermerkt, es bleibt Holz.
+  - **Lücken:** 706/736 Stäbe haben kein RFEM-Material (Feld leer) – auch bei den 47 Betonblöcken (T678–T724), obwohl das die einzigen Betonbauteile sind. Die RFEM-Zuordnung sitzt also offenbar auf den falschen Stäben („Concrete C25/30" an Flachstäbe statt an Fundamentblöcke).
+- **Umsetzung in Rhino:** 4 Render-Materialien angelegt – `Etappe03_Holz` (braun), `Etappe03_Beton` (hellgrau), `Etappe03_Metall` (stahlblau), `Etappe03_Stahlseil` (ziegelrot) – und den 15 Profil-Layern zugewiesen; alle 1.297 Member-Objekte (736 Achsen + 561 Solids) auf „Material von Layer" gestellt → **Farben im Rendered-Viewport sichtbar**. UserStrings `Etappe03_Material` + `Etappe03_Quelle` an jedem Stab (Achse und Solid) dokumentieren, **woher jede Zuordnung kommt**.
+
+**Was wir gemacht haben:**
+- Materialangaben aus dem Modell (RFEM-UserStrings) ausgelesen und gegen Profilnamen, RFEM-Typ und Kursregeln geprüft (Entscheidungsleiter Regeln → Sprachmodell → Agent).
+- 736 Stäbe materialisiert: 502 Holz, 175 Stahlseil, 47 Beton, 12 Metall; jeder Stab mit Render-Material + Herkunfts-UserString versehen.
+- Ergebnisse: `etappen/etappe_02/material_etappe02.csv` (736 Zeilen mit Quelle), `staebe_etappe02.csv` um 2 Spalten ergänzt, Excel `Abgabe_23.10/Etappe02_Traegerliste_T001-T736.xlsx` um Spalten S/T und Sheet „Material-Etappe03" erweitert.
+
+**Wichtigste Prompts** (wörtlich kopieren):
+- „ordne t678 bis t724 als material beton, t725 bis t736 als metall, der rest ist als material holz außer die linien sind stahlseile. berichte im logbuch was du gemacht hast _ füge die materilaien in rhino hinzu damit sie im rendert view port zu sehen sind."
+
+**Was schiefging und woran wir es gemerkt haben:**
+- Erste Material-Zuweisung pro Objekt blähte die Rhino-Materialtabelle auf (1.297 Einträge statt 4) → umgestellt auf Layer-basierte Zuordnung (15 Profil-Layer, „Material von Layer").
+- Aufräumversuch per `DeleteAt` ließ gelöchte Material-Slots als null-Einträge stehen (NullReferenceException) → Rollback, danach saubere Layer-Zuweisung.
+- Excel-Save einmal mit PermissionError (Datei durch OneDrive/Excel kurz gesperrt) → Retry erfolgreich.
+
+**Was wir selbst geprüft haben:**
+- Objektzählung: 1.297 Member-Objekte (736 Achsen + 561 Solids) mit „Material von Layer" ✓
+- Zuordnungssumme: 502 + 175 + 47 + 12 = 736 ✓; T-Bereiche der Profile sind lückenlos und deckungsgleich mit den Regeln (T678–T724 = Rectangle 500/500, T725–T736 = RO 139.7x8.0, T503–T677 = RD 12 = Typ „Tension") ✓
+- Rendered-Viewport: Farben sichtbar (Holz braun dominiert, Fundamente grau, Stahl blau, Seile rot) ✓
 
 **Learning oder Besonderheit:**
+- RFEM-Material-UserStrings sind nur spärlich gefüllt (30/736) und teilweise falsch zugeordnet – Materialangaben im Modell immer gegen Geometrie und Regeln prüfen.
+- „Flat Bar …"-Profilnamen sind reine Querschnittsbezeichnungen, keine Materialaussage: ein Flachstab kann im Holzbau Holz sein.
+- Die 175 „Stahlseile" erkennt man an zwei Merkmalen: Achse ohne Solid + RFEM-Typ „Tension".
 
 
 ## Etappe 4: Embodied Carbon aus der ÖKOBAUDAT
