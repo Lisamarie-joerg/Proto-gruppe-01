@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embodied Carbon – Pavillon Stockerau</title>
+<script src="/static/plotly.min.js"></script>
+<style>
+:root {
+  --bg: #f4f6f9; --panel: #ffffff; --ink: #1e293b; --muted: #64748b;
+  --accent: #2563eb; --accent-soft: #dbeafe; --line: #e2e8f0;
+  --good: #16a34a; --warn: #d97706; --bad: #dc2626;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif;
+       background: var(--bg); color: var(--ink); }
+header { background: #0f172a; color: #fff; padding: 12px 20px;
+         display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+header h1 { font-size: 18px; margin: 0; font-weight: 600; }
+header .sub { color: #94a3b8; font-size: 12px; }
+header .total { margin-left: auto; text-align: right; }
+header .total .val { font-size: 22px; font-weight: 700; }
+header .total .lbl { font-size: 11px; color: #94a3b8; }
+main { display: grid; grid-template-columns: 250px 1fr 340px;
+       gap: 12px; padding: 12px; height: calc(100vh - 130px); }
+.panel { background: var(--panel); border: 1px solid var(--line);
+         border-radius: 10px; padding: 12px; overflow-y: auto; }
+.panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+            color: var(--muted); margin: 14px 0 6px; }
+.panel h2:first-child { margin-top: 0; }
+.btngroup { display: flex; flex-wrap: wrap; gap: 6px; }
+button { border: 1px solid var(--line); background: #fff; color: var(--ink);
+         border-radius: 7px; padding: 6px 10px; font-size: 12px;
+         cursor: pointer; transition: all .12s; }
+button:hover { border-color: var(--accent); }
+button.active { background: var(--accent); border-color: var(--accent);
+                color: #fff; font-weight: 600; }
+button.mat.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+.chip { display: inline-block; width: 10px; height: 10px;
+        border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+#viewport { width: 100%; height: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+th, td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; text-align: right; }
+td:first-child, th:first-child { text-align: left; }
+tr.gesamt td { font-weight: 700; border-top: 2px solid var(--ink); }
+.kpi { display: flex; justify-content: space-between; font-size: 12px;
+       padding: 5px 0; border-bottom: 1px solid var(--line); }
+.kpi .v { font-weight: 700; }
+.note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
+         border-top: 1px solid var(--line); background: #fff; }
+.scroll { max-height: 220px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🏗️ Pavillon Stockerau – Embodied Carbon</h1>
+    <div class="sub">RH7 Stockerau (RFEM-Export) · 736 Stäbe · 686,377 m · ÖKOBAU.DAT (A1–A3 / C / D)</div>
+  </div>
+  <div class="total">
+    <div class="val" id="totalVal">–</div>
+    <div class="lbl" id="totalLbl">kg CO₂e</div>
+  </div>
+</header>
+<main>
+  <div class="panel" id="controls">
+    <h2>Datensatz</h2>
+    <div class="btngroup" id="datasetBtns">
+      <button data-ds="standard" class="active">Standard</button>
+      <button data-ds="alternative">Alternative</button>
+    </div>
+    <h2>Modul</h2>
+    <div class="btngroup" id="moduleBtns">
+      <button data-mod="A1-A3" class="active">A1–A3</button>
+      <button data-mod="C">C</button>
+      <button data-mod="D">D</button>
+    </div>
+    <h2>Materialien</h2>
+    <div class="btngroup" id="matBtns">
+      <button data-mat="Baustahl" class="mat active"><span class="chip" style="background:#94a3b8"></span>Baustahl</button>
+      <button data-mat="Beton" class="mat active"><span class="chip" style="background:#cbd5e1"></span>Beton</button>
+      <button data-mat="Bewehrung" class="mat active"><span class="chip" style="background:#78716c"></span>Bewehrung*</button>
+    </div>
+    <h2>Ansicht</h2>
+    <div class="btngroup" id="viewBtns">
+      <button data-view="persp">Perspektive</button>
+      <button data-view="top">Draufsicht</button>
+      <button data-view="side">Seite</button>
+    </div>
+    <div class="btngroup" style="margin-top:6px">
+      <button id="axesBtn">Stabachsen einblenden</button>
+    </div>
+    <p class="note">*Bewehrung: pauschal 85 kg/m³ Betonstahl, sitzt im Beton (kein eigener Körper).</p>
+    <p class="note">Farbe = CO₂e je Stab (grün → rot). Punktgröße = Querschnittsfläche.</p>
+  </div>
+  <div class="panel" style="padding:4px"><div id="viewport"></div></div>
+  <div class="panel">
+    <h2>Auswahl</h2>
+    <div id="kpiBox"></div>
+    <h2>Materialgruppen (berechnet)</h2>
+    <table id="groupTable"></table>
+    <h2>Tabellen aus Excel (alle Dateien)</h2>
+    <div class="scroll" id="xlAll"></div>
+    <p class="note" id="xlHint"></p>
+  </div>
+</main>
+<footer id="footer"></footer>
+<script>
+const state = { dataset: 'standard', module: 'A1-A3',
+  mats: { Baustahl: true, Beton: true, Bewehrung: true }, axes: false };
+let DATA = null;
+let BASELINE = 0;   // Standard A1-A3 Gesamtsumme (Referenz)
+
+const VIEWS = {
+  persp: { eye: { x: 1.7, y: -1.7, z: 1.15 }, up: { x: 0, y: 0, z: 1 } },
+  top:   { eye: { x: 0, y: -0.001, z: 2.7 },  up: { x: 0, y: 1, z: 0 } },
+  side:  { eye: { x: 2.7, y: 0, z: 0.12 },    up: { x: 0, y: 0, z: 1 } },
+};
+const fmt = (x, d = 1) =>
+  Number(x).toLocaleString('de-DE', { maximumFractionDigits: d });
+
+function co2eOf(b) {
+  // CO2e des Stabs fuer aktuelle Auswahl, aufgeteilt in Material/Bewehrung
+  const ds = DATA.datasets[state.dataset];
+  const total = b.co2e[state.dataset][state.module];
+  let rebar = 0;
+  if (b.gruppe === 'Beton') {
+    rebar = b.V_m3 * ds.rebar_ratio_kg_m3 * ds.betonstahl.gwp[state.module];
+  }
+  return { total, rebar, pure: total - rebar };
+}
+function barValue(b) {   // angezeigter Wert (Beruecksichtigung Bewehrung-Toggle)
+  const c = co2eOf(b);
+  return b.gruppe === 'Beton'
+    ? (state.mats.Bewehrung ? c.total : c.pure)
+    : c.total;
+}
+
+function buildTraces() {
+  const bars = DATA.bars;
+  const vals = bars.map(barValue);
+  let cmin = Math.min(...vals);
+  let cmax = Math.max(...vals);
+  if (cmax === cmin) cmax = cmin + 1;
+  const traces = [];
+  for (const grp of ['Baustahl', 'Beton']) {
+    const gb = bars.filter(b => b.gruppe === grp);
+    traces.push({
+      type: 'scatter3d', mode: 'markers', name: grp,
+      x: gb.map(b => b.mitte[0]),
+      y: gb.map(b => b.mitte[1]),
+      z: gb.map(b => b.mitte[2]),
+      customdata: gb.map(b => [b.nr, b.profil, b.L_m, b.A_mm2,
+                               b.V_m3, barValue(b)]),
+      marker: {
+        size: gb.map(b => 2 + 9 * Math.sqrt(b.A_mm2 / 250000)),
+        color: gb.map(barValue),
+        colorscale: [[0, '#16a34a'], [0.5, '#facc15'], [1, '#dc2626']],
+        cmin, cmax,
+        colorbar: { title: { text: 'kg CO₂e', font: { size: 11 } },
+                    thickness: 12, len: 0.55 },
+        opacity: 0.95,
+      },
+      hovertemplate:
+        '<b>%{customdata[0]}</b> · %{customdata[1]}<br>' +
+        'Länge %{customdata[2]:.3f} m · A %{customdata[3]:.0f} mm²<br>' +
+        'Volumen %{customdata[4]:.5f} m³<br>' +
+        'CO₂e: <b>%{customdata[5]:.2f} kg</b><extra></extra>',
+      visible: state.mats[grp],
+    });
+  }
+  if (state.axes) {
+    for (const grp of ['Baustahl', 'Beton']) {
+      const gb = bars.filter(b => b.gruppe === grp);
+      const xs = [], ys = [], zs = [];
+      gb.forEach(b => {
+        xs.push(b.start[0], b.end[0], null);
+        ys.push(b.start[1], b.end[1], null);
+        zs.push(b.start[2], b.end[2], null);
+      });
+      traces.push({ type: 'scatter3d', mode: 'lines',
+        name: grp + ' (Achsen)', x: xs, y: ys, z: zs,
+        line: { color: '#64748b', width: 2 },
+        hoverinfo: 'skip', showlegend: false, visible: true });
+    }
+  }
+  return traces;
+}
+function render() {
+  const traces = buildTraces();
+  const layout = {
+    margin: { l: 0, r: 0, t: 0, b: 0 },
+    scene: {
+      xaxis: { title: 'X (m)', gridcolor: '#e2e8f0',
+                 zerolinecolor: '#cbd5e1' },
+      yaxis: { title: 'Y (m)', gridcolor: '#e2e8f0',
+                 zerolinecolor: '#cbd5e1' },
+      zaxis: { title: 'Z (m)', gridcolor: '#e2e8f0',
+                 zerolinecolor: '#cbd5e1' },
+      camera: VIEWS.persp, aspectmode: 'data',
+    },
+    legend: { x: 0.01, y: 0.99, font: { size: 11 } },
+    hoverlabel: { font: { size: 11 } },
+  };
+  Plotly.react('viewport', traces, layout,
+               { displaylogo: false, responsive: true });
+  updateSummary();
+}
+
+function updateSummary() {
+  const ds = DATA.datasets[state.dataset];
+  const modLbl = (DATA.module.find(m => m.id === state.module) || {}).label;
+  const G = {
+    Baustahl: { n: 0, m: 0, V: 0, co2e: 0 },
+    Beton: { n: 0, m: 0, V: 0, co2e: 0 },
+    Bewehrung: { n: 0, m: 0, co2e: 0 },
+  };
+  let total = 0;
+  for (const b of DATA.bars) {
+    const c = co2eOf(b);
+    if (b.gruppe === 'Baustahl' && state.mats.Baustahl) {
+      G.Baustahl.n++; G.Baustahl.m += b.m_kg;
+      G.Baustahl.V += b.V_m3; G.Baustahl.co2e += c.total;
+      total += c.total;
+    }
+    if (b.gruppe === 'Beton' && state.mats.Beton) {
+      G.Beton.n++; G.Beton.m += b.m_kg; G.Beton.V += b.V_m3;
+      G.Beton.co2e += c.pure; total += c.pure;
+    }
+    if (b.gruppe === 'Beton' && state.mats.Bewehrung) {
+      G.Bewehrung.n++; G.Bewehrung.m += b.V_m3 * ds.rebar_ratio_kg_m3;
+      G.Bewehrung.co2e += c.rebar; total += c.rebar;
+    }
+  }
+  document.getElementById('totalVal').textContent =
+    fmt(total, total >= 1000 ? 0 : 1) + ' kg CO₂e';
+  document.getElementById('totalLbl').textContent =
+    `${ds.label} · Modul ${modLbl} · Basis Standard/A1–A3: ` +
+    `${fmt(BASELINE, 0)} kg` +
+    (total !== BASELINE
+      ? ` (${total >= BASELINE ? '+' : ''}` +
+        `${fmt((total - BASELINE) / BASELINE * 100, 1)} %)`
+      : '');
+  document.getElementById('kpiBox').innerHTML = `
+    <div class="kpi"><span>Datensatz</span>
+      <span class="v">${ds.label}</span></div>
+    <div class="kpi"><span>Modul</span>
+      <span class="v">${modLbl}</span></div>
+    <div class="kpi"><span>Baustahl (GWP)</span>
+      <span class="v">${fmt(ds.baustahl.gwp[state.module], 3)} kg/kg</span></div>
+    <div class="kpi"><span>Beton (GWP)</span>
+      <span class="v">${fmt(ds.beton.gwp[state.module], 1)} kg/m³</span></div>
+    <div class="kpi"><span>Betonstahl (GWP)</span>
+      <span class="v">${fmt(ds.betonstahl.gwp[state.module], 3)} kg/kg</span></div>`;
+  const rows = [G.Baustahl, G.Beton, G.Bewehrung];
+  const names = ['Baustahl', 'Beton', 'Bewehrung (pauschal)'];
+  let html = '<tr><th>Materialgruppe</th><th>Stäbe</th>' +
+             '<th>Masse</th><th>CO₂e (kg)</th><th>Anteil</th></tr>';
+  rows.forEach((g, i) => {
+    if (!g.n) return;
+    const share = total ? g.co2e / total * 100 : 0;
+    html += `<tr><td>${names[i]}</td><td>${g.n}</td>` +
+            `<td>${fmt(g.m, 0)}</td><td>${fmt(g.co2e, 1)}</td>` +
+            `<td>${fmt(share, 1)} %</td></tr>`;
+  });
+  html += `<tr class="gesamt"><td>GESAMT</td>` +
+          `<td>${G.Baustahl.n + G.Beton.n}</td>` +
+          `<td>${fmt(G.Baustahl.m + G.Beton.m + G.Bewehrung.m, 0)}</td>` +
+          `<td>${fmt(total, 1)}</td><td>100 %</td></tr>`;
+  document.getElementById('groupTable').innerHTML = html;
+}
+function excelTable(t) {
+  if (!t || !t.rows || !t.rows.length) return '<p class="note">–</p>';
+  let html = `<table><caption style="text-align:left;` +
+    `font-weight:600;margin-bottom:4px">${t.sheet}</caption>`;
+  t.rows.forEach((r, i) => {
+    const tag = i === 0 ? 'th' : 'td';
+    html += '<tr>' + r.map(c => {
+      const v = (typeof c === 'number')
+        ? fmt(c, c % 1 ? 2 : 0) : c;
+      return `<${tag}>${v}</${tag}>`;
+    }).join('') + '</tr>';
+  });
+  return html + '</table><div style="height:10px"></div>';
+}
+
+function init() {
+  BASELINE = DATA.bars.reduce(
+    (s, b) => s + b.co2e.standard['A1-A3'], 0);
+  const reihenfolge = ['materialgruppen', 'querschnitte',
+                       'oekobaudat', 'uebersicht',
+                       'querschnitt_volumen', 'profil_uebersicht',
+                       'rahmen', 'traegerliste'];
+  document.getElementById('xlAll').innerHTML =
+    reihenfolge.map(k => excelTable(DATA.tabellen[k])).join('');
+  document.getElementById('xlHint').textContent =
+    DATA.tabellen.traegerliste_hint;
+  const procs = DATA.datasets.standard;
+  const alt = DATA.datasets.alternative;
+  document.getElementById('footer').innerHTML =
+    '<b>Methodik:</b> ' + DATA.meta.methode + '<br>' +
+    '<b>Quellen:</b> ' + DATA.meta.quellen.join(' · ') + '<br>' +
+    '<b>ÖKOBAU.DAT:</b> ' +
+    `Baustahl Standard „${procs.baustahl.name}" ` +
+    `(${procs.baustahl.uuid}) · ` +
+    `Alternative „${alt.baustahl.name}" ` +
+    `(${alt.baustahl.uuid}) · ` +
+    `Beton Standard „${procs.beton.name}" ` +
+    `(${procs.beton.uuid}) · ` +
+    `Alternative „${alt.beton.name}" ` +
+    `(${alt.beton.uuid}) · ` +
+    `Betonstahl „${procs.betonstahl.name}" ` +
+    `(${procs.betonstahl.uuid})`;
+
+  const wire = (id, attr, key) => {
+    document.getElementById(id).addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#' + id + ' button')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state[key] = btn.dataset[attr];
+      render();
+    });
+  };
+  wire('datasetBtns', 'ds', 'dataset');
+  wire('moduleBtns', 'mod', 'module');
+
+  document.getElementById('matBtns').addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const m = btn.dataset.mat;
+    state.mats[m] = !state.mats[m];
+    btn.classList.toggle('active', state.mats[m]);
+    render();
+  });
+  document.getElementById('viewBtns').addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    Plotly.relayout('viewport', { 'scene.camera': VIEWS[btn.dataset.view] });
+  });
+  document.getElementById('axesBtn').addEventListener('click', e => {
+    state.axes = !state.axes;
+    e.target.classList.toggle('active', state.axes);
+    render();
+  });
+  render();
+}
+
+fetch('/api/data')
+  .then(r => r.json())
+  .then(d => { DATA = d; init(); })
+  .catch(err => {
+    document.getElementById('viewport').innerHTML =
+      '<p style="padding:20px">Daten konnten nicht geladen werden: ' +
+      err + '</p>';
+  });
+
+
+</script>
+
+</body>
+</html>

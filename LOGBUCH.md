@@ -156,8 +156,35 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 **Test:** Schaltet beim Stahl auf die Alternative um. Was erwartet ihr vorher, was passiert, und warum?
 
+**Ergebnis (Test bestanden):**
+- **Erwartung:** Der Alternative-Datensatz „Baustahl Grobblech" hat laut ÖKOBAU.DAT ein GWP-total (A1–A3) von 2,529 kg CO₂e/kg statt 0,560 kg CO₂e/kg beim Standard („Profile und Stabstahl") – also fast 4,5×. Da die 689 Baustahl-Stäbe (7.411 kg Stahl) 60,4 % der A1–A3-Emissionen ausmachen, erwarteten wir einen starken Anstieg der Gesamtsumme; Beton sollte mit EcoPact (98,9 statt 181,0 kg CO₂e/m³) sinken.
+- **Tatsächlich:** Gesamt A1–A3 steigt von **6.872,6 kg auf 20.497,6 kg CO₂e (+198,3 %)**. Baustahl: 4.152,2 → 18.742,0 kg (+351 %), Beton+Bewehrung: 2.720,4 → 1.755,7 kg (−35 %).
+- **Warum:** Der Grobblech-Datensatz ist ein energiesintensives Produkt (hoher Schmelzaufwand pro kg) – der Ausschlag kommt vom Datensatz, nicht von der Menge.
+- **Module C und D:** Standard: C = +262,9 kg (Demontage/Entsorgung), D = +1.470,9 kg. Alternative: C = +300,5 kg, D = **−10.924,4 kg** (Grobblech hat eine hohe Recycling-Gutschrift von −1,467 kg CO₂e/kg). Über den Lebenszyklus (A1–A3+C+D) liegt die Alternative mit 9.873,7 kg nur knapp über Standard (8.606,4 kg) – die Modulwahl ist also entscheidend.
+
+**Was wir gemacht haben:**
+- Lokale Web-App (FastAPI + Plotly.js, läuft offline, Start: `python webapp/app.py` → http://localhost:8501). **3D-Viewport in der Seitenmitte** (Pavillon mit Maus drehbar), 736 Stäbe als Punkte **nach CO₂e gefärbt** (grün→rot), Punktgröße = Querschnittsfläche, Hover zeigt Nr/Profil/Länge/Volumen/CO₂e.
+- Steuerung per Buttons: **Datensatz Standard/Alternative**, **Modul A1–A3 / C / D**, **Materialien aus-/einschaltbar** (Baustahl / Beton / Bewehrung), Ansichten (Perspektive/Draufsicht/Seite), Stabachsen einblenden.
+- Datenaggregat `etappe5_webapp_data.py`: liest **alle Excel-Dateien** aus `Abgabe_23.10/` (EmbodiedCarbon_Staebe_Liste.xlsx mit Materialgruppen/Querschnitte/OEKOBAU.DAT, Staebe_UEbersicht.xlsx, Staebe_Querschnitt_Volumen.xlsx, Etappe02_Traegerliste_T001-T736_ETAPPE04.xlsx mit Trägerliste/Rahmenausführungen/Profil-Übersicht) plus die CSVs der Etappen 2/4 und die ÖKOBAU.DAT-Rohdaten (`oekobaudat_raw/`, GWP-total je Modul A1–A3/C1–C4/D) → `webapp/static/data.json` (756 KB). Die Excel-Tabellen sind in der App im rechten Panel eingebunden.
+- Plausibilitätscheck: Standard A1–A3 = 6.872,6 kg vs. Etappe 4: 6.872,7 kg → **Abweichung 0,00 %**.
+
+**Wichtigste Prompts** (wörtlich kopieren):
+- „Baut eine lokale Web-App, die den Embodied Carbon des Pavillons zeigt. Der Pavillon in 3D, die Stäbe nach CO₂ eingefärbt. Datensatz je Materialgruppe (Standard / Alternative) und Module A1–A3 / C / D umschaltbar. mache ein viewport in der mitte der seite in dem man das gebäude in 3D drehen kann. die Verschiedenen materialien sind per button ausschaltbar. erstelle eine webapp die man bedinen kann. erstelle dazu ein logbucheintrag und speichere es unter dem abgabe ordner ab. greife auf alle gespeicherten exceldatein zu und binde sie ein"
+
+**Was schiefging und woran wir es gemerkt haben:**
+- Die Excel-Tabellen landeten zuerst als `null` in der data.json – bei der Reparatur des Daten-Skripts war die `return`-Zeile von `read_excel_table` verloren gegangen; aufgefallen an der Zeilen-/Spalten-Prüfung der JSON-Ausgabe.
+- PowerShell-Escapes haben Inline-Python zerschossen → alle Skripte als Dateien geschrieben.
+
+**Was wir selbst geprüft haben:**
+- Endpunkte per HTTP-Test: `/` (200), `/api/data` (200, 736 Stäbe, 2 Datensätze, 3 Module, 8 Excel-Tabellen), `/static/plotly.min.js` (200).
+- Summen gegen Etappe 4 (0,00 % Abweichung); Gruppensummen Baustahl 4.152,2 / Beton 2.720,4 kg stimmen mit dem Excel-Sheet „Materialgruppen" (4.152,33 / 2.720,37) überein.
+- Materialgruppen: Baustahl 689 Stäbe (7.410,9 kg), Beton 47 Stäbe (11,756 m³, 28.214 kg, Bewehrung 999 kg).
 
 **Learning oder Besonderheit:**
+- Die ÖKOBAU.DAT-Datensätze liefern im erweiterten View (`view=extended`) auch die Module C1–C4 und D – Lebenszyklus-Szenarien (A1–A3+C+D) sind damit ohne Zusatzdaten rechenbar.
+- Bei Modul D kann der „schlechtere" Datensatz (Grobblech) dank hoher Recycling-Gutschrift (−1,467 kg/kg) die bessere Bilanz ergeben – Graue-Energie-Vergleiche müssen immer alle Module betrachten.
+- Die Flachstäbe werden laut Aufgabenstellung (Etappe 4) als Baustahl bilanziert, in Etappe 3 aber als Holz gerendert – die CO₂-App folgt der Etappe-4-Methodik (die Etappe-3-Materialzuordnung steht zusätzlich in den Daten).
+
 
 
 ## Zum Schluss
