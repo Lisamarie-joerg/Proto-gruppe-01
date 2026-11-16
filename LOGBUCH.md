@@ -214,3 +214,49 @@ und reinem Statik-Server (`python -m http.server`, :8000).
 Wie habt ihr mit dem Agenten gearbeitet, und was würdet ihr der nächsten Gruppe mitgeben?
 
 Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/Pfade, Längen) und die Ergebnisse gegen das Modell geprüft (Objektsummen). Wir haben die Zahlen verifiziert und die Excel-Tabelle nur noch formatiert. Tipp für die nächste Gruppe: Modelldatei in `Data/` liegen lassen und den Agenten direkt darauf loslassen – die Zählung über die Stabachsen (Layer „MemberAxes") ist am schnellsten und verlässlichsten.
+
+## 16.11.2026 – Bewehrungsplan und Website
+
+- Bestandsaufnahme: Website und Abgabe_20.11 gesichtet. Die gleichnamigen Rhino-Dateien haben unterschiedliche Prüfsummen.
+- Quellen geprüft: Streifenfundamentplan zeigt vier Stabpositionen mit 1.015,63 kg Gesamtmasse laut Stabliste. Im RFEM-Modell sind keine separat benannten Bewehrungslayer vorhanden.
+- Webapp bearbeitet: GLB-Linien in Filter und Auswahl aufgenommen, Kamera auf Rhino-Z ausgerichtet, Modellabmessungen ergänzt. Fundamentfokus, schematische 3D-Bewehrung, transparente Überlagerung, PDF und Zuschnittliste ergänzt.
+- Gruppenzugriff vorbereitet: Webdateien verwenden relative Pfade und können mit einem einfachen lokalen HTTP-Server bereitgestellt werden. Startanleitung hinzugefügt.
+- Offen: Sichtprüfung im Browser, Zuordnung aller planmäßigen Stäbe, planbasierte CO₂e-Mengen und GitHub-Abgleich. OneDrive-Projektordner meldet beim Schreibversuch Zugriff verweigert.
+- Prüfungen: Alle 47 Betonachsen der Webdaten stimmen auf Millimeter gerundet mit Abgabe_20.11 überein. Planmassen, Planausschnitt, lokale Asset-Pfade und JavaScript-Syntax geprüft. Die Testumgebung hat die lokale Socket-Verbindung verweigert.
+
+## 16.11.2026 – Planpositionen im Modell und CO₂e
+
+- Schnitte A–A und B–B sowie Detail 1 ausgewertet. Alle vier Positionen als anwählbare 3D-Stäbe in fünf Fundamentstreifen ergänzt. Lage, Übergreifungen im Detail und Biegeradien bleiben angenähert.
+- Die Stabliste und die Bilanz beziehen ihre Mengen aus denselben Planpositionen. Die Gesamtbilanz verwendet 1.015,63 kg, Einzelwerte verteilen die Planmasse proportional zum Betonvolumen. Archivierte Excel-Ergebnisse sind als vorheriger Bilanzstand gekennzeichnet.
+- Automatisch geprüft: 501 erzeugte Stäbe, vier korrekte Positionsstückzahlen, endliche 3D-Koordinaten und Bewehrungs-CO₂e für beide Datensätze in A1–A3, C und D.
+- GitHub-Ziel geprüft: Die konfigurierte Origin ist öffentlich und der Browser meldet keinen angemeldeten Account. Git kann den GitHub-Host aus der Sitzung nicht auflösen. Der Upload ist offen.
+
+## 16.11.2026 – Startdatei und GitHub-Desktop-Stand
+
+- Windows-Startdatei für den lokalen Website-Aufruf hinzugefügt und ZIP neu geprüft.
+- Separaten Git-Arbeitsbranch vom lokal bekannten Stand der Gruppen-Origin vorbereitet. Die veröffentlichte Version steht noch aus.
+
+## 16.11.2026 – Materialdarstellung und Start
+
+- Modellmaterial nach Bauteil-ID zugewiesen: 47 Betonfundamente, 12 Stahlstützen, 502 Holzbauteile und 175 Stahlseile. Materialdarstellung und CO₂e-Bilanzannahmen separat gekennzeichnet.
+- Ein eindeutiger Seitentitel und ein Start auf freiem Port unterscheiden die aktualisierte Website von einer älteren lokalen Instanz.
+- Website-Dateien und ZIP für den genehmigten GitHub-Push vorbereitet.
+
+## 16.11.2026 – Planmodell, Material und Interaktion
+
+- Aus Stabliste P-01, Schnitten A–A/B–B und Detail 1 wurden 501 3D-Stabobjekte auf vier Positionslayern erzeugt. Rhino-Datei wieder geöffnet und Stückzahlen geprüft. Einbaulagen und Biegeradien sind angenähert.
+- Website auf Tragwerk, Bewehrung und Gewicht umgebaut. Materialzuordnung gegen GLB und RFEM-Daten geprüft: 47 Betonfundamente, 12 Stahlstützen, 502 Dachkörper aus Holz.
+- In Edge Materialansicht und freigestellte Bewehrung geprüft. Klick auf einen Längsstab öffnete Detailposition 2 und markierte die Positionsgruppe pink. Drag-and-drop für eigene GLB-/PDF-Dateien ergänzt.
+- ZIP mit der aktuellen Website aktualisiert. Rhino-Modell separat bereitgestellt.
+
+## 16.11.2026 – Betondeckung, Stöße und Originaldetails
+
+- Beton in der kombinierten Ansicht deutlicher dargestellt. Stabwahl markiert gleiche Planposition und modellierte Zuschnittlänge pink, andere Stäbe grau. Originalausschnitte A–A, B–B und Detail 1 direkt aus dem PDF ergänzt.
+- Längsstäbe mit 30 cm Überdeckung modelliert und seitlich versetzt. Gegen die Betonflächen des GLB bis zu 25 mm entlang der Stäbe geprüft: kleinster geprüfter Abstand zur Stahloberfläche 41,66 mm, längster Stab 5,1044 m.
+- 470 Stäbe, modellierte Stahlmasse 902,86 kg. Originalwerte bleiben in der Stabliste sichtbar. Rhino-Modell und ZIP aktualisiert.
+
+## 16.11.2026 – Stoßlagen und bemaßte Achsen
+
+- P-01 erneut geprüft. A–A zeigt einen Stoß nahe Achse E, B–B zwei Stöße zwischen 4/5 und 5/6. Bemaßung jeweils mindestens 1,00 m. Im Modell 1,06 m verwendet und benachbarte Stöße um insgesamt 20 cm gegeneinander versetzt.
+- Alle 70 Längsstöße mit 1,06 m Überdeckung nachgerechnet. Längster Stab 5,1353 m. 490 Stäbe in 15 Typgruppen, Modellmasse 955,43 kg. Die Stabauswahl gruppiert nach Planposition und Zuschnittlänge auf Zentimeter gerundet.
+- Achsen B–H und 3–7 mit Maßketten in der XY-Ebene unter dem Fundament eingezeichnet und in Edge geprüft. Rhino-Modell und ZIP aktualisiert.
