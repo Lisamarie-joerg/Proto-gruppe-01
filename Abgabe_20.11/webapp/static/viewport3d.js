@@ -165,6 +165,62 @@ function createGroundGrid(grid, bounds) {
   return group;
 }
 
+// Intersect each circular bar segment with the section plane. The resulting
+// polygons close only the exposed steel surfaces, leaving the bar sides colored.
+function sectionCaps(plan, plane, axis) {
+  const vertices = [];
+  const facets = 12;
+  const epsilon = 1e-7;
+  for (const bar of plan.elements) {
+    const radius = plan.positions[bar.position].diameter / 2000;
+    const points = bar.points.map(point => new THREE.Vector3(...point));
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i-1], b = points[i];
+      const da = plane.distanceToPoint(a), db = plane.distanceToPoint(b);
+      if (Math.min(da,db) > radius || Math.max(da,db) < -radius) continue;
+      const tangent = b.clone().sub(a).normalize();
+      const reference = Math.abs(tangent.z) > .9 ? new THREE.Vector3(1,0,0) : new THREE.Vector3(0,0,1);
+      const u = tangent.clone().cross(reference).normalize();
+      const v = tangent.clone().cross(u).normalize();
+      const rings = [a,b].map(center => Array.from({length:facets}, (_,j) => {
+        const theta = j * Math.PI * 2 / facets;
+        return center.clone().addScaledVector(u,radius*Math.cos(theta))
+          .addScaledVector(v,radius*Math.sin(theta));
+      }));
+      const slice = [];
+      function insert(point) {
+        if (!slice.some(existing => existing.distanceToSquared(point) < epsilon**2)) slice.push(point);
+      }
+      function edge(p,q) {
+        const x = plane.distanceToPoint(p), y = plane.distanceToPoint(q);
+        if (Math.abs(x) < epsilon) insert(p);
+        if (Math.abs(y) < epsilon) insert(q);
+        if (x*y < -(epsilon**2)) insert(p.clone().lerp(q,x/(x-y)));
+      }
+      for (let j = 0; j < facets; j++) {
+        const next = (j+1)%facets;
+        edge(rings[0][j],rings[0][next]);
+        edge(rings[1][j],rings[1][next]);
+        edge(rings[0][j],rings[1][j]);
+      }
+      if (slice.length < 3) continue;
+      const mid = slice.reduce((center,p) => center.add(p),new THREE.Vector3())
+        .multiplyScalar(1/slice.length);
+      const lateral = axis === 'x' ? 'y' : 'x';
+      const angle = p => Math.atan2(p.z-mid.z,p[lateral]-mid[lateral]);
+      slice.sort((p,q) => angle(p)-angle(q));
+      for (let j = 1; j < slice.length-1; j++) {
+        for (const p of [slice[0],slice[j],slice[j+1]]) {
+          vertices.push(...p.clone().addScaledVector(plane.normal,.00005).toArray());
+        }
+      }
+    }
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+  return geometry;
+}
+
 function createViewer(data) {
   const mount = byId('viewport3d');
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -229,6 +285,13 @@ function createViewer(data) {
   let axisChoice;
   let cutDirection = 0;
   let cutPlane;
+  let cutZoom = 1;
+  const cutOffset = new THREE.Vector3();
+  const cutSurfaces = new THREE.Mesh(new THREE.BufferGeometry(),
+    new THREE.MeshBasicMaterial({color:0x000000,side:THREE.DoubleSide,
+      polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
+  cutSurfaces.visible = false;
+  scene.add(cutSurfaces);
   const sectionControls = byId('sectionControls');
 
   const axisMenu = byId('sectionAxis');
@@ -252,11 +315,12 @@ function createViewer(data) {
     renderer.clippingPlanes = [cutPlane];
     const size = bounds.getSize(new THREE.Vector3());
     const aspect = Math.max(.1,camera.aspect);
-    const halfHeight = Math.max(size.z/2,(isX ? size.y : size.x)/(2*aspect))*1.19;
+    const halfHeight = Math.max(size.z/2,(isX ? size.y : size.x)/(2*aspect))*1.19/cutZoom;
     sectionCamera.left = -halfHeight*aspect;
     sectionCamera.right = halfHeight*aspect;
     sectionCamera.top = halfHeight;
     sectionCamera.bottom = -halfHeight;
+    center.add(cutOffset);
     sectionCamera.position.copy(center).addScaledVector(normal,-30);
     sectionCamera.lookAt(center);
     sectionCamera.updateMatrixWorld();
@@ -267,6 +331,10 @@ function createViewer(data) {
     cutDirection = 0;
     axisChoice = null;
     cutPlane = null;
+    cutZoom = 1;
+    cutOffset.set(0,0,0);
+    cutSurfaces.visible = false;
+    byId("sectionZoom").hidden = true;
     renderer.clippingPlanes = [];
     orbit.enabled = true;
     sectionControls.hidden = true;
@@ -292,7 +360,32 @@ function createViewer(data) {
     byId('sectionInfo').textContent = 'Schnitt ' + axisChoice.name + ' · Blick nach ' +
       (direction > 0 ? '+' : '−') + axisChoice.kind.toUpperCase();
     fitSection();
+    cutSurfaces.geometry.dispose();
+    cutSurfaces.geometry = sectionCaps(plan,cutPlane,axisChoice.kind);
+    cutSurfaces.visible = bars.visible;
+    byId('sectionZoom').hidden = false;
   }
+
+  function zoomSection(factor) {
+    if (!cutDirection) return;
+    cutZoom = THREE.MathUtils.clamp(cutZoom*factor,.7,20);
+    fitSection();
+  }
+
+  byId('sectionZoomIn').addEventListener('click',() => zoomSection(1.25));
+  byId('sectionZoomOut').addEventListener('click',() => zoomSection(.8));
+  renderer.domElement.addEventListener('wheel',event => {
+    if (!cutDirection) return;
+    event.preventDefault();
+    const box = renderer.domElement.getBoundingClientRect();
+    const anchor = new THREE.Vector3(
+      2*(event.clientX-box.left)/box.width-1, 1-2*(event.clientY-box.top)/box.height, 0);
+    const before = anchor.clone().unproject(sectionCamera);
+    zoomSection(Math.exp(-THREE.MathUtils.clamp(event.deltaY,-300,300)*.003));
+    cutOffset.add(before.sub(anchor.unproject(sectionCamera)));
+    cutOffset[axisChoice.kind] = 0;
+    fitSection();
+  },{passive:false});
 
   byId('sectionMinus').addEventListener('click', () => startSection(-1));
   byId('sectionPlus').addEventListener('click', () => startSection(1));
@@ -304,6 +397,7 @@ function createViewer(data) {
   function update() {
     const custom = model !== stockModel;
     bars.visible = !custom && mode !== 'structure';
+    cutSurfaces.visible = Boolean(cutDirection) && bars.visible;
     if (model) model.visible = custom || mode !== 'rebar';
     foundations.visible = !custom && mode !== 'rebar';
     for (const part of foundations.children) {

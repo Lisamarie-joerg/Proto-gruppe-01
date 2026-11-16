@@ -8,7 +8,7 @@ Im Viewer zwischen Tragwerk, transparenter Überlagerung und reiner Bewehrung we
 
 In der Draufsicht sind die Achsen B–H und 3–7 mit ihren Abständen auf der Grundfläche lesbar. C und G sind aus dem registrierten PDF-Plan abgeleitet.
 
-Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend eine Blickrichtung wählen. Mit **Schnitt beenden** zur räumlichen Ansicht zurückkehren.
+Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend eine Blickrichtung wählen. Mit Mausrad oder +/− im Schnitt zoomen. Die Schnittflächen des Betonstahls sind schwarz. Mit **Schnitt beenden** zur räumlichen Ansicht zurückkehren.
 
 ## Eigene Dateien
 
@@ -19,3 +19,7 @@ Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend e
 Die separate Datei `Stockerau-Bewehrung.3dm` enthält das Ausgangsmodell mit Materialzuweisung und 509 zusätzliche Stabobjekte auf vier Positionslayern. Sie liegt neben dem ZIP auf GitHub. In Rhino die schattierte oder gerenderte Darstellung wählen. Stab-ID, Planposition und Schnitt stehen in den Benutzerdaten der Objekte. Die Einbaulagen sind aus Plan und RFEM-Achsen rekonstruiert, die Biegeradien und Einbaulagen sind angenähert.
 
 Zur Reproduktion mit installierten Paketen `rhino3dm` und `pymupdf` den Befehl `python bewehrung_erstellen.py PFAD_ZUM_MODELL PFAD_ZUM_PLAN` aus dem Repo ausführen. Website und Rhino-Modell verwenden dieselbe Bewehrungsgeometrie.
+
+### Bewehrung in ein bestehendes Rhino-Modell übernehmen
+
+Über **3D-Bewehrung für Rhino laden** die Importdatei herunterladen und in Rhino über **Datei > Importieren** ins bestehende Modell übernehmen. Die Datei enthält 509 3D-Stäbe auf vier Positionslayern sowie Referenzachsen und drei Kontrollpunkte. Die Geometrie steht in den ursprünglichen RFEM-Weltkoordinaten in Metern. Achskreuz D/5 liegt bei (10, −5, 0). Bei Verwendung als Block den Weltursprung als Einfügepunkt verwenden, mit Skalierung 1 und Drehung 0 bei gleicher Modelleinstellung in Metern.

@@ -20,6 +20,11 @@ LAP = 1.06
 MAX_LENGTH = 7.5
 SECTION_WIDTH = .50
 
+GRID = {
+    "x": [["B",7],["C",8.07],["D",10],["E",11.5],["F",13],["G",14.93],["H",16]],
+    "y": [["3",-10],["4",-7.5],["5",-5],["6",-2.5],["7",0]],
+}
+
 COLORS = {"Beton": (163, 164, 153, 255), "Metall": (81, 105, 127, 255),
           "Holz": (174, 112, 52, 255), "Stahlseil": (57, 73, 87, 255)}
 
@@ -180,6 +185,53 @@ def add_rebar_mesh(model, item, layer, material):
     model.Objects.AddMesh(mesh, attrs)
 
 
+def add_position_layers(model, elements, material):
+    layers = {}
+    for position in POSITIONS:
+        layer = rhino.Layer()
+        layer.Name = f"Bewehrung P-01 - Position {position}"
+        layer.Color = (108, 39, 67, 255)
+        layers[position] = model.Layers.Add(layer)
+    for item in elements:
+        add_rebar_mesh(model, item, layers[item["position"]], material)
+
+
+def export_reinforcement(path, elements, unit_system):
+    model = rhino.File3dm()
+    model.Settings.ModelUnitSystem = unit_system
+    material = rhino.Material()
+    material.Name = "Betonstahl"
+    material.DiffuseColor = (108, 39, 67, 255)
+    add_position_layers(model, elements, model.Materials.Add(material))
+
+    layer = rhino.Layer()
+    layer.Name = "Referenzachsen P-01 - Modellkoordinaten"
+    layer.Color = (48, 93, 91, 255)
+    index = model.Layers.Add(layer)
+    for kind in ("x", "y"):
+        for label, coord in GRID[kind]:
+            attrs = rhino.ObjectAttributes()
+            attrs.LayerIndex = index
+            attrs.Name = f"Achse {label}"
+            if kind == "x":
+                start, end = (coord,-10.7,0),(coord,.7,0)
+            else:
+                start, end = (6.3,coord,0),(16.7,coord,0)
+            model.Objects.AddLine(rhino.Point3d(*start),rhino.Point3d(*end),attrs)
+    for label, x, y in (("D/5",10,-5),("F/5",13,-5),("D/7",10,0)):
+        attrs = rhino.ObjectAttributes()
+        attrs.LayerIndex = index
+        attrs.Name = f"Einfügekontrolle {label}"
+        model.Objects.AddPoint(rhino.Point3d(x,y,0),attrs)
+    model.Strings["P-01 Koordinaten"] = "RFEM-Weltkoordinaten in Metern. Ursprung 0,0,0. Kontrollpunkt D/5 = 10,-5,0."
+    assert model.Write(str(path), 7)
+    reopened = rhino.File3dm.Read(str(path))
+    assert reopened.Settings.ModelUnitSystem == unit_system
+    assert len(reopened.Objects) == len(elements) + 15
+    assert Counter(o.Attributes.GetUserString("Position") for o in reopened.Objects
+                   if o.Attributes.GetUserString("Plan")) == Counter(e["position"] for e in elements)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("model", type=Path)
@@ -246,14 +298,8 @@ def main():
         attrs.MaterialSource = rhino.ObjectMaterialSource.MaterialFromObject
         model.Objects.AddBrep(geometry,attrs)
 
-    layers = {}
-    for p in POSITIONS:
-        layer = rhino.Layer()
-        layer.Name = f"Bewehrung P-01 - Position {p}"
-        layer.Color = (108, 39, 67, 255)
-        layers[p] = model.Layers.Add(layer)
-    for item in elements:
-        add_rebar_mesh(model, item, layers[item["position"]], materials["Betonstahl"])
+    add_position_layers(model, elements, materials["Betonstahl"])
+    export_reinforcement(args.static / "Stockerau-Bewehrung-Import.3dm", elements, model.Settings.ModelUnitSystem)
     assert model.Write(str(args.rhino_out), 7)
     reopened = rhino.File3dm.Read(str(args.rhino_out))
     assert Counter(o.Attributes.GetUserString("Position") for o in reopened.Objects
@@ -280,8 +326,7 @@ def main():
     payload = {"plan": "BG_5_BP_FU_XX_001_P-01", "mass": 1015.63,
                "modelMass": round(sum(record["modelMass"] for record in records.values()), 2),
                "cover": COVER, "lap": LAP, "maxLength": MAX_LENGTH,
-               "grid": {"x": [["B",7],["C",8.07],["D",10],["E",11.5],["F",13],["G",14.93],["H",16]],
-                        "y": [["3",-10],["4",-7.5],["5",-5],["6",-2.5],["7",0]]},
+               "grid": GRID,
                "positions": records, "elements": elements, "foundations": foundations}
     (args.static / "bewehrung.json").write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

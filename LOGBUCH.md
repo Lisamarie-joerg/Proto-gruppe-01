@@ -271,3 +271,8 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Außenkanten aus P-01 am registrierten Achsraster abgelesen. Fundamentüberstände ab äußeren Stützenachsen in A–A ca. 48/54 cm, in B–B je 25 cm. Fünf Fundamentkörper für Rhino und Viewer aus gemeinsamen Geometriedaten erzeugt.
 - 12 Detailkörbe aus je acht Bügeln an den Stützenmittelpunkten zentriert und ihre Lage aus den Modellkoordinaten geprüft. Kleinste modellierte lichte Deckung 41.99 mm. Auswahl nach Planposition, Position 2 umfasst alle 60 Stäbe.
 - Klick auf Rasterachse und anschließende Richtungswahl erzeugen einen orthogonalen Clipping-Schnitt. Website im Hauptordner und in Abgabe_20.11 aktualisiert.
+
+## 16.11.2026 – Schnittzoom und Rhino-Bewehrungsexport
+
+- Orthogonalen Schnittzoom per Mausrad und Schaltflächen ergänzt. Die schwarzen Schnittpolygone des Betonstahls für beide Richtungen an den Achsen D und 5 geprüft.
+- Button für den 3DM-Export der 509 Stäbe ergänzt. Vier Positionslayer und Referenzachsen samt Kontrollpunkten im bestehenden RFEM-Koordinatensystem gespeichert. Bounding Boxes der Stäbe stimmen zwischen Importdatei und Vollmodell exakt überein, Referenz D/5 ist auf (10, −5, 0).

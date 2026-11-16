@@ -30,6 +30,10 @@
       <span id="sectionInfo" role="status"></span>
       <div class="switch">
         <button id="sectionMinus"></button><button id="sectionPlus"></button>
+        <span id="sectionZoom" class="switch" hidden>
+          <button id="sectionZoomOut" aria-label="Schnitt verkleinern">−</button>
+          <button id="sectionZoomIn" aria-label="Schnitt vergrößern">+</button>
+        </span>
         <button id="sectionClear">Schnitt beenden</button>
       </div>
     </div>
@@ -56,6 +60,8 @@
     <section class="panel">
       <p class="project">Mengen und Gewichte</p>
       <h2>Bewehrung laut Plan</h2>
+      <p><a class="download" href="./Stockerau-Bewehrung-Import.3dm" download>3D-Bewehrung für Rhino laden ↓</a></p>
+      <p class="note">4 Positionslayer und Referenzachsen. Für die Übernahme in das Bestandsmodell in Rhino importieren.</p>
       <p class="weight"><strong id="rebarMass">1.015,63</strong> kg</p>
       <p class="note" id="modelSpec"></p>
       <p id="selection" aria-live="polite">Stab im Modell oder Position in der Liste auswählen.</p>
