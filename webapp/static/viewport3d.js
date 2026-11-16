@@ -92,6 +92,76 @@ function setMode(value) {
   viewer?.update();
 }
 
+function createGroundGrid(grid, z) {
+  const group = new THREE.Group();
+  group.position.z = z;
+  const [left, right] = [grid.x[0][1], grid.x.at(-1)[1]];
+  const [bottom, top] = [grid.y[0][1], grid.y.at(-1)[1]];
+  const axes = [];
+  const dims = [];
+  const line = (target, x1, y1, x2, y2) => target.push(x1, y1, 0, x2, y2, 0);
+  function textLabel(text, x, y, turn = 0, marker = false) {
+    const canvas = document.createElement('canvas');
+    canvas.width = marker ? 128 : 256;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#f5f8f4';
+    ctx.strokeStyle = '#345751';
+    if (marker) {
+      ctx.beginPath();
+      ctx.arc(64,64,53,0,Math.PI*2);
+      ctx.fill();
+      ctx.lineWidth = 6;
+      ctx.stroke();
+    } else {
+      ctx.fillRect(0,25,256,78);
+    }
+    ctx.fillStyle = '#254942';
+    ctx.font = marker ? 'bold 61px sans-serif' : 'bold 52px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text,canvas.width/2,65);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(marker ? .44 : .97, marker ? .44 : .48),
+      new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
+    mesh.position.set(x,y,.008);
+    mesh.rotation.z = turn;
+    group.add(mesh);
+  }
+
+  const dimensionY = bottom - .88, dimensionX = left - .94;
+  const tick = .075;
+  grid.x.forEach(([name,x], i) => {
+    line(axes,x,bottom-.36,x,top+.42);
+    line(dims,x,bottom-.24,x,dimensionY-.16);
+    line(dims,x-tick,dimensionY-tick,x+tick,dimensionY+tick);
+    textLabel(name,x,top+.63,0,true);
+    if (i) {
+      const previous = grid.x[i-1][1];
+      textLabel(fmt(x-previous)+' m',(x+previous)/2,dimensionY-.21);
+    }
+  });
+  grid.y.forEach(([name,y], i) => {
+    line(axes,left-.36,y,right+.42,y);
+    line(dims,left-.24,y,dimensionX-.16,y);
+    line(dims,dimensionX-tick,y-tick,dimensionX+tick,y+tick);
+    textLabel(name,right+.64,y,0,true);
+    if (i) {
+      const previous = grid.y[i-1][1];
+      textLabel(fmt(y-previous)+' m',dimensionX-.24,(y+previous)/2,Math.PI/2);
+    }
+  });
+  line(dims,left,dimensionY,right,dimensionY);
+  line(dims,dimensionX,bottom,dimensionX,top);
+  for (const [vertices,color,opacity] of [[axes,0x5d8076,.50],[dims,0x355c54,.83]]) {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    group.add(new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({color,transparent:true,opacity})));
+  }
+  return group;
+}
+
 function createViewer(data) {
   const mount = byId('viewport3d');
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -138,6 +208,7 @@ function createViewer(data) {
   let model;
   let stockModel;
   let bounds;
+  let groundGrid;
   let parts = [];
   const ray = new THREE.Raycaster();
   ray.params.Line.threshold = .04;
@@ -162,7 +233,8 @@ function createViewer(data) {
   function setCamera(top = false) {
     if (!bounds) return;
     const viewBounds = mode === 'rebar' && model === stockModel
-      ? new THREE.Box3().setFromObject(bars) : bounds;
+      ? new THREE.Box3().setFromObject(bars) : bounds.clone();
+    if (top && groundGrid?.visible) viewBounds.union(new THREE.Box3().setFromObject(groundGrid));
     const center = viewBounds.getCenter(new THREE.Vector3());
     const size = viewBounds.getSize(new THREE.Vector3()).length();
     const half = THREE.MathUtils.degToRad(camera.fov / 2);
@@ -199,7 +271,14 @@ function createViewer(data) {
     scene.add(model);
     model.updateMatrixWorld(true);
     bounds = new THREE.Box3().setFromObject(model);
-    if (next === stockModel) bounds.union(new THREE.Box3().setFromObject(bars));
+    if (next === stockModel) {
+      if (!groundGrid) {
+        groundGrid = createGroundGrid(plan.grid,bounds.min.z-.09);
+        scene.add(groundGrid);
+      }
+      bounds.union(new THREE.Box3().setFromObject(bars));
+    }
+    if (groundGrid) groundGrid.visible = next === stockModel;
     update();
     setCamera();
   }

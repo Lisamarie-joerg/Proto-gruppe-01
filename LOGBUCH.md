@@ -232,3 +232,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Beton in der kombinierten Ansicht deutlicher dargestellt. Stabwahl markiert gleiche Planposition und modellierte Zuschnittlänge pink, andere Stäbe grau. Originalausschnitte A–A, B–B und Detail 1 direkt aus dem PDF ergänzt.
 - Längsstäbe mit 30 cm Überdeckung modelliert und seitlich versetzt. Gegen die Betonflächen des GLB bis zu 25 mm entlang der Stäbe geprüft: kleinster geprüfter Abstand zur Stahloberfläche 41,66 mm, längster Stab 5,1044 m.
 - 470 Stäbe, modellierte Stahlmasse 902,86 kg. Originalwerte bleiben in der Stabliste sichtbar. Rhino-Modell und ZIP aktualisiert.
+
+## 16.11.2026 – Stoßlagen und bemaßte Achsen
+
+- P-01 erneut geprüft. A–A zeigt einen Stoß nahe Achse E, B–B zwei Stöße zwischen 4/5 und 5/6. Bemaßung jeweils mindestens 1,00 m. Im Modell 1,06 m verwendet und benachbarte Stöße um insgesamt 20 cm gegeneinander versetzt.
+- Alle 70 Längsstöße mit 1,06 m Überdeckung nachgerechnet. Längster Stab 5,1353 m. 490 Stäbe in 15 Typgruppen, Modellmasse 955,43 kg. Die Stabauswahl gruppiert nach Planposition und Zuschnittlänge auf Zentimeter gerundet.
+- Achsen B–H und 3–7 mit Maßketten in der XY-Ebene unter dem Fundament eingezeichnet und in Edge geprüft. Rhino-Modell und ZIP aktualisiert.

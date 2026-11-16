@@ -16,7 +16,7 @@ POSITIONS = {
 }
 COVER = .04
 FIT_MARGIN = .002
-LAP = .30
+LAP = 1.06
 MAX_LENGTH = 7.5
 SECTION_WIDTH = .50
 
@@ -49,8 +49,12 @@ def reinforcement(bars):
         stock_id = "2" if axis == 0 else "4"
         offset = COVER + FIT_MARGIN + .006
         length = span - 2 * offset
-        pieces = ceil((length - LAP) / (MAX_LENGTH - LAP))
-        stock = (length + (pieces - 1) * LAP) / pieces
+        # A-A: one drawn splice just east of axis E. B-B: two between
+        # axes 4/5 and 5/6. These X/Y coordinates come from the section
+        # drawing, registered to D/F and 3/5/7 in the RFEM model.
+        splice_axes = (11.55,) if axis == 0 else (-6.54, -3.41)
+        splices = [(station - start[axis]) / direction[axis] - offset
+                   for station in splice_axes]
 
         def point(station, lateral, vertical):
             return [round(a + (station + offset)*d + lateral*s + vertical*u, 5)
@@ -103,18 +107,19 @@ def reinforcement(bars):
         lanes = [(lateral, z) for z in (-.194, .194)
                  for lateral in (-.194, -.065, .065, .194)]
         lanes += [(-.194, 0), (.194, 0)]
-        for i in range(pieces):
-            station = i * (stock - LAP)
-            for lateral, z in lanes:
-                # Offset alternate pieces inside the cage so their solids do
-                # not coincide in the overlap.
-                if i % 2:
-                    if z:
-                        z *= .91
-                    else:
-                        lateral *= .91
-                yield bar(stock_id, [point(station, lateral, z),
-                                     point(station + stock, lateral, z)])
+        for lane, (lateral, z) in enumerate(lanes):
+            # Stagger neighbouring lanes around the indicated splice station.
+            stagger = (-.10, .10)[lane % 2]
+            centers = [station + stagger for station in splices]
+            starts = [0, *(center - LAP / 2 for center in centers)]
+            ends = [*(center + LAP / 2 for center in centers), length]
+            for i, (a, b) in enumerate(zip(starts, ends)):
+                # Offset alternate pieces within the section to keep the
+                # actual solids distinct in the overlapping length.
+                shift_z = z * .91 if i % 2 else z
+                shift_lateral = lateral * .91 if i % 2 and not z else lateral
+                yield bar(stock_id, [point(a, shift_lateral, shift_z),
+                                     point(b, shift_lateral, shift_z)])
         for end_station, inward in ((0, 1), (length, length - 1)):
             for lateral in (-.194, -.065, .065, .194):
                 yield bar("3", [point(inward, lateral, -.195),
@@ -226,6 +231,8 @@ def main():
     payload = {"plan": "BG_5_BP_FU_XX_001_P-01", "mass": 1015.63,
                "modelMass": round(sum(record["modelMass"] for record in records.values()), 2),
                "cover": COVER, "lap": LAP, "maxLength": MAX_LENGTH,
+               "grid": {"x": [["B",7],["C",8.07],["D",10],["E",11.5],["F",13],["G",14.93],["H",16]],
+                        "y": [["3",-10],["4",-7.5],["5",-5],["6",-2.5],["7",0]]},
                "positions": records, "elements": elements}
     (args.static / "bewehrung.json").write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
