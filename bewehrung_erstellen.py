@@ -1,7 +1,7 @@
 """Build the Rhino reinforcement model and matching viewer geometry from plan P-01."""
 import argparse
 from collections import Counter, defaultdict
-from math import atan2, cos, dist, pi, sin, sqrt
+from math import atan2, ceil, cos, dist, pi, sin, sqrt
 import json
 from pathlib import Path
 
@@ -14,6 +14,12 @@ POSITIONS = {
     "3": {"diameter": 12, "count": 40, "length": 2.39, "mass": 84.89, "detail": "Endbügel · 100 / 39 / 100 cm", "crop": (2040, 924, 2515, 981)},
     "4": {"diameter": 12, "count": 60, "length": 4.10, "mass": 218.45, "detail": "Längsstab · Schnitt B–B", "crop": (2040, 978, 2515, 1038)},
 }
+COVER = .04
+FIT_MARGIN = .002
+LAP = .30
+MAX_LENGTH = 7.5
+SECTION_WIDTH = .50
+
 COLORS = {"Beton": (163, 164, 153, 255), "Metall": (81, 105, 127, 255),
           "Holz": (174, 112, 52, 255), "Stahlseil": (57, 73, 87, 255)}
 
@@ -40,21 +46,34 @@ def reinforcement(bars):
         side = (-sin(bearing), cos(bearing), 0)
         rise = direction[2]
         up = (-rise * cos(bearing), -rise * sin(bearing), sqrt(1 - rise**2))
-        stock_id, pieces = ("2", 2) if axis == 0 else ("4", 3)
-        stock = POSITIONS[stock_id]["length"]
-        length = stock * pieces - (pieces - 1)  # 1.00 m overlaps per section
-        offset = (span - length) / 2
+        stock_id = "2" if axis == 0 else "4"
+        offset = COVER + FIT_MARGIN + .006
+        length = span - 2 * offset
+        pieces = ceil((length - LAP) / (MAX_LENGTH - LAP))
+        stock = (length + (pieces - 1) * LAP) / pieces
 
         def point(station, lateral, vertical):
             return [round(a + (station + offset)*d + lateral*s + vertical*u, 5)
                     for a, d, s, u in zip(start, direction, side, up)]
 
         def bar(position, points, origin=section):
+            cut = sum(dist(a, b) for a, b in zip(points, points[1:]))
+            radius = POSITIONS[position]["diameter"] / 2000
+            limits = [SECTION_WIDTH / 2 - COVER - radius] * 2
+            for vertex in points:
+                relative = [x - a for x, a in zip(vertex, start)]
+                station, lateral, height = [sum(x*v for x,v in zip(relative, vector))
+                                            for vector in (direction, side, up)]
+                assert COVER + radius - 1e-5 <= station <= span - COVER - radius + 1e-5
+                assert all(abs(value) <= limit + 1e-5
+                           for value, limit in zip((lateral, height), limits))
+            assert cut <= MAX_LENGTH
             return {"position": position, "strip": strip, "source": origin,
-                    "points": points}
+                    "points": points, "length": round(cut, 4),
+                    "group": f"{position}:{cut:.2f}"}
 
-        # 42 cm outside width, 10 mm diameter, 4 cm concrete cover.
-        half = .205
+        # Clear cover is measured to the steel surface, not the centerline.
+        half = SECTION_WIDTH / 2 - COVER - .005 - FIT_MARGIN
         corners = [(-half, -half + .15), (-half, -half), (half, -half), (half, half), (-half, half),
                    (-half, -half), (-half + .15, -half)]
 
@@ -65,25 +84,35 @@ def reinforcement(bars):
                 points = [point(station + lateral, cross_offset, z) for lateral, z in corners]
             return bar("1", points, origin)
 
+        def stirrup_run(start_station, end_station):
+            spacings = ceil((end_station - start_station) / .20)
+            return [stirrup(start_station + i*(end_station-start_station)/spacings)
+                    for i in range(spacings + 1)]
+
         if axis == 0:
-            for i in range(51):
-                yield stirrup((length - 10) / 2 + .20*i)
+            yield from stirrup_run(0, length)
             crossings = [(x - start[0])/direction[0] - offset for x in (10, 13)]
-            for station in (.23, *crossings, length - .23):
+            for station in (.28, *crossings, length - .28):
                 for shift in (-.15, -.05, .05, .15):
                     yield stirrup(station + shift, "Detail 1")
                     yield stirrup(station, "Detail 1", shift)
         else:
-            for center in (length / 4, 3 * length / 4):
-                for i in range(-11, 12):
-                    yield stirrup(center + i * .20)
+            yield from stirrup_run(.23, length / 2 - .23)
+            yield from stirrup_run(length / 2 + .23, length - .23)
 
         lanes = [(lateral, z) for z in (-.194, .194)
                  for lateral in (-.194, -.065, .065, .194)]
         lanes += [(-.194, 0), (.194, 0)]
         for i in range(pieces):
-            station = i * (stock - 1)
+            station = i * (stock - LAP)
             for lateral, z in lanes:
+                # Offset alternate pieces inside the cage so their solids do
+                # not coincide in the overlap.
+                if i % 2:
+                    if z:
+                        z *= .91
+                    else:
+                        lateral *= .91
                 yield bar(stock_id, [point(station, lateral, z),
                                      point(station + stock, lateral, z)])
         for end_station, inward in ((0, 1), (length, length - 1)):
@@ -125,7 +154,8 @@ def add_rebar_mesh(model, item, layer, material):
     attrs.MaterialSource = rhino.ObjectMaterialSource.MaterialFromObject
     attrs.Name = item["id"]
     for name, value in {"Plan": "BG_5_BP_FU_XX_001_P-01", "Position": item["position"],
-                        "Fundamentstreifen": item["strip"], "Planbezug": item["source"]}.items():
+                        "Fundamentstreifen": item["strip"], "Planbezug": item["source"],
+                        "Modelllaenge_m": str(item["length"]), "Typgruppe": item["group"]}.items():
         attrs.SetUserString(name, value)
     model.Objects.AddMesh(mesh, attrs)
 
@@ -146,7 +176,7 @@ def main():
         p = item["position"]
         counts[p] += 1
         item["id"] = f"P{p}-{counts[p]:03}"
-    assert counts == {p: spec["count"] for p, spec in POSITIONS.items()}
+    assert set(counts) == set(POSITIONS)
 
     materials = {}
     for key, color in {**COLORS, "Betonstahl": (108, 39, 67, 255)}.items():
@@ -180,8 +210,22 @@ def main():
         for p, spec in POSITIONS.items():
             page.get_pixmap(matrix=pymupdf.Matrix(2.2, 2.2),
                             clip=pymupdf.Rect(spec["crop"])).save(args.static / f"position-{p}.png")
+        for name, rect in {
+            "schnitt-a": (235, 1780, 1440, 2290),
+            "schnitt-b": (1540, 1780, 2800, 2280),
+            "detail-1": (2090, 1360, 2370, 1680),
+        }.items():
+            page.get_pixmap(matrix=pymupdf.Matrix(1.3, 1.3),
+                            clip=pymupdf.Rect(rect)).save(args.static / f"{name}.png")
     records = {p: {k: v for k, v in spec.items() if k != "crop"} for p, spec in POSITIONS.items()}
+    for position, record in records.items():
+        record["modelCount"] = counts[position]
+        record["modelMass"] = round(sum(
+            item["length"] * 7850 * pi * (record["diameter"] / 2000)**2
+            for item in elements if item["position"] == position), 2)
     payload = {"plan": "BG_5_BP_FU_XX_001_P-01", "mass": 1015.63,
+               "modelMass": round(sum(record["modelMass"] for record in records.values()), 2),
+               "cover": COVER, "lap": LAP, "maxLength": MAX_LENGTH,
                "positions": records, "elements": elements}
     (args.static / "bewehrung.json").write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

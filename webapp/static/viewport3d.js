@@ -16,6 +16,7 @@ const loader = new GLTFLoader();
 
 let mode = 'combined';
 let active = null;
+let activeGroup = null;
 let plan;
 let planUrl;
 let viewer;
@@ -36,12 +37,13 @@ function renderMasses(data) {
   data.bars.forEach(bar => { sums[bar.material_etappe03] += grossMass(bar); });
   byId('structureMass').innerHTML = Object.entries(sums)
     .map(([key, value]) => `<dt>${titles[key]}</dt><dd>${fmt(value, 0)} kg</dd>`).join('')
-    + `<dt>Bewehrung laut Plan</dt><dd>${fmt(plan.mass)} kg</dd>
-       <dt><strong>Gesamt</strong></dt><dd><strong>${fmt(Object.values(sums).reduce((a,b)=>a+b,plan.mass),0)} kg</strong></dd>`;
+    + `<dt>Bewehrung im Modell</dt><dd>${fmt(plan.modelMass)} kg</dd>
+       <dt><strong>Gesamt</strong></dt><dd><strong>${fmt(Object.values(sums).reduce((a,b)=>a+b,plan.modelMass),0)} kg</strong></dd>`;
 }
 
 function selection(position, item = null) {
   active = position;
+  activeGroup = item?.group ?? null;
   const row = plan?.positions[position];
   const selected = byId('selection');
   document.querySelectorAll('[data-position]').forEach(button => {
@@ -56,14 +58,22 @@ function selection(position, item = null) {
     return;
   }
   byId('detailTitle').textContent = 'Planposition ' + position;
-  byId('detailText').textContent = row.detail + (item ? ' · ' + item.source + ' · ' + item.id : '');
-  byId('detailImage').src = './position-' + position + '.png';
-  selected.textContent = `Position ${position} · ${fmt(row.mass / row.count)} kg je Stab · ${fmt(row.mass)} kg gesamt`;
+  byId('detailText').textContent = row.detail + (item ? ' · Modellstab ' + item.id : '');
+  const section = { 'A-A': 'schnitt-a', 'B-B': 'schnitt-b', 'Detail 1': 'detail-1' }[item?.source];
+  const url = './' + (section ?? 'position-' + position) + '.png';
+  byId('detailImage').src = byId('detailOriginal').href = url;
+  const barMass = item && item.length * 7850 * Math.PI * (row.diameter / 2000)**2;
+  const equivalents = item && plan.elements.filter(element => element.group === item.group).length;
+  selected.textContent = item
+    ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} Stäbe gleichen Typs`
+    : `Position ${position} · ${row.modelCount} Modellstäbe · ca. ${fmt(row.modelMass)} kg im Modell`;
   if (!detail.open) detail.show();
 }
 
 function renderPlan() {
   byId('rebarMass').textContent = fmt(plan.mass);
+  byId('modelSpec').textContent =
+    `Modell: ${plan.elements.length} Stäbe · ca. ${fmt(plan.modelMass)} kg · mindestens ${fmt(plan.cover*100,0)} cm Betondeckung · ${fmt(plan.lap*100,0)} cm Längsüberdeckung · max. ${fmt(plan.maxLength,1)} m je Stab`;
   byId('positions').innerHTML = Object.entries(plan.positions).map(([id, p]) =>
     `<tr><th scope="row"><button type="button" data-position="${id}" aria-pressed="false">${id}</button></th>
        <td>${p.diameter}</td><td>${p.count}</td><td>${fmt(p.length)}</td><td>${fmt(p.mass)}</td></tr>`).join('');
@@ -104,10 +114,11 @@ function createViewer(data) {
     Stahlseil: new THREE.LineBasicMaterial({color: 0x394957}),
   };
   const transparentConcrete = new THREE.MeshStandardMaterial({
-    color: 0xa8aca1, roughness: .94, opacity: .24, transparent: true, depthWrite: false,
+    color: 0xa8aca1, roughness: .94, opacity: .56, transparent: true, depthWrite: false,
   });
   const ordinary = new THREE.MeshBasicMaterial({ color: 0x811649 });
   const highlighted = new THREE.MeshBasicMaterial({ color: 0xff1495 });
+  const muted = new THREE.MeshBasicMaterial({ color: 0x7b8584, transparent: true, opacity: .40, depthWrite: false });
   const bars = new THREE.Group();
   scene.add(bars);
   for (const item of plan.elements) {
@@ -141,9 +152,10 @@ function createViewer(data) {
         ? transparentConcrete : materials[material];
     }
     for (const mesh of bars.children) {
-      mesh.material = active === mesh.userData.rebar.position ? highlighted : ordinary;
-      // Increase apparent size slightly for selected thin bars at overview scale.
-      mesh.renderOrder = active === mesh.userData.rebar.position ? 2 : 0;
+      const item = mesh.userData.rebar;
+      const matches = activeGroup !== null ? item.group === activeGroup : item.position === active;
+      mesh.material = matches ? highlighted : active ? muted : ordinary;
+      mesh.renderOrder = matches ? 2 : 0;
     }
   }
 

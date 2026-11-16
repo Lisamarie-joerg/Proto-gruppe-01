@@ -30,7 +30,10 @@
       <dialog id="detail" aria-labelledby="detailTitle">
         <div class="detail-head"><h2 id="detailTitle"></h2><form method="dialog"><button aria-label="Detailfenster schließen">×</button></form></div>
         <p id="detailText"></p>
-        <img id="detailImage" alt="Originalausschnitt der Stabliste">
+        <a id="detailOriginal" target="_blank" rel="noopener">
+          <img id="detailImage" alt="Originalausschnitt aus dem PDF-Bewehrungsplan">
+        </a>
+        <a href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Vollständigen Originalplan öffnen ↗</a>
       </dialog>
     </div>
     <div class="viewer-footer">
@@ -46,6 +49,7 @@
       <p class="project">Mengen und Gewichte</p>
       <h2>Bewehrung laut Plan</h2>
       <p class="weight"><strong id="rebarMass">1.015,63</strong> kg</p>
+      <p class="note" id="modelSpec"></p>
       <p id="selection" aria-live="polite">Stab im Modell oder Position in der Liste auswählen.</p>
       <table>
         <thead><tr><th>Pos.</th><th>Ø mm</th><th>Stk.</th><th>m/Stk.</th><th>kg ges.</th></tr></thead>
@@ -55,7 +59,7 @@
         <dl id="structureMass"></dl>
         <p class="note">Aus Modellvolumen und Dichte berechnet. Beton 2.400, Stahl 7.850 und Holz 450 kg/m³. Die tatsächliche Holzrohdichte hängt von Holzart und Feuchte ab.</p>
       </details>
-      <p class="note">Die Stabformen folgen den Schnitten A–A und B–B sowie Detail 1. Einbaulagen und Biegeradien sind aus dem 2D-Plan angenähert.</p>
+      <p class="note">Die Stabformen folgen den Schnitten A–A und B–B sowie Detail 1. Die modellierten Zuschnitte und Stöße folgen den oben angegebenen Vorgaben. Die Tabelle enthält die unveränderten Planwerte.</p>
     </section>
     <section class="panel">
       <h2>Eigene Dateien öffnen</h2>

@@ -226,3 +226,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Website auf Tragwerk, Bewehrung und Gewicht umgebaut. Materialzuordnung gegen GLB und RFEM-Daten geprüft: 47 Betonfundamente, 12 Stahlstützen, 502 Dachkörper aus Holz.
 - In Edge Materialansicht und freigestellte Bewehrung geprüft. Klick auf einen Längsstab öffnete Detailposition 2 und markierte die Positionsgruppe pink. Drag-and-drop für eigene GLB-/PDF-Dateien ergänzt.
 - ZIP mit der aktuellen Website aktualisiert. Rhino-Modell separat bereitgestellt.
+
+## 16.11.2026 – Betondeckung, Stöße und Originaldetails
+
+- Beton in der kombinierten Ansicht deutlicher dargestellt. Stabwahl markiert gleiche Planposition und modellierte Zuschnittlänge pink, andere Stäbe grau. Originalausschnitte A–A, B–B und Detail 1 direkt aus dem PDF ergänzt.
+- Längsstäbe mit 30 cm Überdeckung modelliert und seitlich versetzt. Gegen die Betonflächen des GLB bis zu 25 mm entlang der Stäbe geprüft: kleinster geprüfter Abstand zur Stahloberfläche 41,66 mm, längster Stab 5,1044 m.
+- 470 Stäbe, modellierte Stahlmasse 902,86 kg. Originalwerte bleiben in der Stabliste sichtbar. Rhino-Modell und ZIP aktualisiert.
