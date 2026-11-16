@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Embodied Carbon – Pavillon Stockerau</title>
-<script src="/static/plotly.min.js"></script>
+<script src="./plotly.min.js"></script>
 <style>
 :root {
   --bg: #f4f6f9; --panel: #ffffff; --ink: #1e293b; --muted: #64748b;
@@ -38,7 +38,17 @@ button.active { background: var(--accent); border-color: var(--accent);
 button.mat.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
 .chip { display: inline-block; width: 10px; height: 10px;
         border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-#viewport { width: 100%; height: 100%; }
+#viewport, #viewport3d { width: 100%; height: 100%; }
+#viewport3d canvas { display: block; }
+.hidden { display: none !important; }
+#glbHint { position: absolute; inset: 0; display: flex; align-items: center;
+           justify-content: center; color: var(--muted); font-size: 13px;
+           background: var(--panel); border-radius: 6px; z-index: 5; }
+.layerlist { max-height: 240px; overflow-y: auto; border: 1px solid var(--line);
+             border-radius: 7px; padding: 4px 6px; background: #fff; }
+.layerlist label { display: flex; align-items: center; gap: 6px;
+                   padding: 2px 0; cursor: pointer; font-size: 11.5px; }
+.layerlist .cnt { color: var(--muted); margin-left: auto; font-size: 10.5px; }
 table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
 th, td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
 th { color: var(--muted); font-weight: 600; text-align: right; }
@@ -51,6 +61,16 @@ tr.gesamt td { font-weight: 700; border-top: 2px solid var(--ink); }
 footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
          border-top: 1px solid var(--line); background: #fff; }
 .scroll { max-height: 220px; overflow-y: auto; }
+.partinfo-row { display: flex; justify-content: space-between; gap: 8px;
+                font-size: 12px; padding: 3px 0;
+                border-bottom: 1px solid var(--line); }
+.partinfo-row .v { font-weight: 600; text-align: right; }
+#partInfo { min-height: 60px; }
+#rebarControls { margin: 6px; }
+#rebarControls button[aria-pressed="true"] { background: #173451; color: white; }
+.rebar-table { width: 100%; margin-top: 12px; text-align: right; }
+.rebar-table caption { text-align: left; font-weight: 600; }
+.rebar-table tr.selected { background: #ffebbf; }
 </style>
 </head>
 <body>
@@ -66,6 +86,18 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
 </header>
 <main>
   <div class="panel" id="controls">
+    <h2>Ansicht</h2>
+    <div class="btngroup" id="viewModeBtns">
+      <button data-vm="rhino" class="active">Rhino-Modell (3D)</button>
+      <button data-vm="plotly">CO₂-Punktwolke</button>
+    </div>
+    <div id="colorModeSection">
+      <h2>Farbmodus (3D)</h2>
+      <div class="btngroup" id="colorModeBtns">
+        <button data-cm="rhino" class="active">Rhino-Material</button>
+        <button data-cm="co2">nach CO₂e</button>
+      </div>
+    </div>
     <h2>Datensatz</h2>
     <div class="btngroup" id="datasetBtns">
       <button data-ds="standard" class="active">Standard</button>
@@ -81,61 +113,154 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
     <div class="btngroup" id="matBtns">
       <button data-mat="Baustahl" class="mat active"><span class="chip" style="background:#94a3b8"></span>Baustahl</button>
       <button data-mat="Beton" class="mat active"><span class="chip" style="background:#cbd5e1"></span>Beton</button>
-      <button data-mat="Bewehrung" class="mat active"><span class="chip" style="background:#78716c"></span>Bewehrung*</button>
+      <button data-mat="Bewehrung" class="mat active"><span class="chip" style="background:#78716c"></span>Bewehrung</button>
     </div>
-    <h2>Ansicht</h2>
+    <div id="layerSection">
+      <h2>Layer (Rhino-Modell)</h2>
+      <div class="btngroup" style="margin-bottom:6px">
+        <button id="layersAll">Alle ein</button>
+        <button id="layersNone">Alle aus</button>
+      </div>
+      <div class="layerlist" id="layerList"></div>
+    </div>
+    <h2>Kamera</h2>
     <div class="btngroup" id="viewBtns">
       <button data-view="persp">Perspektive</button>
       <button data-view="top">Draufsicht</button>
+      <button data-view="front">Vorne</button>
       <button data-view="side">Seite</button>
     </div>
     <div class="btngroup" style="margin-top:6px">
-      <button id="axesBtn">Stabachsen einblenden</button>
+      <button id="axesBtn">Stabachsen einblenden (Plotly)</button>
     </div>
-    <p class="note">*Bewehrung: pauschal 85 kg/m³ Betonstahl, sitzt im Beton (kein eigener Körper).</p>
-    <p class="note">Farbe = CO₂e je Stab (grün → rot). Punktgröße = Querschnittsfläche.</p>
+
+    <p class="note">3D-Ansicht: Bauteil anklicken für Material, Gewicht &amp; CO₂e; Layer per Checkbox ein/ausschalten.</p>
+    <p class="note">Plotly-Ansicht: Farbe = CO₂e je Stab (grün → rot), Punktgröße = Querschnittsfläche.</p>
   </div>
-  <div class="panel" style="padding:4px"><div id="viewport"></div></div>
+  <div class="panel" style="padding:4px; position:relative; overflow:hidden">
+    <div id="rebarControls" class="btngroup" aria-label="Ansicht des Tragwerks">
+      <button data-rebar-view="structure" aria-pressed="true">Tragwerk</button>
+      <button data-rebar-view="rebar" aria-pressed="false">Nur Bewehrung</button>
+      <button data-rebar-view="combined" aria-pressed="false">Bewehrung im Tragwerk</button>
+      <button id="resetFoundation">Gesamtansicht</button>
+    </div>
+    <div id="viewport3d"></div>
+    <p class="note" id="modelDimensions"></p>
+    <div id="viewport" class="hidden"></div>
+    <div id="glbHint">Lade Rhino-Modell (model.glb) …</div>
+  </div>
   <div class="panel">
+    <h2>Bauteil-Info (3D-Klick)</h2>
+    <div id="partInfo"><p class="note">Bauteil im 3D-Viewport anklicken …</p></div>
+    <section aria-labelledby="planTitle">
+      <h2 id="planTitle">Bewehrungsplan · Streifenfundamente</h2>
+      <p class="note">50 × 50 cm · C25/30 · B550B · Betondeckung 4 cm</p>
+      <div id="foundationInfo" aria-live="polite"></div>
+      <p><a href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Originalplan öffnen</a></p>
+      <details id="planDetail"><summary>Biegeformen im Plan</summary>
+        <a href="./stabliste.png" target="_blank" rel="noopener"><img src="./stabliste.png" style="width:100%" alt="Originalausschnitt der Stabliste mit Biegeformen"></a>
+      </details>
+      <table class="rebar-table">
+        <caption>Zuschnittliste laut Plan</caption>
+        <thead><tr><th>Pos.</th><th>Ø mm</th><th>Stk.</th><th>m/Stk.</th><th>kg ges.</th></tr></thead>
+        <tbody id="rebarRows"></tbody>
+        <tfoot><tr><th colspan="4" scope="row">Gesamt laut Plan</th><td id="rebarMassTotal"></td></tr></tfoot>
+      </table>
+      <p class="note">Die CO₂e-Summe verwendet die Planmasse. Einzelwerte verteilen diese proportional zum Betonvolumen.</p>
+    </section>
     <h2>Auswahl</h2>
     <div id="kpiBox"></div>
     <h2>Materialgruppen (berechnet)</h2>
     <table id="groupTable"></table>
-    <h2>Tabellen aus Excel (alle Dateien)</h2>
+    <h2>Archivierte Excel-Auswertungen</h2>
+    <p class="note">Vorheriger Bilanzstand mit pauschaler Bewehrungsmasse.</p>
     <div class="scroll" id="xlAll"></div>
     <p class="note" id="xlHint"></p>
   </div>
 </main>
 <footer id="footer"></footer>
+<script type="importmap">
+{ "imports": { "three": "./three/three.module.js",
+               "three/addons/": "./three/addons/" } }
+</script>
 <script>
-const state = { dataset: 'standard', module: 'A1-A3',
+const state = { dataset: 'standard', module: 'A1-A3', view: 'rhino',
+  colorMode: 'rhino',
   mats: { Baustahl: true, Beton: true, Bewehrung: true }, axes: false };
 let DATA = null;
 let BASELINE = 0;   // Standard A1-A3 Gesamtsumme (Referenz)
 
+// Bruecke zum Three.js-Modul-Script (state/DATA gemeinsam nutzen)
+window.__appState = state;
+window.__barValue = barValue;
+window.__rhinoSetView = null;   // wird vom Modul-Script gesetzt
+window.__rhinoResize = null;
+
 const VIEWS = {
   persp: { eye: { x: 1.7, y: -1.7, z: 1.15 }, up: { x: 0, y: 0, z: 1 } },
   top:   { eye: { x: 0, y: -0.001, z: 2.7 },  up: { x: 0, y: 1, z: 0 } },
+  front: { eye: { x: 0, y: -2.7, z: 0.12 },   up: { x: 0, y: 0, z: 1 } },
   side:  { eye: { x: 2.7, y: 0, z: 0.12 },    up: { x: 0, y: 0, z: 1 } },
 };
 const fmt = (x, d = 1) =>
   Number(x).toLocaleString('de-DE', { maximumFractionDigits: d });
 
-function co2eOf(b) {
-  // CO2e des Stabs fuer aktuelle Auswahl, aufgeteilt in Material/Bewehrung
-  const ds = DATA.datasets[state.dataset];
-  const total = b.co2e[state.dataset][state.module];
-  let rebar = 0;
-  if (b.gruppe === 'Beton') {
-    rebar = b.V_m3 * ds.rebar_ratio_kg_m3 * ds.betonstahl.gwp[state.module];
+const rebarPositions = {
+  '1': { diameter: 10, count: 341, length: 1.98, mass: 416.59 },
+  '2': { diameter: 12, count: 60, length: 5.55, mass: 295.70 },
+  '3': { diameter: 12, count: 40, length: 2.39, mass: 84.89 },
+  '4': { diameter: 12, count: 60, length: 4.10, mass: 218.45 },
+};
+const planMass = Object.values(rebarPositions).reduce((sum, row) => sum + Math.round(row.mass * 100), 0) / 100;
+let concreteVolume = 0;
+window.__rebarPlan = { positions: rebarPositions, mass: planMass };
+function rebarMass(bar) {
+  return bar.gruppe === 'Beton' && concreteVolume > 0
+    ? bar.V_m3 / concreteVolume * planMass : 0;
+}
+window.__rebarMass = rebarMass;
+const fmtTwo = value => value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('rebarRows').innerHTML = Object.entries(rebarPositions)
+  .map(([id, row]) => `<tr><th scope="row"><button type="button" data-position="${id}" aria-pressed="false">${id}</button></th>
+    <td>${row.diameter}</td><td>${row.count}</td><td>${fmtTwo(row.length)}</td><td>${fmtTwo(row.mass)}</td></tr>`).join('');
+document.getElementById('rebarMassTotal').textContent = fmtTwo(planMass);
+
+function co2eOf(b, dataset = state.dataset, module = state.module) {
+  if (b.gruppe !== 'Beton') {
+    const total = b.co2e[dataset][module];
+    return { total, rebar: 0, pure: total };
   }
-  return { total, rebar, pure: total - rebar };
+  const ds = DATA.datasets[dataset];
+  const pure = b.V_m3 * ds.beton.gwp[module];
+  const rebar = rebarMass(b) * ds.betonstahl.gwp[module];
+  return { total: pure + rebar, rebar, pure };
 }
 function barValue(b) {   // angezeigter Wert (Beruecksichtigung Bewehrung-Toggle)
   const c = co2eOf(b);
   return b.gruppe === 'Beton'
     ? (state.mats.Bewehrung ? c.total : c.pure)
     : c.total;
+}
+
+function showView(mode) {
+  // Umschalten zwischen Rhino-3D-Modell und Plotly-Punktwolke
+  state.view = mode;
+  document.querySelectorAll('#viewModeBtns button').forEach(b =>
+    b.classList.toggle('active', b.dataset.vm === mode));
+  const isRhino = mode === 'rhino';
+  document.getElementById('viewport3d').classList.toggle('hidden', !isRhino);
+  document.getElementById('viewport').classList.toggle('hidden', isRhino);
+  document.getElementById('colorModeSection').style.display =
+    isRhino ? '' : 'none';
+  document.getElementById('rebarControls').style.display = isRhino ? '' : 'none';
+  document.getElementById('modelDimensions').hidden = !isRhino;
+  document.getElementById('layerSection').style.display =
+    isRhino ? '' : 'none';
+  if (isRhino) {
+    if (window.__rhinoResize) window.__rhinoResize();
+  } else {
+    render();   // Plotly braucht sichtbaren Container fuer die Groesse
+  }
 }
 
 function buildTraces() {
@@ -207,6 +332,7 @@ function render() {
   Plotly.react('viewport', traces, layout,
                { displaylogo: false, responsive: true });
   updateSummary();
+  document.dispatchEvent(new Event('appchange'));
 }
 
 function updateSummary() {
@@ -230,10 +356,11 @@ function updateSummary() {
       G.Beton.co2e += c.pure; total += c.pure;
     }
     if (b.gruppe === 'Beton' && state.mats.Bewehrung) {
-      G.Bewehrung.n++; G.Bewehrung.m += b.V_m3 * ds.rebar_ratio_kg_m3;
+      G.Bewehrung.m += rebarMass(b);
       G.Bewehrung.co2e += c.rebar; total += c.rebar;
     }
   }
+  if (state.mats.Bewehrung) G.Bewehrung.n = Object.values(rebarPositions).reduce((n, row) => n + row.count, 0);
   document.getElementById('totalVal').textContent =
     fmt(total, total >= 1000 ? 0 : 1) + ' kg CO₂e';
   document.getElementById('totalLbl').textContent =
@@ -255,7 +382,7 @@ function updateSummary() {
     <div class="kpi"><span>Betonstahl (GWP)</span>
       <span class="v">${fmt(ds.betonstahl.gwp[state.module], 3)} kg/kg</span></div>`;
   const rows = [G.Baustahl, G.Beton, G.Bewehrung];
-  const names = ['Baustahl', 'Beton', 'Bewehrung (pauschal)'];
+  const names = ['Baustahl', 'Beton', 'Bewehrung (Plan)'];
   let html = '<tr><th>Materialgruppe</th><th>Stäbe</th>' +
              '<th>Masse</th><th>CO₂e (kg)</th><th>Anteil</th></tr>';
   rows.forEach((g, i) => {
@@ -288,7 +415,7 @@ function excelTable(t) {
 
 function init() {
   BASELINE = DATA.bars.reduce(
-    (s, b) => s + b.co2e.standard['A1-A3'], 0);
+    (s, b) => s + co2eOf(b, 'standard', 'A1-A3').total, 0);
   const reihenfolge = ['materialgruppen', 'querschnitte',
                        'oekobaudat', 'uebersicht',
                        'querschnitt_volumen', 'profil_uebersicht',
@@ -336,10 +463,34 @@ function init() {
     btn.classList.toggle('active', state.mats[m]);
     render();
   });
+  // Ansicht: Rhino-3D vs Plotly-Punktwolke
+  document.getElementById('viewModeBtns')
+    .addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      showView(btn.dataset.vm);
+    });
+  // Farbmodus (3D)
+  document.getElementById('colorModeBtns')
+    .addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#colorModeBtns button')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.colorMode = btn.dataset.cm;
+      document.dispatchEvent(new Event('appchange'));
+    });
+  // Kamera-Presets: je nach Ansicht Plotly oder Three.js
   document.getElementById('viewBtns').addEventListener('click', e => {
     const btn = e.target.closest('button');
     if (!btn) return;
-    Plotly.relayout('viewport', { 'scene.camera': VIEWS[btn.dataset.view] });
+    const v = btn.dataset.view;
+    if (state.view === 'plotly') {
+      Plotly.relayout('viewport', { 'scene.camera': VIEWS[v] });
+    } else if (window.__rhinoSetView) {
+      window.__rhinoSetView(v);
+    }
   });
   document.getElementById('axesBtn').addEventListener('click', e => {
     state.axes = !state.axes;
@@ -347,11 +498,21 @@ function init() {
     render();
   });
   render();
+  showView('rhino');
 }
 
-fetch('/api/data')
-  .then(r => r.json())
-  .then(d => { DATA = d; init(); })
+fetch('./data.json')
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(d => {
+    DATA = d;
+    concreteVolume = d.bars.filter(b => b.gruppe === 'Beton').reduce((sum, b) => sum + b.V_m3, 0);
+    window.__appData = d;
+    document.dispatchEvent(new Event('appdata'));
+    init();
+  })
   .catch(err => {
     document.getElementById('viewport').innerHTML =
       '<p style="padding:20px">Daten konnten nicht geladen werden: ' +
@@ -360,6 +521,7 @@ fetch('/api/data')
 
 
 </script>
+<script type="module" src="./viewport3d.js"></script>
 
 </body>
 </html>

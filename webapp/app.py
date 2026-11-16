@@ -13,7 +13,7 @@ import json
 import os
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,7 @@ app = FastAPI(title="Embodied Carbon – Pavillon Stockerau")
 
 @app.get("/")
 def index():
-    return FileResponse(os.path.join(STATIC, "index.html"))
+    return RedirectResponse(url="./static/index.html")
 
 
 @app.get("/api/data")

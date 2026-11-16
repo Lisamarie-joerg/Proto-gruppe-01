@@ -192,3 +192,24 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 Wie habt ihr mit dem Agenten gearbeitet, und was würdet ihr der nächsten Gruppe mitgeben?
 
 Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/Pfade, Längen) und die Ergebnisse gegen das Modell geprüft (Objektsummen). Wir haben die Zahlen verifiziert und die Excel-Tabelle nur noch formatiert. Tipp für die nächste Gruppe: Modelldatei in `Data/` liegen lassen und den Agenten direkt darauf loslassen – die Zählung über die Stabachsen (Layer „MemberAxes") ist am schnellsten und verlässlichsten.
+
+## 16.11.2026 – Bewehrungsplan und Website
+
+- Bestandsaufnahme: Website und Abgabe_20.11 gesichtet. Die gleichnamigen Rhino-Dateien haben unterschiedliche Prüfsummen.
+- Quellen geprüft: Streifenfundamentplan zeigt vier Stabpositionen mit 1.015,63 kg Gesamtmasse laut Stabliste. Im RFEM-Modell sind keine separat benannten Bewehrungslayer vorhanden.
+- Webapp bearbeitet: GLB-Linien in Filter und Auswahl aufgenommen, Kamera auf Rhino-Z ausgerichtet, Modellabmessungen ergänzt. Fundamentfokus, schematische 3D-Bewehrung, transparente Überlagerung, PDF und Zuschnittliste ergänzt.
+- Gruppenzugriff vorbereitet: Webdateien verwenden relative Pfade und können mit einem einfachen lokalen HTTP-Server bereitgestellt werden. Startanleitung hinzugefügt.
+- Offen: Sichtprüfung im Browser, Zuordnung aller planmäßigen Stäbe, planbasierte CO₂e-Mengen und GitHub-Abgleich. OneDrive-Projektordner meldet beim Schreibversuch Zugriff verweigert.
+- Prüfungen: Alle 47 Betonachsen der Webdaten stimmen auf Millimeter gerundet mit Abgabe_20.11 überein. Planmassen, Planausschnitt, lokale Asset-Pfade und JavaScript-Syntax geprüft. Die Testumgebung hat die lokale Socket-Verbindung verweigert.
+
+## 16.11.2026 – Planpositionen im Modell und CO₂e
+
+- Schnitte A–A und B–B sowie Detail 1 ausgewertet. Alle vier Positionen als anwählbare 3D-Stäbe in fünf Fundamentstreifen ergänzt. Lage, Übergreifungen im Detail und Biegeradien bleiben angenähert.
+- Die Stabliste und die Bilanz beziehen ihre Mengen aus denselben Planpositionen. Die Gesamtbilanz verwendet 1.015,63 kg, Einzelwerte verteilen die Planmasse proportional zum Betonvolumen. Archivierte Excel-Ergebnisse sind als vorheriger Bilanzstand gekennzeichnet.
+- Automatisch geprüft: 501 erzeugte Stäbe, vier korrekte Positionsstückzahlen, endliche 3D-Koordinaten und Bewehrungs-CO₂e für beide Datensätze in A1–A3, C und D.
+- GitHub-Ziel geprüft: Die konfigurierte Origin ist öffentlich und der Browser meldet keinen angemeldeten Account. Git kann den GitHub-Host aus der Sitzung nicht auflösen. Der Upload ist offen.
+
+## 16.11.2026 – Startdatei und GitHub-Desktop-Stand
+
+- Windows-Startdatei für den lokalen Website-Aufruf hinzugefügt und ZIP neu geprüft.
+- Separaten Git-Arbeitsbranch vom lokal bekannten Stand der Gruppen-Origin vorbereitet. Die veröffentlichte Version steht noch aus.
