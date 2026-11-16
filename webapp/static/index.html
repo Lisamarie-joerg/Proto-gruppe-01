@@ -67,6 +67,8 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
 .partinfo-row .v { font-weight: 600; text-align: right; }
 #partInfo { min-height: 60px; }
 #rebarControls { margin: 6px; }
+#materialKey { margin: 8px; font-size: 12px; gap: 10px; }
+#materialKey .chip { display: inline-block; margin-right: 4px; }
 #rebarControls button[aria-pressed="true"] { background: #173451; color: white; }
 .rebar-table { width: 100%; margin-top: 12px; text-align: right; }
 .rebar-table caption { text-align: left; font-weight: 600; }
@@ -76,7 +78,7 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
 <body>
 <header>
   <div>
-    <h1>🏗️ Pavillon Stockerau – Embodied Carbon</h1>
+    <h1>Pavillon Stockerau · Material und Bewehrung</h1>
     <div class="sub">RH7 Stockerau (RFEM-Export) · 736 Stäbe · 686,377 m · ÖKOBAU.DAT (A1–A3 / C / D)</div>
   </div>
   <div class="total">
@@ -94,7 +96,7 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
     <div id="colorModeSection">
       <h2>Farbmodus (3D)</h2>
       <div class="btngroup" id="colorModeBtns">
-        <button data-cm="rhino" class="active">Rhino-Material</button>
+        <button data-cm="rhino" class="active">Bauteilmaterial</button>
         <button data-cm="co2">nach CO₂e</button>
       </div>
     </div>
@@ -145,6 +147,12 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
       <button id="resetFoundation">Gesamtansicht</button>
     </div>
     <div id="viewport3d"></div>
+    <div id="materialKey" class="btngroup" aria-label="Bauteilmaterialien">
+      <span><i class="chip" style="background:#a5a9a6"></i>Betonfundamente</span>
+      <span><i class="chip" style="background:#536d82"></i>Stahlstützen</span>
+      <span><i class="chip" style="background:#bd8344"></i>Holzdach</span>
+      <span><i class="chip" style="background:#34495b"></i>Stahlseile</span>
+    </div>
     <p class="note" id="modelDimensions"></p>
     <div id="viewport" class="hidden"></div>
     <div id="glbHint">Lade Rhino-Modell (model.glb) …</div>
@@ -166,7 +174,7 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
         <tbody id="rebarRows"></tbody>
         <tfoot><tr><th colspan="4" scope="row">Gesamt laut Plan</th><td id="rebarMassTotal"></td></tr></tfoot>
       </table>
-      <p class="note">Die CO₂e-Summe verwendet die Planmasse. Einzelwerte verteilen diese proportional zum Betonvolumen.</p>
+      <p class="note">Die CO₂e-Summe verwendet die Planmasse. Einzelwerte verteilen diese proportional zum Betonvolumen. Die CO₂e-Daten übernehmen die bisherige Bilanzannahme für die Dachprofile.</p>
     </section>
     <h2>Auswahl</h2>
     <div id="kpiBox"></div>
@@ -254,6 +262,7 @@ function showView(mode) {
     isRhino ? '' : 'none';
   document.getElementById('rebarControls').style.display = isRhino ? '' : 'none';
   document.getElementById('modelDimensions').hidden = !isRhino;
+  document.getElementById('materialKey').style.display = isRhino ? '' : 'none';
   document.getElementById('layerSection').style.display =
     isRhino ? '' : 'none';
   if (isRhino) {

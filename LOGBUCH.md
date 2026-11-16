@@ -213,3 +213,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 
 - Windows-Startdatei für den lokalen Website-Aufruf hinzugefügt und ZIP neu geprüft.
 - Separaten Git-Arbeitsbranch vom lokal bekannten Stand der Gruppen-Origin vorbereitet. Die veröffentlichte Version steht noch aus.
+
+## 16.11.2026 – Materialdarstellung und Start
+
+- Modellmaterial nach Bauteil-ID zugewiesen: 47 Betonfundamente, 12 Stahlstützen, 502 Holzbauteile und 175 Stahlseile. Materialdarstellung und CO₂e-Bilanzannahmen separat gekennzeichnet.
+- Ein eindeutiger Seitentitel und ein Start auf freiem Port unterscheiden die aktualisierte Website von einer älteren lokalen Instanz.
+- Website-Dateien und ZIP für den genehmigten GitHub-Push vorbereitet.

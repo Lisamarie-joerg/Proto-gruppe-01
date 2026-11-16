@@ -281,6 +281,39 @@ function objectColor(object, t) {
 const unknownMat =
   new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.7 });
 
+const modelMaterials = {
+  Beton: new THREE.MeshStandardMaterial({color: 0xa5a9a6, roughness: .94}),
+  Metall: new THREE.MeshStandardMaterial({color: 0x536d82, roughness: .36, metalness: .42}),
+  Holz: new THREE.MeshStandardMaterial({color: 0xbd8344, roughness: .79}),
+};
+const axisMaterials = {
+  Beton: new THREE.LineBasicMaterial({color: 0x7c8281}),
+  Metall: new THREE.LineBasicMaterial({color: 0x536d82}),
+  Holz: new THREE.LineBasicMaterial({color: 0x966033}),
+  Stahlseil: new THREE.LineBasicMaterial({color: 0x34495b}),
+};
+
+function addSurfaceDetail(material, key, variation) {
+  material.onBeforeCompile = shader => {
+    shader.vertexShader = 'varying vec3 surfacePosition;\n' + shader.vertexShader
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\n surfacePosition = position;');
+    shader.fragmentShader = 'varying vec3 surfacePosition;\n' + shader.fragmentShader
+      .replace('#include <color_fragment>', '#include <color_fragment>\n' + variation);
+  };
+  material.customProgramCacheKey = () => key;
+}
+addSurfaceDetail(modelMaterials.Holz, 'wood-grain', `
+  float waves = sin(surfacePosition.y * 380.0 + surfacePosition.z * 230.0
+    + sin(surfacePosition.x * 10.0 + surfacePosition.y * 19.0) * 2.0);
+  float fineGrain = sin(surfacePosition.z * 1250.0 + surfacePosition.y * 910.0);
+  diffuseColor.rgb *= 0.94 + 0.08 * waves + 0.028 * fineGrain;
+`);
+addSurfaceDetail(modelMaterials.Beton, 'concrete-grain', `
+  vec3 cell = floor(surfacePosition * 280.0);
+  float mottling = fract(sin(dot(cell, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+  diffuseColor.rgb *= 0.91 + 0.15 * mottling;
+`);
+
 /* ---------- Sichtbarkeit: Material-Toggles (Baustahl/Beton) ---------- */
 function updateVisibility() {
   if (!model) return;
@@ -318,7 +351,11 @@ function applyColors() {
     document.getElementById('lgMax').textContent = fmtDE(vmax);
     legend.classList.remove('hidden');
   } else {
-    for (const m of allMeshes) m.material = origMat.get(m.uuid);
+    for (const m of allMeshes) {
+      const part = barByBeam.get(String(m.userData.beamId));
+      const palette = m.isLine ? axisMaterials : modelMaterials;
+      m.material = palette[part?.material_etappe03] || origMat.get(m.uuid);
+    }
     legend.classList.add('hidden');
   }
   refreshHighlight();
@@ -504,6 +541,8 @@ function showPartInfo(mesh) {
   const bar = barByBeam.get(String(mesh.userData.beamId));
   const layerPath = mesh.userData.layer || '';
   const kind = layerPath.includes('MemberAxes') ? 'Stabachse' : 'Stabkörper';
+  const materialName = { Beton: 'Betonfundament', Metall: 'Stahlstütze',
+    Holz: 'Holzdach', Stahlseil: 'Stahlseil' }[bar?.material_etappe03];
   const shortLayer = layerPath.split('::').slice(-2).join('::');
   const head =
     prow('Nr', bar ? bar.nr : '–') +

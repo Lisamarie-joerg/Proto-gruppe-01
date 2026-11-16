@@ -3,14 +3,9 @@
 ## Öffnen
 
 1. ZIP entpacken oder den freigegebenen GitHub-Stand klonen.
-2. Unter Windows mit installiertem Python auf Website-oeffnen.bat doppelklicken. Alternativ im entpackten Ordner in PowerShell starten:
-
-   ```powershell
-   python -m http.server 8501 --bind 127.0.0.1 --directory webapp/static
-   ```
-
-3. Im Browser http://localhost:8501/ öffnen. Die URL gilt auf dem Rechner, auf dem der Befehl läuft. Ein Doppelklick auf index.html verhindert das Laden der Module und Daten.
-4. Zum Beenden im Terminal Strg+C drücken. Falls Port 8501 belegt ist, im Befehl und in der URL beispielsweise 8510 verwenden.
+2. Unter Windows mit installiertem Python auf Website-oeffnen.bat doppelklicken. Alternativ im entpackten Ordner `python website_starten.py` ausführen.
+3. Die Startdatei öffnet die aktualisierte Seite auf einem freien lokalen Port. Falls kein Browserfenster aufgeht, die vollständige Adresse aus dem Terminal kopieren. Das Terminal muss offen bleiben.
+4. Zum Beenden im Terminal Strg+C drücken.
 
 Für die statische Website sind weder Rhino noch FastAPI nötig. Im bestehenden Repo funktioniert auch der FastAPI-Start über webapp_starten.bat bei eingerichteter .venv.
 
