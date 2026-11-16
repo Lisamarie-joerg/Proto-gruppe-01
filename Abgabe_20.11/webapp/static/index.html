@@ -45,7 +45,8 @@
         <a id="detailOriginal" target="_blank" rel="noopener">
           <img id="detailImage" alt="Originalausschnitt aus dem PDF-Bewehrungsplan">
         </a>
-        <a href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Vollständigen Originalplan öffnen ↗</a>
+        <iframe id="detailPdf" title="Original-PDF zur gewählten Position" hidden style="width:100%;height:220px;border:0"></iframe>
+        <a id="detailPlanLink" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Vollständigen Originalplan öffnen ↗</a>
       </dialog>
     </div>
     <div class="viewer-footer">
@@ -57,7 +58,7 @@
     </div>
   </section>
   <aside>
-    <section class="panel">
+    <section class="panel" id="stockPanel">
       <p class="project">Mengen und Gewichte</p>
       <h2>Bewehrung laut Plan</h2>
       <p><a class="download" href="./Stockerau-Bewehrung-Import.3dm" download>3D-Bewehrung für Rhino laden ↓</a></p>
@@ -75,6 +76,12 @@
       </details>
       <p class="note">Die Stabformen folgen den Schnitten A–A und B–B sowie Detail 1. Die modellierten Zuschnitte und Stöße folgen den oben angegebenen Vorgaben. Die Tabelle enthält die unveränderten Planwerte.</p>
     </section>
+    <section class="panel" id="importPanel" hidden>
+      <h2>Importierte Bewehrung</h2>
+      <p id="importSelection" aria-live="polite"></p>
+      <div id="importGroups" class="switch"></div>
+      <p id="importMass" class="note"></p>
+    </section>
     <section class="panel">
       <h2>Eigene Dateien öffnen</h2>
       <div class="drop" id="modelDrop">
@@ -84,6 +91,14 @@
       <div class="drop" id="planDrop">
         <label for="planFile"><strong>Bewehrungsplan ablegen</strong><span>PDF · Vorschau im Browser</span></label>
         <input id="planFile" type="file" accept=".pdf,application/pdf">
+      </div>
+      <div class="drop" id="rebarDrop">
+        <label for="rebarFile"><strong>Bewehrungsdaten zum GLB</strong><span>JSON mit Stabgeometrie, Positionen und optionalen Achsen</span></label>
+        <input id="rebarFile" type="file" accept=".json,application/json">
+      </div>
+      <div class="switch" id="importSettings" hidden>
+        <label><input type="checkbox" id="neutralImport"> Neutral anzeigen</label>
+        <label><input type="checkbox" id="zUpImport"> Z ist oben</label>
       </div>
       <p id="uploadStatus" class="note" role="status">Eigene Dateien bleiben auf deinem Rechner.</p>
       <div class="upload-links">

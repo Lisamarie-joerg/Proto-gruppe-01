@@ -18,6 +18,7 @@ let mode = 'combined';
 let active = null;
 let plan;
 let planUrl;
+let importedPlan;
 let viewer;
 
 async function json(url) {
@@ -43,9 +44,33 @@ function renderMasses(data) {
 
 function selection(position, item = null) {
   active = position;
+  if (viewer?.isCustom()) {
+    viewer.update();
+    document.querySelectorAll('#importGroups button').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.position === position));
+    });
+    const row = importedPlan?.positions[position];
+    byId('importSelection').textContent = position
+      ? ['Position ' + position, item?.id, row && fmt(row.modelMass ?? row.mass) + ' kg'].filter(Boolean).join(' · ')
+      : 'Position im Modell oder in der Liste auswählen.';
+    if (position && planUrl) {
+      byId('detailTitle').textContent = 'Planposition ' + position;
+      byId('detailText').textContent = row?.detail || 'Bewehrungsplan zum importierten Modell';
+      const url = planUrl + (row?.page ? '#page=' + row.page : '');
+      byId('detailImage').parentElement.hidden = true;
+      byId('detailPlanLink').href = url;
+      byId('detailPdf').hidden = false;
+      byId('detailPdf').src = url;
+      if (!detail.open) detail.show();
+    } else if (detail.open) detail.close();
+    return;
+  }
+  byId('detailImage').parentElement.hidden = false;
+  byId('detailPdf').hidden = true;
+  byId('detailPlanLink').href = './bewehrungsplan.pdf';
   const row = plan?.positions[position];
   const selected = byId('selection');
-  document.querySelectorAll('[data-position]').forEach(button => {
+  document.querySelectorAll('#positions [data-position]').forEach(button => {
     const on = position === button.dataset.position;
     button.setAttribute('aria-pressed', String(on));
     button.closest('tr').classList.toggle('selected', on);
@@ -250,20 +275,31 @@ function createViewer(data) {
   const ordinary = new THREE.MeshBasicMaterial({ color: 0x811649 });
   const highlighted = new THREE.MeshBasicMaterial({ color: 0xff1495 });
   const muted = new THREE.MeshBasicMaterial({ color: 0x7b8584, transparent: true, opacity: .40, depthWrite: false });
-  const bars = new THREE.Group();
-  scene.add(bars);
-  for (const item of plan.elements) {
-    const path = new THREE.CurvePath();
-    const points = item.points.map(p => new THREE.Vector3(...p));
-    for (let i = 1; i < points.length; i++) {
-      path.add(new THREE.LineCurve3(points[i-1], points[i]));
+  function makeBars(dataset) {
+    const group = new THREE.Group();
+    for (const item of dataset.elements) {
+      const path = new THREE.CurvePath();
+      const points = item.points.map(p => new THREE.Vector3(...p));
+      for (let i = 1; i < points.length; i++) {
+        path.add(new THREE.LineCurve3(points[i-1], points[i]));
+      }
+      const radius = dataset.positions[item.position].diameter / 2000;
+      const mesh = new THREE.Mesh(new THREE.TubeGeometry(path, (points.length-1)*6, radius, 8), ordinary);
+      mesh.userData.rebar = item;
+      mesh.userData.centerline = points;
+      group.add(mesh);
     }
-    const radius = plan.positions[item.position].diameter / 2000;
-    const mesh = new THREE.Mesh(new THREE.TubeGeometry(path, (points.length-1)*6, radius, 8), ordinary);
-    mesh.userData.rebar = item;
-    mesh.userData.centerline = points;
-    bars.add(mesh);
+    return group;
   }
+  function disposeOverlay() {
+    if (!importedOverlay) return;
+    scene.remove(importedOverlay);
+    importedOverlay.children.forEach(mesh => mesh.geometry.dispose());
+    importedOverlay = null;
+  }
+
+  const bars = makeBars(plan);
+  scene.add(bars);
 
   const foundations = new THREE.Group();
   for (const item of plan.foundations) {
@@ -280,6 +316,89 @@ function createViewer(data) {
   const byBeam = new Map(data.bars.map(bar => [String(bar.beam_id), bar]));
   let model;
   let stockModel;
+  let importedMeshes = [];
+  let importedOverlay;
+  let activeGrid;
+  let customGrid;
+
+  function setAxes(grid) {
+    activeGrid = grid;
+    axisMenu.options.length = 1;
+    for (const kind of ['x','y']) {
+      for (const [name,coord] of grid[kind]) {
+        axisMenu.add(new Option('Achse '+name, JSON.stringify({name,kind,coord})));
+      }
+    }
+  }
+
+  const axisPosition = object => {
+    let fallback;
+    let rawPosition;
+    for (let node = object; node; node = node.parent) {
+      rawPosition ??= node.userData.Position ?? node.userData.position;
+      const name = node.name || '';
+      const isRebar = /bewehr|rebar|reinforcement/i.test(name) || node.userData.rebar === true;
+      if (node.userData.rebarPosition != null && String(node.userData.rebarPosition).trim()) return String(node.userData.rebarPosition).trim();
+      if (isRebar && rawPosition != null && String(rawPosition).trim()) return String(rawPosition).trim();
+      const id = name.match(/^P([0-9]+)[_-][0-9]+(?:_|$)/i);
+      const pos = isRebar && name.match(/(?:pos(?:ition)?)[\s_.:-]+([a-z0-9]+)|(?:bewehrung|rebar|reinforcement)[\s_.:-]+([0-9]+)/i);
+      if (id || pos) return id?.[1] ?? pos[1] ?? pos[2];
+      if (isRebar) fallback ??= name || 'Bewehrung';
+    }
+    return fallback ?? null;
+  };
+  const importMaterial = (mesh, properties) => mesh.isLine
+    ? new THREE.LineBasicMaterial(properties)
+    : mesh.isPoints ? new THREE.PointsMaterial({...properties,size:3,sizeAttenuation:false})
+      : new THREE.MeshBasicMaterial({...properties,side:THREE.DoubleSide});
+  const isConcrete = object => {
+    for (let node = object; node; node = node.parent) {
+      if (/beton|concrete|fundament|foundation/i.test(node.name + ' ' + (node.userData.material ?? ''))) return true;
+    }
+    return false;
+  };
+
+  function prepareImport(root) {
+    const group = new THREE.Group();
+    group.add(root);
+    const meshes = [];
+    group.traverse(mesh => {
+      if ((!mesh.isMesh && !mesh.isLine && !mesh.isPoints) || !mesh.geometry?.getAttribute('position')?.count) return;
+      if (mesh.isMesh && !mesh.geometry.hasAttribute('normal')) mesh.geometry.computeVertexNormals();
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      const converted = materials.map(material => {
+        const color = material?.color?.clone() ?? new THREE.Color(0xadb6ba);
+        if (Math.max(color.r,color.g,color.b) < .025) color.setHex(0xadb6ba);
+        if (mesh.isLine) return new THREE.LineBasicMaterial({color});
+        if (mesh.isPoints) return new THREE.PointsMaterial({color,size:2,sizeAttenuation:false});
+        return new THREE.MeshBasicMaterial({color,map:material?.map ?? null,
+          vertexColors: Boolean(material?.vertexColors),side:THREE.DoubleSide});
+      });
+      const neutral = mesh.isMesh ? new THREE.MeshStandardMaterial({
+        color:0xb3bec2,roughness:.85,side:THREE.DoubleSide,
+      }) : mesh.isLine ? new THREE.LineBasicMaterial({color:0x66777d})
+        : new THREE.PointsMaterial({color:0x66777d,size:2,sizeAttenuation:false});
+      const position = axisPosition(mesh);
+      const rebar = position && [ordinary,highlighted,muted].map(mat => importMaterial(mesh,{
+        color:mat.color, transparent:mat.transparent, opacity:mat.opacity, depthWrite:mat.depthWrite,
+      }));
+      const concrete = !position && mesh.isMesh && (isConcrete(mesh) ||
+        materials.some(mat => /beton|concrete|fundament|foundation/i.test(mat?.name ?? '')))
+        ? importMaterial(mesh,{color:0xaeb7bb,transparent:true,opacity:.38,depthWrite:false}) : null;
+      meshes.push({mesh, material:Array.isArray(mesh.material) ? converted : converted[0], neutral, position, rebar, concrete});
+    });
+    const box = new THREE.Box3().setFromObject(group);
+    if (!meshes.length || box.isEmpty() || ![...box.min,...box.max].every(Number.isFinite)) {
+      throw new Error('Das Modell enthält keine darstellbare Geometrie.');
+    }
+    importedMeshes = meshes;
+    return group;
+  }
+
+  function importedPositions() {
+    return importedPlan ? Object.keys(importedPlan.positions)
+      : [...new Set(importedMeshes.map(item => item.position).filter(Boolean))].sort();
+  }
   let bounds;
   let groundGrid;
   let axisChoice;
@@ -295,11 +414,7 @@ function createViewer(data) {
   const sectionControls = byId('sectionControls');
 
   const axisMenu = byId('sectionAxis');
-  for (const kind of ['x','y']) {
-    for (const [name,coord] of plan.grid[kind]) {
-      axisMenu.add(new Option('Achse '+name, JSON.stringify({name,kind,coord})));
-    }
-  }
+  setAxes(plan.grid);
   axisMenu.addEventListener('change', () => {
     if (axisMenu.value) chooseAxis(JSON.parse(axisMenu.value));
     else { endSection(); setCamera(); }
@@ -315,13 +430,15 @@ function createViewer(data) {
     renderer.clippingPlanes = [cutPlane];
     const size = bounds.getSize(new THREE.Vector3());
     const aspect = Math.max(.1,camera.aspect);
-    const halfHeight = Math.max(size.z/2,(isX ? size.y : size.x)/(2*aspect))*1.19/cutZoom;
+    const halfHeight = Math.max(.001,size.z/2,(isX ? size.y : size.x)/(2*aspect))*1.19/cutZoom;
     sectionCamera.left = -halfHeight*aspect;
     sectionCamera.right = halfHeight*aspect;
     sectionCamera.top = halfHeight;
     sectionCamera.bottom = -halfHeight;
     center.add(cutOffset);
-    sectionCamera.position.copy(center).addScaledVector(normal,-30);
+    const distance = Math.max(30,size.length()*2);
+    sectionCamera.far = distance*3;
+    sectionCamera.position.copy(center).addScaledVector(normal,-distance);
     sectionCamera.lookAt(center);
     sectionCamera.updateMatrixWorld();
     sectionCamera.updateProjectionMatrix();
@@ -340,6 +457,7 @@ function createViewer(data) {
     sectionControls.hidden = true;
     axisMenu.value = "";
     if (groundGrid) groundGrid.visible = model === stockModel;
+    if (customGrid) customGrid.visible = model !== stockModel;
   }
 
   function chooseAxis(axis) {
@@ -357,12 +475,14 @@ function createViewer(data) {
     cutDirection = direction;
     orbit.enabled = false;
     if (groundGrid) groundGrid.visible = false;
+    if (customGrid) customGrid.visible = false;
     byId('sectionInfo').textContent = 'Schnitt ' + axisChoice.name + ' · Blick nach ' +
       (direction > 0 ? '+' : '−') + axisChoice.kind.toUpperCase();
     fitSection();
     cutSurfaces.geometry.dispose();
-    cutSurfaces.geometry = sectionCaps(plan,cutPlane,axisChoice.kind);
-    cutSurfaces.visible = bars.visible;
+    const dataset = model === stockModel ? plan : importedPlan;
+    cutSurfaces.geometry = dataset ? sectionCaps(dataset,cutPlane,axisChoice.kind) : new THREE.BufferGeometry();
+    cutSurfaces.visible = Boolean(dataset) && mode !== 'structure';
     byId('sectionZoom').hidden = false;
   }
 
@@ -397,7 +517,19 @@ function createViewer(data) {
   function update() {
     const custom = model !== stockModel;
     bars.visible = !custom && mode !== 'structure';
-    cutSurfaces.visible = Boolean(cutDirection) && bars.visible;
+    cutSurfaces.visible = Boolean(cutDirection) && (bars.visible || (custom && importedPlan && mode !== 'structure'));
+    if (importedOverlay) importedOverlay.visible = custom && mode !== 'structure';
+    if (custom) {
+      const showConcrete = mode === 'combined' && (importedOverlay || importedMeshes.some(item => item.position));
+      for (const item of importedMeshes) {
+        item.mesh.visible = item.position ? !importedPlan && mode !== 'structure' : mode !== 'rebar';
+        item.mesh.material = item.position ? item.rebar[item.position === active ? 1 : active ? 2 : 0]
+          : showConcrete && item.concrete ? item.concrete : byId('neutralImport').checked ? item.neutral : item.material;
+      }
+    }
+    for (const mesh of importedOverlay?.children ?? []) {
+      mesh.material = mesh.userData.rebar.position === active ? highlighted : active ? muted : ordinary;
+    }
     if (model) model.visible = custom || mode !== 'rebar';
     foundations.visible = !custom && mode !== 'rebar';
     for (const part of foundations.children) {
@@ -420,9 +552,10 @@ function createViewer(data) {
     if (!bounds) return;
     const viewBounds = mode === 'rebar' && model === stockModel
       ? new THREE.Box3().setFromObject(bars) : bounds.clone();
-    if (top && groundGrid?.visible) viewBounds.union(new THREE.Box3().setFromObject(groundGrid));
+    const grid = model === stockModel ? groundGrid : customGrid;
+    if (top && grid?.visible) viewBounds.union(new THREE.Box3().setFromObject(grid));
     const center = viewBounds.getCenter(new THREE.Vector3());
-    const size = viewBounds.getSize(new THREE.Vector3()).length();
+    const size = Math.max(.001,viewBounds.getSize(new THREE.Vector3()).length());
     const half = THREE.MathUtils.degToRad(camera.fov / 2);
     const angle = Math.min(half, Math.atan(Math.tan(half) * camera.aspect));
     const spans = viewBounds.getSize(new THREE.Vector3());
@@ -438,7 +571,32 @@ function createViewer(data) {
     orbit.update();
   }
 
-  function useModel(next, stock = false) {
+  function refreshImport() {
+    if (model === stockModel) return;
+    endSection();
+    model.rotation.x = byId('zUpImport').checked ? 0 : Math.PI/2;
+    model.updateMatrixWorld(true);
+    bounds = new THREE.Box3().setFromObject(model);
+    disposeOverlay();
+    importedOverlay = importedPlan ? makeBars(importedPlan) : null;
+    if (importedOverlay) {
+      scene.add(importedOverlay);
+      bounds.union(new THREE.Box3().setFromObject(importedOverlay));
+    }
+    if (customGrid) scene.remove(customGrid);
+    customGrid = importedPlan?.grid ? createGroundGrid(importedPlan.grid,bounds) : null;
+    if (customGrid) scene.add(customGrid);
+    const center = bounds.getCenter(new THREE.Vector3());
+    setAxes(importedPlan?.grid ?? {x:[['X Mitte',center.x]],y:[['Y Mitte',center.y]]});
+    update();
+    setCamera();
+  }
+
+  function useModel(next, stock = false, importing = false) {
+    if (importing) {
+      next = prepareImport(next);
+      importedPlan = null;
+    }
     if (model) scene.remove(model);
     model = next;
     if (stock) stockModel = next;
@@ -470,7 +628,10 @@ function createViewer(data) {
       bounds.union(new THREE.Box3().setFromObject(bars));
     }
     if (groundGrid) groundGrid.visible = next === stockModel;
-    axisMenu.disabled = next !== stockModel;
+    if (next !== stockModel) { refreshImport(); return; }
+    disposeOverlay();
+    if (customGrid) { scene.remove(customGrid); customGrid = null; }
+    setAxes(plan.grid);
     update();
     setCamera();
   }
@@ -478,10 +639,10 @@ function createViewer(data) {
   const a = new THREE.Vector3(), b = new THREE.Vector3();
   const pointOnRay = new THREE.Vector3(), pointOnBar = new THREE.Vector3();
   const visiblePoint = p => !cutPlane || cutPlane.distanceToPoint(p) >= -1e-5;
-  function nearBar() {
+  function nearBar(meshes = bars.children) {
     let best;
     let thresholdSquared = Infinity;
-    for (const mesh of bars.children) {
+    for (const mesh of meshes) {
       const points = mesh.userData.centerline;
       for (let i = 1; i < points.length; i++) {
         a.copy(points[i - 1]);
@@ -506,10 +667,22 @@ function createViewer(data) {
     const box = renderer.domElement.getBoundingClientRect();
     const coords = new THREE.Vector2((e.clientX-box.left)/box.width*2-1, 1-(e.clientY-box.top)/box.height*2);
     ray.setFromCamera(coords, cutDirection ? sectionCamera : camera);
-    if (groundGrid?.visible) {
-      const axis = ray.intersectObjects(groundGrid.children.filter(item => item.userData.axis),false)[0];
+    const clickableGrid = model === stockModel ? groundGrid : customGrid;
+    if (clickableGrid?.visible) {
+      const axis = ray.intersectObjects(clickableGrid.children.filter(item => item.userData.axis),false)[0];
       if (axis) {
         chooseAxis(axis.object.userData.axis);
+        return;
+      }
+    }
+    if (model !== stockModel && mode !== 'structure') {
+      const meshes = importedOverlay?.children ?? importedMeshes.filter(item => item.position).map(item => item.mesh);
+      const selected = ray.intersectObjects(meshes,false).find(hit => visiblePoint(hit.point))?.object
+        ?? (importedOverlay ? nearBar(meshes) : null);
+      if (selected) {
+        const data = selected.userData.rebar;
+        const position = data?.position ?? importedMeshes.find(item => item.mesh === selected)?.position;
+        if (position) selection(position,data);
         return;
       }
     }
@@ -524,16 +697,16 @@ function createViewer(data) {
       ? ray.intersectObjects([...parts,...(foundations.visible ? foundations.children : [])], false)
         .find(item => visiblePoint(item.point))
       : null;
-    if (!hit && groundGrid?.visible) {
+    if (!hit && clickableGrid?.visible) {
       const point = ray.ray.intersectPlane(
-        new THREE.Plane(new THREE.Vector3(0,0,1), -groundGrid.position.z),new THREE.Vector3());
+        new THREE.Plane(new THREE.Vector3(0,0,1), -clickableGrid.position.z),new THREE.Vector3());
       if (point) {
         const candidates = [];
         for (const kind of ['x','y']) {
           const other = kind === 'x' ? 'y' : 'x';
-          const cross = plan.grid[other];
+          const cross = activeGrid[other];
           if (point[other] < cross[0][1]-.45 || point[other] > cross.at(-1)[1]+.45) continue;
-          for (const [name,coord] of plan.grid[kind]) {
+          for (const [name,coord] of activeGrid[kind]) {
             candidates.push({name,kind,coord,distance:Math.abs(point[kind]-coord)});
           }
         }
@@ -568,7 +741,7 @@ function createViewer(data) {
   resize();
   renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,cutDirection ? sectionCamera : camera); });
   return {
-    update, setCamera, endSection, useModel, isCustom: () => model !== stockModel,
+    update, setCamera, endSection, useModel, refreshImport, importedPositions, isCustom: () => model !== stockModel,
     restore: () => useModel(stockModel),
   };
 }
@@ -594,7 +767,9 @@ setupInput('planDrop','planFile',file => {
   const preview = byId('planPreview'), link = byId('openPlan');
   preview.src = link.href = planUrl;
   preview.hidden = link.hidden = false;
-  byId('uploadStatus').textContent = file.name + ' · Planvorschau geöffnet. Eine Zuordnung zu Stäben ist für eigene Pläne nicht hinterlegt.';
+  byId('uploadStatus').textContent = file.name + ' · Planvorschau geöffnet.'
+    + (viewer?.isCustom() ? ' Gewählte Positionen können den Plan öffnen.' : ' Lade das zugehörige GLB für die 3D-Ansicht.');
+  if (viewer?.isCustom() && active) selection(active);
 });
 
 let modelRequest = 0;
@@ -608,21 +783,120 @@ setupInput('modelDrop','modelFile',async file => {
   try {
     const result = await loader.parseAsync(await file.arrayBuffer(), './');
     if (request !== modelRequest) return;
+    viewer.useModel(result.scene,false,true);
     selection(null);
-    viewer.useModel(result.scene);
-    setMode('structure');
-    buttons.forEach(button => { button.disabled = button.dataset.mode !== 'structure'; });
-    document.querySelectorAll('[data-position]').forEach(button => { button.disabled = true; });
+    const count = showImportOptions();
+    setMode(count ? 'combined' : 'structure');
     byId('restore').hidden = false;
-    byId('uploadStatus').textContent = file.name + ' · Vorschau. Die Stabliste und Gewichte beziehen sich auf Stockerau.';
+    byId('uploadStatus').textContent = file.name + (count
+      ? ' · ' + count + ' Bewehrungsgruppen erkannt.'
+      : ' · Modell sichtbar. Für die Bewehrungsansicht Bewehrungsgeometrie mit Positionsnamen oder passende JSON-Daten laden.');
   } catch (error) {
     if (request === modelRequest) byId('uploadStatus').textContent = 'GLB konnte nicht geladen werden: ' + error.message;
   }
 });
 
+function readImportPlan(source) {
+  if (!source || !Array.isArray(source.elements) || !source.elements.length || !source.positions
+      || Array.isArray(source.positions)) {
+    throw new Error('JSON benötigt positions und elements mit 3D-Stabkoordinaten in Metern.');
+  }
+  const positions = Object.create(null);
+  for (const [id,row] of Object.entries(source.positions)) {
+    if (!row || !Number.isFinite(row.diameter) || row.diameter <= 0) {
+      throw new Error('Positionsdurchmesser in mm fehlt: ' + id);
+    }
+    positions[id] = {diameter:row.diameter,
+      detail:typeof row.detail === 'string' ? row.detail : '',
+      page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0};
+  }
+  const elements = source.elements.map((item,i) => {
+    const position = String(item?.position);
+    const points = item?.points;
+    if (!positions[position] || !Array.isArray(points) || points.length < 2 ||
+      points.some(p => !Array.isArray(p) || p.length !== 3 || !p.every(Number.isFinite))) {
+      throw new Error('Ungültige Position oder 3D-Koordinate bei Stab ' + (i+1));
+    }
+    let length = 0;
+    for (let k=1;k<points.length;k++) {
+      const segment = Math.hypot(...points[k].map((value,j)=>value-points[k-1][j]));
+      if (!segment) throw new Error('Doppelte Stabkoordinate bei Stab ' + (i+1));
+      length += segment;
+    }
+    positions[position].modelMass += length * 7850 * Math.PI * (positions[position].diameter/2000)**2;
+    return {position,points,id:String(item.id ?? ('Stab '+(i+1))),length};
+  });
+  let grid;
+  if (source.grid != null) {
+    grid = {};
+    for (const kind of ['x','y']) {
+      const items = source.grid[kind];
+      if (!Array.isArray(items) || items.length < 2
+          || items.some(pair => !Array.isArray(pair) || typeof pair[0] !== 'string' || !Number.isFinite(pair[1]))) {
+        throw new Error('Das Achsraster benötigt beschriftete X- und Y-Koordinaten.');
+      }
+      grid[kind] = [...items].sort((a,b)=>a[1]-b[1]);
+    }
+  }
+  return {positions,elements,grid};
+}
+
+function showImportOptions() {
+  const positions = viewer.importedPositions();
+  byId('stockPanel').hidden = true;
+  byId('importPanel').hidden = false;
+  byId('importSettings').hidden = false;
+  byId('importMass').textContent = importedPlan
+    ? 'Modellmasse der Bewehrung: ca. ' + fmt(Object.values(importedPlan.positions)
+      .reduce((sum,p) => sum+p.modelMass,0)) + ' kg (Stabdurchmesser, Länge und 7.850 kg/m³).'
+    : 'Gewichte und Planpositionen aus einem Zusatzdatensatz können hier ergänzt werden.';
+  const panel = byId('importGroups');
+  panel.replaceChildren();
+  for (const position of positions) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.position = position;
+    button.textContent = position;
+    button.setAttribute('aria-pressed','false');
+    button.addEventListener('click',() => {
+      if (mode === 'structure') setMode('combined');
+      selection(position);
+    });
+    panel.append(button);
+  }
+  buttons.forEach(button => { button.disabled = !positions.length && button.dataset.mode !== 'structure'; });
+  return positions.length;
+}
+
+setupInput('rebarDrop','rebarFile',async file => {
+  if (!viewer?.isCustom()) {
+    byId('uploadStatus').textContent = 'Bitte zuerst das eigene GLB laden, dem die Bewehrungsdaten zugeordnet werden sollen.';
+    return;
+  }
+  const request = modelRequest;
+  try {
+    const source = readImportPlan(JSON.parse(await file.text()));
+    if (request !== modelRequest) return;
+    importedPlan = source;
+    viewer.refreshImport();
+    showImportOptions();
+    setMode('combined');
+    selection(null);
+    byId('uploadStatus').textContent = file.name + ' · ' + source.elements.length + ' Bewehrungsstäbe geladen.';
+  } catch(error) {
+    if (request === modelRequest) byId('uploadStatus').textContent = 'Bewehrungsdaten konnten nicht geladen werden: ' + error.message;
+  }
+});
+byId('neutralImport').addEventListener('change',() => viewer?.update());
+byId('zUpImport').addEventListener('change',() => viewer?.refreshImport());
+
 byId('restore').addEventListener('click', () => {
   ++modelRequest;
   viewer.restore();
+  byId('importPanel').hidden = true;
+  byId('importSettings').hidden = true;
+  byId('stockPanel').hidden = false;
+  selection(null);
   setMode('combined');
   buttons.forEach(button => { button.disabled = false; });
   document.querySelectorAll('[data-position]').forEach(button => { button.disabled = false; });

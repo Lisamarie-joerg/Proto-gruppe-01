@@ -276,3 +276,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 
 - Orthogonalen Schnittzoom per Mausrad und Schaltflächen ergänzt. Die schwarzen Schnittpolygone des Betonstahls für beide Richtungen an den Achsen D und 5 geprüft.
 - Button für den 3DM-Export der 509 Stäbe ergänzt. Vier Positionslayer und Referenzachsen samt Kontrollpunkten im bestehenden RFEM-Koordinatensystem gespeichert. Bounding Boxes der Stäbe stimmen zwischen Importdatei und Vollmodell exakt überein, Referenz D/5 ist auf (10, −5, 0).
+
+## 16.11.2026 - Import eigener Modelle und Bewehrungspläne
+
+- Dunkle GLB-Materialien aufgehellt und eine neutrale Darstellung sowie Z-up-Umschaltung ergänzt.
+- Importierte Stäbe nach Positionsnamen oder JSON gruppiert. Original-PDF im Detailfenster, optionale Planseiten, Achsen, Schnittflächen und berechnete Bewehrungsmasse für JSON-Geometrie ergänzt.
+- Stockerau im Browser geöffnet. Datenprüfung mit 509 Stäben, 60 Stäben der Position 2, Schnittflächen und einem synthetischen dunklen Importmodell bestanden.
