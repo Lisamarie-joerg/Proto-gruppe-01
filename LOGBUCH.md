@@ -187,6 +187,28 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 
 
+**Nachtrag – Bugfix (Web-App):** Die App zeigte das 3D-Modell nur, wenn sie über
+`python webapp/app.py` (FastAPI, Port 8501) gestartet wurde. Wurde der
+`static`-Ordner direkt über einen Statik-Server geöffnet (z. B.
+`python -m http.server 8000`), schlugen die absoluten Pfade
+`/static/plotly.min.js` und `/api/data` mit 404 fehl → Plotly und Daten luden
+nicht, der Viewport blieb leer (Fehlerkonsole: „Daten konnten nicht geladen
+werden"). Fix: `index.html` nutzt jetzt relative Pfade mit Fallback
+(Plotly: `plotly.min.js` → `/static/plotly.min.js`; Daten: `/api/data` →
+`data.json`), und `app.py` mountet den static-Ordner zusätzlich unter `/`
+(`html=True`). Damit läuft die App sowohl über FastAPI als auch über jeden
+beliebigen Statik-Server. Verifiziert per Headless-Render (736 Stäbe, Szene
+822×733 px) auf beiden Wegen.
+
+**Nachtrag – Darstellung der Stäbe im 3D-Viewport:** Zuerst wurden die 736
+Stäbe nur als einfache Punkte (scatter3d markers) gezeichnet. Jetzt wird jeder
+Stab als echtes 3D-Volumen (quaderförmiger mesh3d-Körper zwischen `start` und
+`end`, Kantenlänge aus der Querschnittsfläche `A_mm2`) gerendert, weiterhin
+nach CO₂e eingefärbt (grün → rot) und mit Hover-Infos (Nr./Profil/Länge/Fläche/
+Volumen/CO₂e). Verifiziert per Headless-Render: Bildinhalt von ~12.800 auf
+~57.000 farbige Pixel gestiegen (~4,5×), identisch auf FastAPI (`app.py`, :8501)
+und reinem Statik-Server (`python -m http.server`, :8000).
+
 ## Zum Schluss
 
 Wie habt ihr mit dem Agenten gearbeitet, und was würdet ihr der nächsten Gruppe mitgeben?

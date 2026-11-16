@@ -36,6 +36,11 @@ def get_data():
 
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+# Zusätzlich den static-Ordner unter "/" mounten (html=True): Die index.html
+# nutzt relative Pfade (plotly.min.js, data.json) und funktioniert damit auch,
+# wenn sie ueber einen beliebigen anderen Statik-Server ausgeliefert wird
+# (z.B. `python -m http.server` im static-Ordner) – ohne FastAPI-Backend.
+app.mount("/", StaticFiles(directory=STATIC, html=True), name="static_root")
 
 
 if __name__ == "__main__":

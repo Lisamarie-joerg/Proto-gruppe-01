@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Embodied Carbon – Pavillon Stockerau</title>
-<script src="/static/plotly.min.js"></script>
+<script src="plotly.min.js"></script>
+<script>
+  // Fallback, falls die Seite ueber einen Server ohne Wurzel-Mount geoeffnet
+  // wird (z.B. FastAPI ohne "/"->static): Plotly auch unter /static/ suchen.
+  if (!window.Plotly) {
+    document.write('<script src="/static/plotly.min.js"><\/script>');
+  }
+</script>
 <style>
 :root {
   --bg: #f4f6f9; --panel: #ffffff; --ink: #1e293b; --muted: #64748b;
@@ -138,6 +145,42 @@ function barValue(b) {   // angezeigter Wert (Beruecksichtigung Bewehrung-Toggle
     : c.total;
 }
 
+function beamMesh(b) {
+  // 3D-Stab als quaderfoermiges Volumen zwischen start und end.
+  // Stablaenge L und Querschnittsflaeche A (mm^2) kommen aus den Daten;
+  // r ist die Kantenlaenge eines aequivalenten Quadrats.
+  const s = b.start, e = b.end;
+  const dx = e[0] - s[0], dy = e[1] - s[1], dz = e[2] - s[2];
+  const L = Math.hypot(dx, dy, dz) || 1e-6;
+  const ux = dx / L, uy = dy / L, uz = dz / L;
+  // Hilfsvektor, um senkrecht auf u zu kommen
+  let ax = 0, ay = 0, az = 1;
+  if (Math.abs(uz) > 0.9) { ax = 1; ay = 0; az = 0; }
+  let vx = uy * az - uz * ay, vy = uz * ax - ux * az, vz = ux * ay - uy * ax;
+  const vlen = Math.hypot(vx, vy, vz) || 1e-6;
+  vx /= vlen; vy /= vlen; vz /= vlen;
+  let wx = uy * vz - uz * vy, wy = uz * vx - ux * vz, wz = ux * vy - uy * vx;
+  const r = Math.sqrt(b.A_mm2) / 1000 / 2;  // m (halbe Kantenlaenge)
+  const c = [
+    [s[0] - vx * r - wx * r, s[1] - vy * r - wy * r, s[2] - vz * r - wz * r],
+    [s[0] + vx * r - wx * r, s[1] + vy * r - wy * r, s[2] + vz * r - wz * r],
+    [s[0] + vx * r + wx * r, s[1] + vy * r + wy * r, s[2] + vz * r + wz * r],
+    [s[0] - vx * r + wx * r, s[1] - vy * r + wy * r, s[2] - vz * r + wz * r],
+  ];
+  const d = [
+    [e[0] - vx * r - wx * r, e[1] - vy * r - wy * r, e[2] - vz * r - wz * r],
+    [e[0] + vx * r - wx * r, e[1] + vy * r - wy * r, e[2] + vz * r - wz * r],
+    [e[0] + vx * r + wx * r, e[1] + vy * r + wy * r, e[2] + vz * r + wz * r],
+    [e[0] - vx * r + wx * r, e[1] - vy * r + wy * r, e[2] - vz * r + wz * r],
+  ];
+  const xs = [], ys = [], zs = [];
+  for (const p of [...c, ...d]) { xs.push(p[0]); ys.push(p[1]); zs.push(p[2]); }
+  const i = [0, 0, 0, 0, 4, 4, 4, 4, 0, 1, 2, 3];
+  const j = [1, 2, 3, 0, 5, 6, 7, 4, 4, 5, 6, 7];
+  const k = [2, 3, 0, 1, 6, 7, 4, 5, 5, 6, 7, 4];
+  return { xs, ys, zs, i, j, k };
+}
+
 function buildTraces() {
   const bars = DATA.bars;
   const vals = bars.map(barValue);
@@ -147,27 +190,40 @@ function buildTraces() {
   const traces = [];
   for (const grp of ['Baustahl', 'Beton']) {
     const gb = bars.filter(b => b.gruppe === grp);
+    const xs = [], ys = [], zs = [], ii = [], jj = [], kk = [];
+    const hover = [];
+    const colors = [];
+    let off = 0;
+    for (const b of gb) {
+      const m = beamMesh(b);
+      xs.push(...m.xs); ys.push(...m.ys); zs.push(...m.zs);
+      for (let t = 0; t < m.i.length; t++) {
+        ii.push(m.i[t] + off); jj.push(m.j[t] + off); kk.push(m.k[t] + off);
+      }
+      off += m.xs.length;
+      const val = barValue(b);
+      for (let t = 0; t < m.xs.length; t++) {
+        colors.push(val);
+        hover.push(
+          `<b>${b.nr}</b> · ${b.profil}<br>` +
+          `Länge ${b.L_m.toFixed(3)} m · A ${b.A_mm2.toFixed(0)} mm²<br>` +
+          `Volumen ${b.V_m3.toFixed(5)} m³<br>` +
+          `CO₂e: <b>${val.toFixed(2)} kg</b>`);
+      }
+    }
     traces.push({
-      type: 'scatter3d', mode: 'markers', name: grp,
-      x: gb.map(b => b.mitte[0]),
-      y: gb.map(b => b.mitte[1]),
-      z: gb.map(b => b.mitte[2]),
-      customdata: gb.map(b => [b.nr, b.profil, b.L_m, b.A_mm2,
-                               b.V_m3, barValue(b)]),
-      marker: {
-        size: gb.map(b => 2 + 9 * Math.sqrt(b.A_mm2 / 250000)),
-        color: gb.map(barValue),
-        colorscale: [[0, '#16a34a'], [0.5, '#facc15'], [1, '#dc2626']],
-        cmin, cmax,
-        colorbar: { title: { text: 'kg CO₂e', font: { size: 11 } },
-                    thickness: 12, len: 0.55 },
-        opacity: 0.95,
-      },
-      hovertemplate:
-        '<b>%{customdata[0]}</b> · %{customdata[1]}<br>' +
-        'Länge %{customdata[2]:.3f} m · A %{customdata[3]:.0f} mm²<br>' +
-        'Volumen %{customdata[4]:.5f} m³<br>' +
-        'CO₂e: <b>%{customdata[5]:.2f} kg</b><extra></extra>',
+      type: 'mesh3d', name: grp,
+      x: xs, y: ys, z: zs,
+      i: ii, j: jj, k: kk,
+      intensity: colors,
+      colorscale: [[0, '#16a34a'], [0.5, '#facc15'], [1, '#dc2626']],
+      cmin, cmax,
+      colorbar: { title: { text: 'kg CO₂e', font: { size: 11 } },
+                  thickness: 12, len: 0.55 },
+      opacity: 0.95,
+      flatshading: false,
+      hovertemplate: '%{text}<extra></extra>',
+      text: hover,
       visible: state.mats[grp],
     });
   }
@@ -349,8 +405,23 @@ function init() {
   render();
 }
 
-fetch('/api/data')
-  .then(r => r.json())
+// Daten laden: /api/data bei laufendem FastAPI-Backend (app.py),
+// sonst data.json relativ zur Seite – so funktioniert die App auch, wenn
+// der static-Ordner direkt ueber einen Statik-Server ausgeliefert wird
+// (z.B. `python -m http.server`), ohne FastAPI-Backend.
+function loadData() {
+  return fetch('/api/data')
+    .then(r => {
+      if (!r.ok) throw new Error('API HTTP ' + r.status);
+      return r.json();
+    })
+    .catch(() => fetch('data.json')
+      .then(r => {
+        if (!r.ok) throw new Error('data.json HTTP ' + r.status);
+        return r.json();
+      }));
+}
+loadData()
   .then(d => { DATA = d; init(); })
   .catch(err => {
     document.getElementById('viewport').innerHTML =
