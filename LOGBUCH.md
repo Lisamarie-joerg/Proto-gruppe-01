@@ -260,3 +260,8 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - P-01 erneut geprüft. A–A zeigt einen Stoß nahe Achse E, B–B zwei Stöße zwischen 4/5 und 5/6. Bemaßung jeweils mindestens 1,00 m. Im Modell 1,06 m verwendet und benachbarte Stöße um insgesamt 20 cm gegeneinander versetzt.
 - Alle 70 Längsstöße mit 1,06 m Überdeckung nachgerechnet. Längster Stab 5,1353 m. 490 Stäbe in 15 Typgruppen, Modellmasse 955,43 kg. Die Stabauswahl gruppiert nach Planposition und Zuschnittlänge auf Zentimeter gerundet.
 - Achsen B–H und 3–7 mit Maßketten in der XY-Ebene unter dem Fundament eingezeichnet und in Edge geprüft. Rhino-Modell und ZIP aktualisiert.
+
+
+## 16.11.2026 – Gruppenordner für die Abgabe
+
+- Lokal aktualisierten Ordner Abgabe_20.11 mit Originalplan, Rhino-Quelldatei und startbarer Website übernommen. Startdatei und Website-Assets geprüft. Das ZIP im Hauptordner entspricht dem aktuellen Stand auf main.

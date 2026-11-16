@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stockerau · Tragwerk und Bewehrung</title>
+<link rel="stylesheet" href="./viewer.css">
+<script type="importmap">{"imports":{"three":"./three/three.module.js","three/addons/":"./three/addons/"}}</script>
+<script type="module" src="./viewport3d.js"></script>
+</head>
+<body>
+<header class="page-header">
+  <div><p class="project">Prototypenbau · Gruppe 01</p><h1>Pavillon Stockerau</h1></div>
+  <a class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Originalplan P-01 ↗</a>
+</header>
+<main>
+  <section class="viewer" aria-label="3D-Modell">
+    <div class="toolbar" aria-label="Darstellung">
+      <div class="switch">
+        <button data-mode="structure" aria-pressed="false">Tragwerk</button>
+        <button data-mode="combined" aria-pressed="true">Bewehrung im Tragwerk</button>
+        <button data-mode="rebar" aria-pressed="false">Nur Bewehrung</button>
+      </div>
+      <div class="switch">
+        <button id="reset">Gesamtansicht</button><button id="top">Draufsicht</button>
+      </div>
+    </div>
+    <div id="viewport3d">
+      <p id="status" role="status">3D-Modell und Bewehrung werden geladen …</p>
+      <dialog id="detail" aria-labelledby="detailTitle">
+        <div class="detail-head"><h2 id="detailTitle"></h2><form method="dialog"><button aria-label="Detailfenster schließen">×</button></form></div>
+        <p id="detailText"></p>
+        <a id="detailOriginal" target="_blank" rel="noopener">
+          <img id="detailImage" alt="Originalausschnitt aus dem PDF-Bewehrungsplan">
+        </a>
+        <a href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Vollständigen Originalplan öffnen ↗</a>
+      </dialog>
+    </div>
+    <div class="viewer-footer">
+      <div class="legend" aria-label="Materialien">
+        <span><i class="concrete"></i>Betonfundamente</span><span><i class="steel"></i>Stahlstützen</span>
+        <span><i class="wood"></i>Holzdach</span><span><i class="pink"></i>Gewählte Stabposition</span>
+      </div>
+      <small>Drehen · Zoomen · Stab auswählen · Draufsicht für Achsmaße</small>
+    </div>
+  </section>
+  <aside>
+    <section class="panel">
+      <p class="project">Mengen und Gewichte</p>
+      <h2>Bewehrung laut Plan</h2>
+      <p class="weight"><strong id="rebarMass">1.015,63</strong> kg</p>
+      <p class="note" id="modelSpec"></p>
+      <p id="selection" aria-live="polite">Stab im Modell oder Position in der Liste auswählen.</p>
+      <table>
+        <thead><tr><th>Pos.</th><th>Ø mm</th><th>Stk.</th><th>m/Stk.</th><th>kg ges.</th></tr></thead>
+        <tbody id="positions"></tbody>
+      </table>
+      <details><summary>Geschätztes Gewicht des Tragwerks</summary>
+        <dl id="structureMass"></dl>
+        <p class="note">Aus Modellvolumen und Dichte berechnet. Beton 2.400, Stahl 7.850 und Holz 450 kg/m³. Die tatsächliche Holzrohdichte hängt von Holzart und Feuchte ab.</p>
+      </details>
+      <p class="note">Die Stabformen folgen den Schnitten A–A und B–B sowie Detail 1. Die modellierten Zuschnitte und Stöße folgen den oben angegebenen Vorgaben. Die Tabelle enthält die unveränderten Planwerte.</p>
+    </section>
+    <section class="panel">
+      <h2>Eigene Dateien öffnen</h2>
+      <div class="drop" id="modelDrop">
+        <label for="modelFile"><strong>3D-Modell ablegen</strong><span>GLB · Export aus Rhino</span></label>
+        <input id="modelFile" type="file" accept=".glb">
+      </div>
+      <div class="drop" id="planDrop">
+        <label for="planFile"><strong>Bewehrungsplan ablegen</strong><span>PDF · Vorschau im Browser</span></label>
+        <input id="planFile" type="file" accept=".pdf,application/pdf">
+      </div>
+      <p id="uploadStatus" class="note" role="status">Eigene Dateien bleiben auf deinem Rechner.</p>
+      <div class="upload-links">
+        <button id="restore" hidden>Stockerau-Modell öffnen</button>
+        <a id="openPlan" target="_blank" rel="noopener" hidden>Eigenen Plan öffnen ↗</a>
+      </div>
+      <iframe id="planPreview" title="Vorschau des eigenen Bewehrungsplans" hidden></iframe>
+    </section>
+  </aside>
+</main>
+</body>
+</html>
