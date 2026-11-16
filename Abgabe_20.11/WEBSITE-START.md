@@ -12,7 +12,9 @@ Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend e
 
 ## Eigene Dateien
 
-Für Projekt 6 im Ordner `Dateien Projekt6` zuerst `Bauteil6.glb` öffnen. Die Website erkennt diesen Export und lädt eine angenäherte 3D-Teilrekonstruktion aus Plan 2448 für die Positionen 1 und 2 der unteren Deckenlage E02. Anschließend die vier Original-PDFs gemeinsam ins Planfeld ziehen und über die Liste wechseln. Beim Klick auf einen rekonstruierten Stab öffnet sich Plan 2448. Die übrigen Planpositionen sind im jeweiligen Original-PDF sichtbar.
+Für Projekt 6 im Ordner `Dateien Projekt6` zuerst `Bauteil6.glb` öffnen und dann die vier Original-PDFs gemeinsam ins Planfeld ziehen. Unter **Importierte Bewehrung** das Planblatt wählen. **Soll** ist die Stückzahl aus der Biegeliste, **In 3D** zählt die vorhandenen Modellstäbe. Beim Klick auf eine Position öffnet sich ihr Originalblatt. Vorhandene Stäbe der Gruppe werden pink.
+
+Das Teilmodell enthält 101 angenäherte Stäbe aus Blatt 2448 in den Positionen 1, 2 und 9. Die zugehörige **3D-Teilbewehrung für Rhino** lässt sich in die Originaldatei `Bauteil6.3dm` importieren. Beide verwenden dieselben Weltkoordinaten in Millimetern. In den Positionslayern sind die rekonstruierten Stäbe nach Planblatt und Position abgelegt.
 
 1. 3D-Modell als GLB öffnen. Rhino-Dateien zuvor als GLB mit eingebetteten Texturen exportieren. Ist das Modell zu dunkel, **Neutral anzeigen** aktivieren; liegt das Modell auf der Seite, **Z ist oben** umschalten.
 2. Das dazugehörige Original-PDF laden. Bei einer Stabauswahl erscheint es im Detailfenster. Ohne Zuordnung wird der gesamte Plan geöffnet.

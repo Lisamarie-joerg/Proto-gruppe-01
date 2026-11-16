@@ -288,3 +288,15 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Den konkreten GLB-Export mit 883 Meshes geprüft. Beton und Stahlprofile erhalten lesbare Ersatzfarben für das schwarze Ausgangsmaterial.
 - Vier Original-PDFs gleichzeitig auswählbar gemacht. Die Positionen 1 und 2 aus Plan 2448 als 20 angenäherte gerade Stäbe der unteren Deckenlage am GLB hinterlegt. Plan 2448 öffnet sich bei der Stabauswahl nach lokalem Laden des PDFs.
 - Import mit echtem GLB, vier Originaldateien, Gruppenauswahl, PDF-Verknüpfung und Rückkehr zu Stockerau im Anwendungstest geprüft. Der Test verwendet Three.js mit einer simulierten Browseroberfläche und prüft die Szene ohne WebGL-Ausgabe.
+
+## 16.11.2026 - Planabgleich für die vollständige Bewehrung E02
+
+- Vier Biegelisten visuell gelesen und die Sollstückzahlen je Plan, Revision und Position in `webapp/static/projekt6-plan-soll.csv` erfasst. Die Summe beträgt 3.154 Tabellenstücke für E02. Die Abgrenzung der Ergänzungspositionen und der vollständigen oberen Lage vor dem Modellieren anhand der referenzierten Planblätter prüfen.
+- `Bauteil6.3dm` in Rhino geprüft. Das Dokument enthält 883 Meshes und verwendet Millimeter. Das Deckenmesh `Floor:STB, d=25:1936245` trägt die IFC-GlobalId `3RxWNgkJb4BgTC6fgJ6T1J`. Es liegt zwischen +12,02 und +12,27 m und ist laut IFC-Metadaten 250 mm dick. Eine ähnlich geformte Decke liegt bei +7,38 bis +7,63 m.
+- Für die Rekonstruktion zuerst Geschoss, Raster A–D/1–7 und Öffnungen registrieren. Dann je Planposition Bauteil, Lage, Durchmesser, Biegeform, Stückzahl und Verlegebereich erfassen. Das Rhino-Modell erhält Stabobjekte je Plan und Position. Die Website übernimmt daraus Stabachsen und Planverweise. Sollmengen, geometrisch zugeordnete Stäbe und Modellmasse werden separat geprüft.
+
+## 16.11.2026 - E02-Positionsliste und Grundnetz in der App
+
+- 136 Tabellenpositionen der vier Blätter mit Soll- und Modellstückzahl in der App verfügbar gemacht. Positionen öffnen das jeweilige lokal geladene Original-PDF. Vorhandene Stäbe lassen sich gemeinsam auswählen.
+- Für Position 2448/9 81 von 92 geraden 14-m-Stäben als Näherung am E02-Deckenmesh geprüft und übernommen. Elf Lagen erfordern weitere Prüfung an Öffnungen und Rändern. Positionen 1 und 2 liegen über der kreuzenden Lage. Die Rekonstruktion umfasst insgesamt 101 Stäbe.
+- Separate Rhino-Importdatei mit 101 geschlossenen Volumenkörpern im Originalkoordinatensystem erzeugt und in Rhino wieder eingelesen. Viewer-Import, Gruppenauswahl, Planverweise und Rückkehr zu Stockerau mit den echten Dateien im Anwendungstest geprüft.

@@ -20,6 +20,7 @@ let plan;
 let planUrl;
 const localPlans = new Map();
 let importedPlan;
+let projectCatalog;
 let viewer;
 
 async function json(url) {
@@ -47,26 +48,39 @@ function selection(position, item = null) {
   active = position;
   if (viewer?.isCustom()) {
     viewer.update();
+    const record = projectCatalog?.find(row => row.key === position);
+    if (record && byId('projectSheet').value !== record.sheet) {
+      byId('projectSheet').value = record.sheet;
+      drawProjectPositions();
+    }
     document.querySelectorAll('#importGroups button').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.position === position));
     });
     const row = importedPlan?.positions[position];
+    const amount = record ? (row?.modelCount ?? 0) + ' von ' + record.count + ' Stäben in 3D' : '';
     byId('importSelection').textContent = position
-      ? ['Position ' + position, item?.id, row && fmt(row.modelMass ?? row.mass) + ' kg'].filter(Boolean).join(' · ')
+      ? ['Position ' + position, item?.id, amount, row && fmt(row.modelMass) + ' kg'].filter(Boolean).join(' · ')
       : 'Position im Modell oder in der Liste auswählen.';
-    const selectedPlanUrl = row?.sheet
-      ? [...localPlans.values()].find(file => file.sheet === row.sheet)?.url
+    const sheet = record?.sheet ?? row?.sheet;
+    const selectedPlanUrl = sheet
+      ? [...localPlans.values()].find(file => file.sheet === sheet)?.url
       : planUrl;
+    byId('projectPositions').querySelectorAll('button').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.position === position));
+    });
     if (position && selectedPlanUrl) {
       byId('detailTitle').textContent = 'Planposition ' + position;
-      byId('detailText').textContent = row?.detail || 'Bewehrungsplan zum importierten Modell';
+      byId('detailText').textContent = row?.detail || amount || 'Bewehrungsplan zum importierten Modell';
       const url = selectedPlanUrl + (row?.page ? '#page=' + row.page : '');
       byId('detailImage').parentElement.hidden = true;
       byId('detailPlanLink').href = url;
       byId('detailPdf').hidden = false;
       byId('detailPdf').src = url;
       if (!detail.open) detail.show();
-    } else if (detail.open) detail.close();
+    } else {
+      if (sheet) byId('importSelection').textContent += ' · Originalplan ' + sheet + ' laden.';
+      if (detail.open) detail.close();
+    }
     return;
   }
   byId('detailImage').parentElement.hidden = false;
@@ -533,8 +547,10 @@ function createViewer(data) {
           : showConcrete && item.concrete ? item.concrete : byId('neutralImport').checked ? item.neutral : item.material;
       }
     }
+    const selectedOverlayPosition = importedPlan?.positions[active]?.modelCount ? active : null;
     for (const mesh of importedOverlay?.children ?? []) {
-      mesh.material = mesh.userData.rebar.position === active ? highlighted : active ? muted : ordinary;
+      mesh.material = mesh.userData.rebar.position === selectedOverlayPosition ? highlighted
+        : selectedOverlayPosition ? muted : ordinary;
     }
     if (model) model.visible = custom || mode !== 'rebar';
     foundations.visible = !custom && mode !== 'rebar';
@@ -795,6 +811,18 @@ setupInput('planDrop','planFile',files => {
 },true);
 
 let modelRequest = 0;
+const sheetNames = {
+  2438:'Wände und Stützen', 2448:'Untere Deckenlage',
+  2458:'Randnadeln und Träger', 2648:'Wandscheiben 105–108',
+};
+async function loadProjectCatalog() {
+  const response = await fetch('./projekt6-plan-soll.csv');
+  if (!response.ok) throw new Error('Positionsliste für Projekt 6 fehlt.');
+  return (await response.text()).trim().split(/\r?\n/).slice(1).map(line => {
+    const [sheet,,position,count] = line.split(',');
+    return {sheet,position,count:Number(count),key:sheet + ' / ' + position};
+  });
+}
 setupInput('modelDrop','modelFile',async file => {
   if (!viewer || !file.name.toLowerCase().endsWith('.glb')) {
     byId('uploadStatus').textContent = 'Bitte bei geladenem Viewer eine GLB-Datei auswählen. 3DM in Rhino als GLB exportieren.';
@@ -806,16 +834,19 @@ setupInput('modelDrop','modelFile',async file => {
     const bytes = await file.arrayBuffer();
     const result = await loader.parseAsync(bytes, './');
     let projectPlan;
+    let catalog;
     if (crypto.subtle && bytes.byteLength === 1916120) {
       const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
         .map(byte => byte.toString(16).padStart(2,'0')).join('');
       if (hash === 'd7576f41e671a6d75ddc6fa0595425d7d92df09b2be869d9bb0d3104e7cd25fc') {
         projectPlan = readImportPlan(await json('./bauteil6-bewehrung.json'));
+        catalog = await loadProjectCatalog();
       }
     }
     if (request !== modelRequest) return;
     byId('zUpImport').checked = false;
     viewer.useModel(result.scene,false,true);
+    projectCatalog = catalog;
     if (projectPlan) {
       importedPlan = projectPlan;
       viewer.refreshImport();
@@ -825,7 +856,7 @@ setupInput('modelDrop','modelFile',async file => {
     setMode(count ? 'combined' : 'structure');
     byId('restore').hidden = false;
     byId('uploadStatus').textContent = file.name + (projectPlan
-      ? ' · Gebäude mit rekonstruierter Teilbewehrung. Für das Stabdetail Originalplan 2448 laden.'
+      ? ' · Gebäude und Positionsliste E02 geladen. Original-PDFs für die Planansicht hinzufügen.'
       : count
       ? ' · ' + count + ' Bewehrungsgruppen erkannt.'
       : ' · Modell sichtbar. Für die Bewehrungsansicht Bewehrungsgeometrie mit Positionsnamen oder passende JSON-Daten laden.');
@@ -846,7 +877,7 @@ function readImportPlan(source) {
     }
     positions[id] = {diameter:row.diameter,sheet:typeof row.sheet === 'string' ? row.sheet : null,
       detail:typeof row.detail === 'string' ? row.detail : '',
-      page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0};
+      page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0,modelCount:0};
   }
   const elements = source.elements.map((item,i) => {
     const position = String(item?.position);
@@ -862,6 +893,7 @@ function readImportPlan(source) {
       length += segment;
     }
     positions[position].modelMass += length * 7850 * Math.PI * (positions[position].diameter/2000)**2;
+    positions[position].modelCount++;
     return {position,points,id:String(item.id ?? ('Stab '+(i+1))),length};
   });
   let grid;
@@ -879,6 +911,34 @@ function readImportPlan(source) {
   return {positions,elements,grid,scope:typeof source.scope === 'string' ? source.scope : ''};
 }
 
+function drawProjectPositions() {
+  const sheet = byId('projectSheet').value;
+  const table = byId('projectPositions');
+  table.replaceChildren();
+  for (const record of projectCatalog?.filter(row => row.sheet === sheet) ?? []) {
+    const row = document.createElement('tr');
+    const label = document.createElement('th');
+    label.scope = 'row';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.position = record.key;
+    button.textContent = record.position;
+    button.setAttribute('aria-pressed', String(active === record.key));
+    button.addEventListener('click', () => {
+      if (mode === 'structure' && importedPlan.positions[record.key]?.modelCount) setMode('combined');
+      selection(record.key);
+    });
+    label.append(button);
+    const planned = document.createElement('td');
+    planned.textContent = record.count;
+    const modeled = document.createElement('td');
+    modeled.textContent = importedPlan.positions[record.key]?.modelCount ?? 0;
+    row.append(label,planned,modeled);
+    table.append(row);
+  }
+}
+byId('projectSheet').addEventListener('change', drawProjectPositions);
+
 function showImportOptions() {
   const positions = viewer.importedPositions();
   byId('stockPanel').hidden = true;
@@ -891,7 +951,17 @@ function showImportOptions() {
     : 'Gewichte und Planpositionen aus einem Zusatzdatensatz können hier ergänzt werden.';
   const panel = byId('importGroups');
   panel.replaceChildren();
-  for (const position of positions) {
+  byId('projectPlans').hidden = !projectCatalog;
+  if (projectCatalog) {
+    const sheet = byId('projectSheet');
+    sheet.replaceChildren(...Object.entries(sheetNames).map(([id,name]) => new Option(id + ' · ' + name,id)));
+    sheet.value = '2448';
+    const planned = projectCatalog.reduce((sum,row) => sum + row.count,0);
+    byId('projectCoverage').textContent = fmt(planned,0) + ' Stück laut Biegelisten · '
+      + fmt(importedPlan.elements.length,0) + ' Stäbe in 3D';
+    drawProjectPositions();
+  }
+  for (const position of projectCatalog ? [] : positions) {
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.position = position;
@@ -931,6 +1001,7 @@ byId('zUpImport').addEventListener('change',() => viewer?.refreshImport());
 
 byId('restore').addEventListener('click', () => {
   ++modelRequest;
+  projectCatalog = null;
   viewer.restore();
   byId('importPanel').hidden = true;
   byId('importSettings').hidden = true;

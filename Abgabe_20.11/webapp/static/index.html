@@ -79,6 +79,16 @@
     <section class="panel" id="importPanel" hidden>
       <h2>Importierte Bewehrung</h2>
       <p id="importSelection" aria-live="polite"></p>
+      <div id="projectPlans" hidden>
+        <p><a class="download" href="./Bauteil6-Bewehrung-Import.3dm" download>3D-Teilbewehrung für Rhino laden ↓</a></p>
+        <label for="projectSheet">Planblatt E02</label>
+        <select id="projectSheet"></select>
+        <p id="projectCoverage" class="note"></p>
+        <div class="project-position-list"><table>
+          <thead><tr><th>Position</th><th>Soll</th><th>In 3D</th></tr></thead>
+          <tbody id="projectPositions"></tbody>
+        </table></div>
+      </div>
       <div id="importGroups" class="switch"></div>
       <p id="importMass" class="note"></p>
     </section>

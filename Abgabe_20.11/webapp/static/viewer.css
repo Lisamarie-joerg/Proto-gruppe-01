@@ -49,4 +49,6 @@ input[type=file]{font-size:.77rem;max-width:100%}
 #detailText{font-size:.85rem;margin:8px 0}
 #detailImage{width:100%;display:block}
 [hidden]{display:none!important}
+.project-position-list{max-height:22rem;overflow:auto}
+#projectSheet{max-width:100%}
 @media(max-width:860px){main{grid-template-columns:1fr}.page-header{padding:16px}#viewport3d{height:58vh;min-height:340px}}
