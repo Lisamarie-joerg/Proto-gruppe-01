@@ -219,3 +219,10 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Modellmaterial nach Bauteil-ID zugewiesen: 47 Betonfundamente, 12 Stahlstützen, 502 Holzbauteile und 175 Stahlseile. Materialdarstellung und CO₂e-Bilanzannahmen separat gekennzeichnet.
 - Ein eindeutiger Seitentitel und ein Start auf freiem Port unterscheiden die aktualisierte Website von einer älteren lokalen Instanz.
 - Website-Dateien und ZIP für den genehmigten GitHub-Push vorbereitet.
+
+## 16.11.2026 – Planmodell, Material und Interaktion
+
+- Aus Stabliste P-01, Schnitten A–A/B–B und Detail 1 wurden 501 3D-Stabobjekte auf vier Positionslayern erzeugt. Rhino-Datei wieder geöffnet und Stückzahlen geprüft. Einbaulagen und Biegeradien sind angenähert.
+- Website auf Tragwerk, Bewehrung und Gewicht umgebaut. Materialzuordnung gegen GLB und RFEM-Daten geprüft: 47 Betonfundamente, 12 Stahlstützen, 502 Dachkörper aus Holz.
+- In Edge Materialansicht und freigestellte Bewehrung geprüft. Klick auf einen Längsstab öffnete Detailposition 2 und markierte die Positionsgruppe pink. Drag-and-drop für eigene GLB-/PDF-Dateien ergänzt.
+- ZIP mit der aktuellen Website aktualisiert. Rhino-Modell separat bereitgestellt.

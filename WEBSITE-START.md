@@ -1,20 +1,17 @@
-# Stockerau – Website für die Gruppe
+# Stockerau – Tragwerk und Bewehrung
 
-## Öffnen
+## Website öffnen
 
-1. ZIP entpacken oder den freigegebenen GitHub-Stand klonen.
-2. Unter Windows mit installiertem Python auf Website-oeffnen.bat doppelklicken. Alternativ im entpackten Ordner `python website_starten.py` ausführen.
-3. Die Startdatei öffnet die aktualisierte Seite auf einem freien lokalen Port. Falls kein Browserfenster aufgeht, die vollständige Adresse aus dem Terminal kopieren. Das Terminal muss offen bleiben.
-4. Zum Beenden im Terminal Strg+C drücken.
+Unter Windows mit installiertem Python im entpackten Ordner auf `Website-oeffnen.bat` doppelklicken. Alternativ `python website_starten.py` ausführen. Die Startdatei öffnet den Browser auf einem freien lokalen Port. Das Terminalfenster geöffnet lassen.
 
-Für die statische Website sind weder Rhino noch FastAPI nötig. Im bestehenden Repo funktioniert auch der FastAPI-Start über webapp_starten.bat bei eingerichteter .venv.
+Im Viewer zwischen Tragwerk, transparenter Überlagerung und reiner Bewehrung wechseln. Beim Klick auf einen Stab oder eine Positionsnummer werden alle gleich bezeichneten Stäbe pink. Das kleine Detailfenster zeigt die jeweilige Zeile aus der Original-Stabliste. Die Gewichtsangaben stammen für die Bewehrung aus Plan P-01. Die Tragwerksmassen sind Schätzwerte aus den Modellvolumina und den in der App angegebenen Dichten.
 
-## In das Gruppen-Repo übernehmen
+## Eigene Dateien
 
-In VS Code zuerst den GitHub-Stand abrufen und Änderungen auf einem Arbeitsbranch prüfen. webapp/app.py und webapp/static aus dem ZIP mit dem aktuellen Repo abgleichen. Die neuen Einträge aus LOGBUCH.md übernehmen, wenn sich das Logbuch inzwischen geändert hat. Diff prüfen, committen und den Branch pushen. Die Gruppe holt sich den freigegebenen Stand per Pull.
+3D-Modelle als GLB und Bewehrungspläne als PDF in die markierten Felder ziehen oder per Dateidialog auswählen. Rhino-Dateien zuvor als GLB exportieren. Eigene Dateien werden lokal angezeigt. Eine Zuordnung von Stäben, Planpositionen und Gewichten ist für das integrierte Stockerau-Modell hinterlegt.
 
-Für eine gehostete Website ist webapp/static der vollständige Webroot. Der Plan ist unter bewehrungsplan.pdf Teil dieses Webroots. Die Sichtbarkeit der Website muss zu den Zugriffsrechten eurer Gruppe passen.
+## Rhino und Plan
 
-## Modell und Plan
+Die separate Datei `Stockerau-Bewehrung.3dm` enthält das Ausgangsmodell mit Materialzuweisung und 501 zusätzliche Stabobjekte auf vier Positionslayern. Sie liegt neben dem ZIP auf GitHub. In Rhino die schattierte oder gerenderte Darstellung wählen. Stab-ID, Planposition und Schnitt stehen in den Benutzerdaten der Objekte. Die Einbaulagen sind aus Plan und RFEM-Achsen rekonstruiert, die Biegeradien und Einbaulagen sind angenähert.
 
-Im 3D-Viewport ein Betonsegment auswählen, um den zugehörigen Streifen zu fokussieren. Die Ansichtsbuttons wechseln zwischen Tragwerk, schematischer Bewehrung und transparenter Überlagerung. Alle vier Positionen sind im 3D-Modell und in der Stabliste auswählbar. Bei Auswahl einer Position werden alle dazugehörigen Stäbe hervorgehoben. Die 501 dargestellten Stäbe und Bügel folgen den Stückzahlen, Zuschnittlängen und den Schnitten A–A/B–B. Einbaulagen, Übergreifungen im Detail und Biegeradien sind angenähert. Maßgeblich für Zuschnitt und Masse ist die Original-Stabliste. Die CO₂e-Bilanz verwendet die Planmasse von 1.015,63 kg. Für Einzelwerte wird diese proportional zum Betonvolumen verteilt.
+Zur Reproduktion mit installierten Paketen `rhino3dm` und `pymupdf` den Befehl `python bewehrung_erstellen.py PFAD_ZUM_MODELL PFAD_ZUM_PLAN` aus dem Repo ausführen. Website und Rhino-Modell verwenden dieselbe Bewehrungsgeometrie.
