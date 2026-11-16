@@ -187,6 +187,28 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 
 
 
+**Nachtrag – Bugfix (Web-App):** Die App zeigte das 3D-Modell nur, wenn sie über
+`python webapp/app.py` (FastAPI, Port 8501) gestartet wurde. Wurde der
+`static`-Ordner direkt über einen Statik-Server geöffnet (z. B.
+`python -m http.server 8000`), schlugen die absoluten Pfade
+`/static/plotly.min.js` und `/api/data` mit 404 fehl → Plotly und Daten luden
+nicht, der Viewport blieb leer (Fehlerkonsole: „Daten konnten nicht geladen
+werden"). Fix: `index.html` nutzt jetzt relative Pfade mit Fallback
+(Plotly: `plotly.min.js` → `/static/plotly.min.js`; Daten: `/api/data` →
+`data.json`), und `app.py` mountet den static-Ordner zusätzlich unter `/`
+(`html=True`). Damit läuft die App sowohl über FastAPI als auch über jeden
+beliebigen Statik-Server. Verifiziert per Headless-Render (736 Stäbe, Szene
+822×733 px) auf beiden Wegen.
+
+**Nachtrag – Darstellung der Stäbe im 3D-Viewport:** Zuerst wurden die 736
+Stäbe nur als einfache Punkte (scatter3d markers) gezeichnet. Jetzt wird jeder
+Stab als echtes 3D-Volumen (quaderförmiger mesh3d-Körper zwischen `start` und
+`end`, Kantenlänge aus der Querschnittsfläche `A_mm2`) gerendert, weiterhin
+nach CO₂e eingefärbt (grün → rot) und mit Hover-Infos (Nr./Profil/Länge/Fläche/
+Volumen/CO₂e). Verifiziert per Headless-Render: Bildinhalt von ~12.800 auf
+~57.000 farbige Pixel gestiegen (~4,5×), identisch auf FastAPI (`app.py`, :8501)
+und reinem Statik-Server (`python -m http.server`, :8000).
+
 ## Zum Schluss
 
 Wie habt ihr mit dem Agenten gearbeitet, und was würdet ihr der nächsten Gruppe mitgeben?
@@ -238,3 +260,14 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - P-01 erneut geprüft. A–A zeigt einen Stoß nahe Achse E, B–B zwei Stöße zwischen 4/5 und 5/6. Bemaßung jeweils mindestens 1,00 m. Im Modell 1,06 m verwendet und benachbarte Stöße um insgesamt 20 cm gegeneinander versetzt.
 - Alle 70 Längsstöße mit 1,06 m Überdeckung nachgerechnet. Längster Stab 5,1353 m. 490 Stäbe in 15 Typgruppen, Modellmasse 955,43 kg. Die Stabauswahl gruppiert nach Planposition und Zuschnittlänge auf Zentimeter gerundet.
 - Achsen B–H und 3–7 mit Maßketten in der XY-Ebene unter dem Fundament eingezeichnet und in Edge geprüft. Rhino-Modell und ZIP aktualisiert.
+
+
+## 16.11.2026 – Gruppenordner für die Abgabe
+
+- Lokal aktualisierten Ordner Abgabe_20.11 mit Originalplan, Rhino-Quelldatei und startbarer Website übernommen. Startdatei und Website-Assets geprüft. Das ZIP im Hauptordner entspricht dem aktuellen Stand auf main.
+
+## 16.11.2026 – Fundamentenden, Stützenkörbe und Achsschnitte
+
+- Außenkanten aus P-01 am registrierten Achsraster abgelesen. Fundamentüberstände ab äußeren Stützenachsen in A–A ca. 48/54 cm, in B–B je 25 cm. Fünf Fundamentkörper für Rhino und Viewer aus gemeinsamen Geometriedaten erzeugt.
+- 12 Detailkörbe aus je acht Bügeln an den Stützenmittelpunkten zentriert und ihre Lage aus den Modellkoordinaten geprüft. Kleinste modellierte lichte Deckung 41.99 mm. Auswahl nach Planposition, Position 2 umfasst alle 60 Stäbe.
+- Klick auf Rasterachse und anschließende Richtungswahl erzeugen einen orthogonalen Clipping-Schnitt. Website im Hauptordner und in Abgabe_20.11 aktualisiert.

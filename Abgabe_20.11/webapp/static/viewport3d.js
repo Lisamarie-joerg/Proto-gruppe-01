@@ -16,7 +16,6 @@ const loader = new GLTFLoader();
 
 let mode = 'combined';
 let active = null;
-let activeGroup = null;
 let plan;
 let planUrl;
 let viewer;
@@ -34,7 +33,8 @@ function showStatus(text) {
 
 function renderMasses(data) {
   const sums = { Beton: 0, Metall: 0, Holz: 0, Stahlseil: 0 };
-  data.bars.forEach(bar => { sums[bar.material_etappe03] += grossMass(bar); });
+  data.bars.forEach(bar => { if (bar.gruppe !== 'Beton') sums[bar.material_etappe03] += grossMass(bar); });
+  sums.Beton = plan.foundations.reduce((volume,f) => volume+f.length*f.width*f.height,0)*densities.Beton;
   byId('structureMass').innerHTML = Object.entries(sums)
     .map(([key, value]) => `<dt>${titles[key]}</dt><dd>${fmt(value, 0)} kg</dd>`).join('')
     + `<dt>Bewehrung im Modell</dt><dd>${fmt(plan.modelMass)} kg</dd>
@@ -43,7 +43,6 @@ function renderMasses(data) {
 
 function selection(position, item = null) {
   active = position;
-  activeGroup = item?.group ?? null;
   const row = plan?.positions[position];
   const selected = byId('selection');
   document.querySelectorAll('[data-position]').forEach(button => {
@@ -63,9 +62,9 @@ function selection(position, item = null) {
   const url = './' + (section ?? 'position-' + position) + '.png';
   byId('detailImage').src = byId('detailOriginal').href = url;
   const barMass = item && item.length * 7850 * Math.PI * (row.diameter / 2000)**2;
-  const equivalents = item && plan.elements.filter(element => element.group === item.group).length;
+  const equivalents = item && plan.elements.filter(element => element.position === item.position).length;
   selected.textContent = item
-    ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} Stäbe gleichen Typs`
+    ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} Stäbe der Planposition`
     : `Position ${position} · ${row.modelCount} Modellstäbe · ca. ${fmt(row.modelMass)} kg im Modell`;
   if (!detail.open) detail.show();
 }
@@ -92,9 +91,9 @@ function setMode(value) {
   viewer?.update();
 }
 
-function createGroundGrid(grid, z) {
+function createGroundGrid(grid, bounds) {
   const group = new THREE.Group();
-  group.position.z = z;
+  group.position.z = bounds.min.z-.09;
   const [left, right] = [grid.x[0][1], grid.x.at(-1)[1]];
   const [bottom, top] = [grid.y[0][1], grid.y.at(-1)[1]];
   const axes = [];
@@ -128,25 +127,29 @@ function createGroundGrid(grid, z) {
     mesh.position.set(x,y,.008);
     mesh.rotation.z = turn;
     group.add(mesh);
+    return mesh;
   }
 
-  const dimensionY = bottom - .88, dimensionX = left - .94;
+  const dimensionY = Math.min(bottom,bounds.min.y)-.69;
+  const dimensionX = Math.min(left,bounds.min.x)-.69;
+  const outerTop = Math.max(top,bounds.max.y)+.52;
+  const outerRight = Math.max(right,bounds.max.x)+.52;
   const tick = .075;
   grid.x.forEach(([name,x], i) => {
-    line(axes,x,bottom-.36,x,top+.42);
+    line(axes,x,bottom-.36,x,outerTop-.19);
     line(dims,x,bottom-.24,x,dimensionY-.16);
     line(dims,x-tick,dimensionY-tick,x+tick,dimensionY+tick);
-    textLabel(name,x,top+.63,0,true);
+    textLabel(name,x,outerTop,0,true).userData.axis = {name, kind:"x", coord:x};
     if (i) {
       const previous = grid.x[i-1][1];
       textLabel(fmt(x-previous)+' m',(x+previous)/2,dimensionY-.21);
     }
   });
   grid.y.forEach(([name,y], i) => {
-    line(axes,left-.36,y,right+.42,y);
+    line(axes,left-.36,y,outerRight-.19,y);
     line(dims,left-.24,y,dimensionX-.16,y);
     line(dims,dimensionX-tick,y-tick,dimensionX+tick,y+tick);
-    textLabel(name,right+.64,y,0,true);
+    textLabel(name,outerRight,y,0,true).userData.axis = {name, kind:"y", coord:y};
     if (i) {
       const previous = grid.y[i-1][1];
       textLabel(fmt(y-previous)+' m',dimensionX-.24,(y+previous)/2,Math.PI/2);
@@ -171,6 +174,8 @@ function createViewer(data) {
   scene.background = new THREE.Color(0xe7eee9);
   const camera = new THREE.PerspectiveCamera(43, 1, .01, 1500);
   camera.up.set(0, 0, 1);
+  const sectionCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, .01, 1500);
+  sectionCamera.up.set(0,0,1);
   const orbit = new OrbitControls(camera, renderer.domElement);
   orbit.enableDamping = true;
   const key = new THREE.DirectionalLight(0xffffff, 2.35);
@@ -204,11 +209,94 @@ function createViewer(data) {
     bars.add(mesh);
   }
 
+  const foundations = new THREE.Group();
+  for (const item of plan.foundations) {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(item.length,item.width,item.height), materials.Beton);
+    const direction = new THREE.Vector3(...item.direction);
+    mesh.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(direction,
+      new THREE.Vector3(...item.side),new THREE.Vector3(...item.up)));
+    mesh.position.set(...item.start).addScaledVector(direction,item.length/2);
+    mesh.userData.foundation = item;
+    foundations.add(mesh);
+  }
+  scene.add(foundations);
+
   const byBeam = new Map(data.bars.map(bar => [String(bar.beam_id), bar]));
   let model;
   let stockModel;
   let bounds;
   let groundGrid;
+  let axisChoice;
+  let cutDirection = 0;
+  let cutPlane;
+  const sectionControls = byId('sectionControls');
+
+  const axisMenu = byId('sectionAxis');
+  for (const kind of ['x','y']) {
+    for (const [name,coord] of plan.grid[kind]) {
+      axisMenu.add(new Option('Achse '+name, JSON.stringify({name,kind,coord})));
+    }
+  }
+  axisMenu.addEventListener('change', () => {
+    if (axisMenu.value) chooseAxis(JSON.parse(axisMenu.value));
+    else { endSection(); setCamera(); }
+  });
+
+  function fitSection() {
+    if (!cutDirection || !axisChoice || !bounds) return;
+    const isX = axisChoice.kind === 'x';
+    const normal = new THREE.Vector3(isX ? cutDirection : 0,isX ? 0 : cutDirection,0);
+    const center = bounds.getCenter(new THREE.Vector3());
+    center[axisChoice.kind] = axisChoice.coord;
+    cutPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(normal,center);
+    renderer.clippingPlanes = [cutPlane];
+    const size = bounds.getSize(new THREE.Vector3());
+    const aspect = Math.max(.1,camera.aspect);
+    const halfHeight = Math.max(size.z/2,(isX ? size.y : size.x)/(2*aspect))*1.19;
+    sectionCamera.left = -halfHeight*aspect;
+    sectionCamera.right = halfHeight*aspect;
+    sectionCamera.top = halfHeight;
+    sectionCamera.bottom = -halfHeight;
+    sectionCamera.position.copy(center).addScaledVector(normal,-30);
+    sectionCamera.lookAt(center);
+    sectionCamera.updateMatrixWorld();
+    sectionCamera.updateProjectionMatrix();
+  }
+
+  function endSection() {
+    cutDirection = 0;
+    axisChoice = null;
+    cutPlane = null;
+    renderer.clippingPlanes = [];
+    orbit.enabled = true;
+    sectionControls.hidden = true;
+    axisMenu.value = "";
+    if (groundGrid) groundGrid.visible = model === stockModel;
+  }
+
+  function chooseAxis(axis) {
+    endSection();
+    axisChoice = axis;
+    axisMenu.value = JSON.stringify({name:axis.name,kind:axis.kind,coord:axis.coord});
+    sectionControls.hidden = false;
+    byId('sectionInfo').textContent = 'Achse ' + axis.name + ' · Blickrichtung wählen';
+    byId('sectionMinus').textContent = 'Richtung −' + axis.kind.toUpperCase();
+    byId('sectionPlus').textContent = 'Richtung +' + axis.kind.toUpperCase();
+  }
+
+  function startSection(direction) {
+    if (!axisChoice) return;
+    cutDirection = direction;
+    orbit.enabled = false;
+    if (groundGrid) groundGrid.visible = false;
+    byId('sectionInfo').textContent = 'Schnitt ' + axisChoice.name + ' · Blick nach ' +
+      (direction > 0 ? '+' : '−') + axisChoice.kind.toUpperCase();
+    fitSection();
+  }
+
+  byId('sectionMinus').addEventListener('click', () => startSection(-1));
+  byId('sectionPlus').addEventListener('click', () => startSection(1));
+  byId('sectionClear').addEventListener('click', () => { endSection(); setCamera(); });
   let parts = [];
   const ray = new THREE.Raycaster();
   ray.params.Line.threshold = .04;
@@ -217,6 +305,10 @@ function createViewer(data) {
     const custom = model !== stockModel;
     bars.visible = !custom && mode !== 'structure';
     if (model) model.visible = custom || mode !== 'rebar';
+    foundations.visible = !custom && mode !== 'rebar';
+    for (const part of foundations.children) {
+      part.material = mode === 'combined' ? transparentConcrete : materials.Beton;
+    }
     for (const object of parts) {
       const material = object.userData.part.material_etappe03;
       object.material = material === 'Beton' && mode === 'combined'
@@ -224,7 +316,7 @@ function createViewer(data) {
     }
     for (const mesh of bars.children) {
       const item = mesh.userData.rebar;
-      const matches = activeGroup !== null ? item.group === activeGroup : item.position === active;
+      const matches = item.position === active;
       mesh.material = matches ? highlighted : active ? muted : ordinary;
       mesh.renderOrder = matches ? 2 : 0;
     }
@@ -239,7 +331,10 @@ function createViewer(data) {
     const size = viewBounds.getSize(new THREE.Vector3()).length();
     const half = THREE.MathUtils.degToRad(camera.fov / 2);
     const angle = Math.min(half, Math.atan(Math.tan(half) * camera.aspect));
-    const distance = (size / 2) / Math.sin(angle);
+    const spans = viewBounds.getSize(new THREE.Vector3());
+    const distance = top
+      ? Math.max(spans.y,spans.x/camera.aspect)*.57/Math.tan(half)+spans.z/2
+      : (size / 2) / Math.sin(angle);
     camera.near = Math.max(.001, distance / 5000);
     camera.far = distance * 25;
     camera.updateProjectionMatrix();
@@ -259,7 +354,7 @@ function createViewer(data) {
         if (!obj.isMesh && !obj.isLine) return;
         const bar = byBeam.get(String(obj.userData.beamId));
         if (!bar || !materials[bar.material_etappe03]) return;
-        if (obj.isLine && bar.koerper) {
+        if (bar.gruppe === 'Beton' || (obj.isLine && bar.koerper)) {
           obj.visible = false;
           return;
         }
@@ -271,20 +366,24 @@ function createViewer(data) {
     scene.add(model);
     model.updateMatrixWorld(true);
     bounds = new THREE.Box3().setFromObject(model);
+    endSection();
     if (next === stockModel) {
+      bounds.union(new THREE.Box3().setFromObject(foundations));
       if (!groundGrid) {
-        groundGrid = createGroundGrid(plan.grid,bounds.min.z-.09);
+        groundGrid = createGroundGrid(plan.grid,bounds);
         scene.add(groundGrid);
       }
       bounds.union(new THREE.Box3().setFromObject(bars));
     }
     if (groundGrid) groundGrid.visible = next === stockModel;
+    axisMenu.disabled = next !== stockModel;
     update();
     setCamera();
   }
 
   const a = new THREE.Vector3(), b = new THREE.Vector3();
-  const pointOnRay = new THREE.Vector3();
+  const pointOnRay = new THREE.Vector3(), pointOnBar = new THREE.Vector3();
+  const visiblePoint = p => !cutPlane || cutPlane.distanceToPoint(p) >= -1e-5;
   function nearBar() {
     let best;
     let thresholdSquared = Infinity;
@@ -293,10 +392,11 @@ function createViewer(data) {
       for (let i = 1; i < points.length; i++) {
         a.copy(points[i - 1]);
         b.copy(points[i]);
-        const distanceSquared = ray.ray.distanceSqToSegment(a, b, pointOnRay);
+        const distanceSquared = ray.ray.distanceSqToSegment(a, b, pointOnRay, pointOnBar);
         const depth = ray.ray.origin.distanceTo(pointOnRay);
         const fourPixels = 8 * depth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / mount.clientHeight;
-        if (distanceSquared < fourPixels ** 2 && distanceSquared < thresholdSquared) {
+        const tolerance = cutDirection ? 8*sectionCamera.top/mount.clientHeight : fourPixels;
+        if (visiblePoint(pointOnBar) && distanceSquared < tolerance ** 2 && distanceSquared < thresholdSquared) {
           thresholdSquared = distanceSquared;
           best = mesh;
         }
@@ -311,16 +411,51 @@ function createViewer(data) {
     if (!pointer || Math.hypot(e.clientX-pointer[0],e.clientY-pointer[1]) > 6) return;
     const box = renderer.domElement.getBoundingClientRect();
     const coords = new THREE.Vector2((e.clientX-box.left)/box.width*2-1, 1-(e.clientY-box.top)/box.height*2);
-    ray.setFromCamera(coords, camera);
+    ray.setFromCamera(coords, cutDirection ? sectionCamera : camera);
+    if (groundGrid?.visible) {
+      const axis = ray.intersectObjects(groundGrid.children.filter(item => item.userData.axis),false)[0];
+      if (axis) {
+        chooseAxis(axis.object.userData.axis);
+        return;
+      }
+    }
     if (bars.visible) {
-      const mesh = ray.intersectObjects(bars.children, false)[0]?.object || nearBar();
+      const mesh = ray.intersectObjects(bars.children, false).find(hit => visiblePoint(hit.point))?.object || nearBar();
       if (mesh) {
         selection(mesh.userData.rebar.position, mesh.userData.rebar);
         return;
       }
     }
-    if (!model?.visible) return;
-    const hit = ray.intersectObjects(parts, false)[0];
+    const hit = model?.visible
+      ? ray.intersectObjects([...parts,...(foundations.visible ? foundations.children : [])], false)
+        .find(item => visiblePoint(item.point))
+      : null;
+    if (!hit && groundGrid?.visible) {
+      const point = ray.ray.intersectPlane(
+        new THREE.Plane(new THREE.Vector3(0,0,1), -groundGrid.position.z),new THREE.Vector3());
+      if (point) {
+        const candidates = [];
+        for (const kind of ['x','y']) {
+          const other = kind === 'x' ? 'y' : 'x';
+          const cross = plan.grid[other];
+          if (point[other] < cross[0][1]-.45 || point[other] > cross.at(-1)[1]+.45) continue;
+          for (const [name,coord] of plan.grid[kind]) {
+            candidates.push({name,kind,coord,distance:Math.abs(point[kind]-coord)});
+          }
+        }
+        const axis = candidates.sort((a,b)=>a.distance-b.distance)[0];
+        if (axis?.distance < .11) {
+          chooseAxis(axis);
+          return;
+        }
+      }
+    }
+    if (hit?.object.userData.foundation) {
+      const foundation = hit.object.userData.foundation;
+      selection(null);
+      byId('selection').textContent = `Betonfundament · ${foundation.strip} · ${fmt(foundation.length)} m`;
+      return;
+    }
     if (hit) {
       const bar = hit.object.userData.part;
       selection(null);
@@ -333,12 +468,13 @@ function createViewer(data) {
     renderer.setSize(width,height,false);
     camera.aspect = width/height;
     camera.updateProjectionMatrix();
+    fitSection();
   }
   new ResizeObserver(resize).observe(mount);
   resize();
-  renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,camera); });
+  renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,cutDirection ? sectionCamera : camera); });
   return {
-    update, setCamera, useModel, isCustom: () => model !== stockModel,
+    update, setCamera, endSection, useModel, isCustom: () => model !== stockModel,
     restore: () => useModel(stockModel),
   };
 }
@@ -399,8 +535,8 @@ byId('restore').addEventListener('click', () => {
   byId('restore').hidden = true;
   byId('uploadStatus').textContent = 'Stockerau-Modell wieder geöffnet.';
 });
-byId('reset').addEventListener('click', () => { selection(null); viewer?.setCamera(); });
-byId('top').addEventListener('click', () => viewer?.setCamera(true));
+byId('reset').addEventListener('click', () => { selection(null); viewer?.endSection(); viewer?.setCamera(); });
+byId('top').addEventListener('click', () => { viewer?.endSection(); viewer?.setCamera(true); });
 buttons.forEach(button => button.addEventListener('click', () => {
   const refit = mode === 'rebar' || button.dataset.mode === 'rebar';
   setMode(button.dataset.mode);

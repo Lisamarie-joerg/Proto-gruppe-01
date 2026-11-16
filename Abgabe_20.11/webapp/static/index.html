@@ -23,6 +23,14 @@
       </div>
       <div class="switch">
         <button id="reset">Gesamtansicht</button><button id="top">Draufsicht</button>
+        <select id="sectionAxis" aria-label="Schnittachse"><option value="">Schnittachse …</option></select>
+      </div>
+    </div>
+    <div id="sectionControls" class="toolbar" aria-label="Achsschnitt" hidden>
+      <span id="sectionInfo" role="status"></span>
+      <div class="switch">
+        <button id="sectionMinus"></button><button id="sectionPlus"></button>
+        <button id="sectionClear">Schnitt beenden</button>
       </div>
     </div>
     <div id="viewport3d">
@@ -41,7 +49,7 @@
         <span><i class="concrete"></i>Betonfundamente</span><span><i class="steel"></i>Stahlstützen</span>
         <span><i class="wood"></i>Holzdach</span><span><i class="pink"></i>Gewählte Stabposition</span>
       </div>
-      <small>Drehen · Zoomen · Stab auswählen · Draufsicht für Achsmaße</small>
+      <small>Stab auswählen · Achsenlabel anklicken und Blickrichtung wählen · Draufsicht für Achsmaße</small>
     </div>
   </section>
   <aside>

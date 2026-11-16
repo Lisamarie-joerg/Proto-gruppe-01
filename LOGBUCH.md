@@ -265,3 +265,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 ## 16.11.2026 – Gruppenordner für die Abgabe
 
 - Lokal aktualisierten Ordner Abgabe_20.11 mit Originalplan, Rhino-Quelldatei und startbarer Website übernommen. Startdatei und Website-Assets geprüft. Das ZIP im Hauptordner entspricht dem aktuellen Stand auf main.
+
+## 16.11.2026 – Fundamentenden, Stützenkörbe und Achsschnitte
+
+- Außenkanten aus P-01 am registrierten Achsraster abgelesen. Fundamentüberstände ab äußeren Stützenachsen in A–A ca. 48/54 cm, in B–B je 25 cm. Fünf Fundamentkörper für Rhino und Viewer aus gemeinsamen Geometriedaten erzeugt.
+- 12 Detailkörbe aus je acht Bügeln an den Stützenmittelpunkten zentriert und ihre Lage aus den Modellkoordinaten geprüft. Kleinste modellierte lichte Deckung 41.99 mm. Auswahl nach Planposition, Position 2 umfasst alle 60 Stäbe.
+- Klick auf Rasterachse und anschließende Richtungswahl erzeugen einen orthogonalen Clipping-Schnitt. Website im Hauptordner und in Abgabe_20.11 aktualisiert.

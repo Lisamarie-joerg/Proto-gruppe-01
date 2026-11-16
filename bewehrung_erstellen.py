@@ -24,7 +24,7 @@ COLORS = {"Beton": (163, 164, 153, 255), "Metall": (81, 105, 127, 255),
           "Holz": (174, 112, 52, 255), "Stahlseil": (57, 73, 87, 255)}
 
 
-def reinforcement(bars):
+def reinforcement(bars, foundations):
     groups = defaultdict(list)
     for bar in bars:
         if bar["gruppe"] != "Beton":
@@ -33,11 +33,18 @@ def reinforcement(bars):
         axis = int(abs(b[1] - a[1]) > abs(b[0] - a[0]))
         groups[axis, a[1 - axis]].extend([a, b])
 
+    supports = sorted(b["start"][:2] for b in bars if b["material_etappe03"] == "Metall")
     # Plan grid D/F coincides with RFEM X=10/13; rows 3/5/7 coincide
     # with Y=-10/-5/0. Heights follow the section axes of the RFEM solids.
     for (axis, coordinate), nodes in sorted(groups.items()):
         nodes.sort(key=lambda p: p[axis])
         start, end = nodes[0], nodes[-1]
+        # Measured at the outer concrete faces in PDF sections A-A/B-B.
+        # Dimensions refer to the outer support axes in the RFEM model.
+        extensions = (.48, .54) if axis == 0 else (.25, .25)
+        slope = [(b-a)/(end[axis]-start[axis]) for a,b in zip(start,end)]
+        start = [a - extensions[0]*v for a,v in zip(start,slope)]
+        end = [a + extensions[1]*v for a,v in zip(end,slope)]
         span = dist(start, end)
         section = "A–A" if axis == 0 else "B–B"
         strip = f"{'Y' if axis == 0 else 'X'} = {coordinate:g} m"
@@ -46,6 +53,10 @@ def reinforcement(bars):
         side = (-sin(bearing), cos(bearing), 0)
         rise = direction[2]
         up = (-rise * cos(bearing), -rise * sin(bearing), sqrt(1 - rise**2))
+        foundations.append({"strip": strip, "start": start, "end": end,
+                            "direction": direction, "side": side, "up": up,
+                            "width": SECTION_WIDTH, "height": SECTION_WIDTH,
+                            "length": span, "extensions": extensions})
         stock_id = "2" if axis == 0 else "4"
         offset = COVER + FIT_MARGIN + .006
         length = span - 2 * offset
@@ -95,11 +106,15 @@ def reinforcement(bars):
 
         if axis == 0:
             yield from stirrup_run(0, length)
-            crossings = [(x - start[0])/direction[0] - offset for x in (10, 13)]
-            for station in (.28, *crossings, length - .28):
+            for support_x, support_y in supports:
+                if support_y != coordinate:
+                    continue
+                station = (support_x-start[0])/direction[0] - offset
                 for shift in (-.15, -.05, .05, .15):
-                    yield stirrup(station + shift, "Detail 1")
-                    yield stirrup(station, "Detail 1", shift)
+                    for item in (stirrup(station + shift, "Detail 1"),
+                                 stirrup(station, "Detail 1", shift)):
+                        item["support"] = [support_x, support_y]
+                        yield item
         else:
             yield from stirrup_run(.23, length / 2 - .23)
             yield from stirrup_run(length / 2 + .23, length - .23)
@@ -175,7 +190,16 @@ def main():
     model = rhino.File3dm.Read(str(args.model))
     assert model is not None and model.Settings.ModelUnitSystem == rhino.UnitSystem.Meters
     bars = json.loads((args.static / "data.json").read_bytes())["bars"]
-    elements = list(reinforcement(bars))
+    foundations = []
+    elements = list(reinforcement(bars, foundations))
+    cages = defaultdict(list)
+    for item in elements:
+        if "support" in item:
+            cages[tuple(item["support"])].extend(item["points"])
+    assert len(cages) == 12
+    for support, points in cages.items():
+        assert all(abs((min(p[axis] for p in points)+max(p[axis] for p in points))/2
+                       - support[axis]) < .0001 for axis in (0, 1))
     counts = Counter()
     for item in elements:
         p = item["position"]
@@ -190,12 +214,37 @@ def main():
         material.DiffuseColor = color
         materials[key] = model.Materials.Add(material)
     by_id = {str(b["beam_id"]): b for b in bars}
+    old_foundations = []
     for obj in model.Objects:
         attrs = obj.Attributes
         beam = attrs.GetUserString("BG_RFEM_Exchange_BeamId_bg0246")
         if beam in by_id:
+            if by_id[beam]["gruppe"] == "Beton" and isinstance(obj.Geometry, (rhino.Brep, rhino.Extrusion, rhino.Mesh)):
+                old_foundations.append(attrs.Id)
             attrs.MaterialIndex = materials[by_id[beam]["material_etappe03"]]
             attrs.MaterialSource = rhino.ObjectMaterialSource.MaterialFromObject
+
+    for object_id in old_foundations:
+        model.Objects.Delete(object_id)
+    foundation_layer = rhino.Layer()
+    foundation_layer.Name = "Streifenfundamente nach Plan P-01"
+    foundation_layer.Color = COLORS["Beton"]
+    layer_index = model.Layers.Add(foundation_layer)
+    for strip in foundations:
+        half = strip["width"]/2
+        box = rhino.Box(rhino.BoundingBox(rhino.Point3d(0,-half,-half),
+                                         rhino.Point3d(strip["length"],half,half)))
+        plane = rhino.Plane(rhino.Point3d(*strip["start"]),
+                            rhino.Vector3d(*strip["direction"]), rhino.Vector3d(*strip["side"]))
+        geometry = rhino.Brep.CreateFromBox(box)
+        assert geometry.Transform(rhino.Transform.PlaneToPlane(rhino.Plane.WorldXY(), plane))
+        assert geometry.IsSolid
+        attrs = rhino.ObjectAttributes()
+        attrs.Name = strip["strip"]
+        attrs.LayerIndex = layer_index
+        attrs.MaterialIndex = materials["Beton"]
+        attrs.MaterialSource = rhino.ObjectMaterialSource.MaterialFromObject
+        model.Objects.AddBrep(geometry,attrs)
 
     layers = {}
     for p in POSITIONS:
@@ -233,7 +282,7 @@ def main():
                "cover": COVER, "lap": LAP, "maxLength": MAX_LENGTH,
                "grid": {"x": [["B",7],["C",8.07],["D",10],["E",11.5],["F",13],["G",14.93],["H",16]],
                         "y": [["3",-10],["4",-7.5],["5",-5],["6",-2.5],["7",0]]},
-               "positions": records, "elements": elements}
+               "positions": records, "elements": elements, "foundations": foundations}
     (args.static / "bewehrung.json").write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print("Verified Rhino meshes:", dict(counts))
