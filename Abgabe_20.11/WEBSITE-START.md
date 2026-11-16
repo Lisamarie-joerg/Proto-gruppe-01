@@ -12,6 +12,8 @@ Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend e
 
 ## Eigene Dateien
 
+Für Projekt 6 im Ordner `Dateien Projekt6` zuerst `Bauteil6.glb` öffnen. Die Website erkennt diesen Export und lädt eine angenäherte 3D-Teilrekonstruktion aus Plan 2448 für die Positionen 1 und 2 der unteren Deckenlage E02. Anschließend die vier Original-PDFs gemeinsam ins Planfeld ziehen und über die Liste wechseln. Beim Klick auf einen rekonstruierten Stab öffnet sich Plan 2448. Die übrigen Planpositionen sind im jeweiligen Original-PDF sichtbar.
+
 1. 3D-Modell als GLB öffnen. Rhino-Dateien zuvor als GLB mit eingebetteten Texturen exportieren. Ist das Modell zu dunkel, **Neutral anzeigen** aktivieren; liegt das Modell auf der Seite, **Z ist oben** umschalten.
 2. Das dazugehörige Original-PDF laden. Bei einer Stabauswahl erscheint es im Detailfenster. Ohne Zuordnung wird der gesamte Plan geöffnet.
 3. Die Website erkennt separate GLB-Stäbe mit der Metadaten-Eigenschaft `rebarPosition` (z. B. `2`) oder Objektnamen wie `P2-001`. Alternativ eine passende JSON-Datei laden. Die JSON-Geometrie ersetzt dann die erkannten GLB-Stäbe im Viewer. Sie ermöglicht auch die Massenberechnung und schwarze Stabschnittflächen. Ein optionales X/Y-Raster liefert die eigenen Schnittachsen und Achsmaße.

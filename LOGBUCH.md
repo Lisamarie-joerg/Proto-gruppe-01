@@ -282,3 +282,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Dunkle GLB-Materialien aufgehellt und eine neutrale Darstellung sowie Z-up-Umschaltung ergänzt.
 - Importierte Stäbe nach Positionsnamen oder JSON gruppiert. Original-PDF im Detailfenster, optionale Planseiten, Achsen, Schnittflächen und berechnete Bewehrungsmasse für JSON-Geometrie ergänzt.
 - Stockerau im Browser geöffnet. Datenprüfung mit 509 Stäben, 60 Stäben der Position 2, Schnittflächen und einem synthetischen dunklen Importmodell bestanden.
+
+## 16.11.2026 - Bauteil 6 und Originalpläne E02
+
+- Den konkreten GLB-Export mit 883 Meshes geprüft. Beton und Stahlprofile erhalten lesbare Ersatzfarben für das schwarze Ausgangsmaterial.
+- Vier Original-PDFs gleichzeitig auswählbar gemacht. Die Positionen 1 und 2 aus Plan 2448 als 20 angenäherte gerade Stäbe der unteren Deckenlage am GLB hinterlegt. Plan 2448 öffnet sich bei der Stabauswahl nach lokalem Laden des PDFs.
+- Import mit echtem GLB, vier Originaldateien, Gruppenauswahl, PDF-Verknüpfung und Rückkehr zu Stockerau im Anwendungstest geprüft. Der Test verwendet Three.js mit einer simulierten Browseroberfläche und prüft die Szene ohne WebGL-Ausgabe.

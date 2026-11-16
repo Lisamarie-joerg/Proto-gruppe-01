@@ -89,8 +89,8 @@
         <input id="modelFile" type="file" accept=".glb">
       </div>
       <div class="drop" id="planDrop">
-        <label for="planFile"><strong>Bewehrungsplan ablegen</strong><span>PDF · Vorschau im Browser</span></label>
-        <input id="planFile" type="file" accept=".pdf,application/pdf">
+        <label for="planFile"><strong>Bewehrungspläne ablegen</strong><span>Ein oder mehrere PDFs</span></label>
+        <input id="planFile" type="file" accept=".pdf,application/pdf" multiple>
       </div>
       <div class="drop" id="rebarDrop">
         <label for="rebarFile"><strong>Bewehrungsdaten zum GLB</strong><span>JSON mit Stabgeometrie, Positionen und optionalen Achsen</span></label>
@@ -105,6 +105,7 @@
         <button id="restore" hidden>Stockerau-Modell öffnen</button>
         <a id="openPlan" target="_blank" rel="noopener" hidden>Eigenen Plan öffnen ↗</a>
       </div>
+      <select id="planChoice" aria-label="Bewehrungsplan auswählen" hidden></select>
       <iframe id="planPreview" title="Vorschau des eigenen Bewehrungsplans" hidden></iframe>
     </section>
   </aside>

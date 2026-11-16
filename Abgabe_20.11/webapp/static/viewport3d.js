@@ -18,6 +18,7 @@ let mode = 'combined';
 let active = null;
 let plan;
 let planUrl;
+const localPlans = new Map();
 let importedPlan;
 let viewer;
 
@@ -53,10 +54,13 @@ function selection(position, item = null) {
     byId('importSelection').textContent = position
       ? ['Position ' + position, item?.id, row && fmt(row.modelMass ?? row.mass) + ' kg'].filter(Boolean).join(' · ')
       : 'Position im Modell oder in der Liste auswählen.';
-    if (position && planUrl) {
+    const selectedPlanUrl = row?.sheet
+      ? [...localPlans.values()].find(file => file.sheet === row.sheet)?.url
+      : planUrl;
+    if (position && selectedPlanUrl) {
       byId('detailTitle').textContent = 'Planposition ' + position;
       byId('detailText').textContent = row?.detail || 'Bewehrungsplan zum importierten Modell';
-      const url = planUrl + (row?.page ? '#page=' + row.page : '');
+      const url = selectedPlanUrl + (row?.page ? '#page=' + row.page : '');
       byId('detailImage').parentElement.hidden = true;
       byId('detailPlanLink').href = url;
       byId('detailPdf').hidden = false;
@@ -353,7 +357,7 @@ function createViewer(data) {
       : new THREE.MeshBasicMaterial({...properties,side:THREE.DoubleSide});
   const isConcrete = object => {
     for (let node = object; node; node = node.parent) {
-      if (/beton|concrete|fundament|foundation/i.test(node.name + ' ' + (node.userData.material ?? ''))) return true;
+      if (/beton|concrete|fundament|foundation|slab[ _]edge|stb(?![a-z])/i.test(node.name + ' ' + (node.userData.material ?? ''))) return true;
     }
     return false;
   };
@@ -368,7 +372,9 @@ function createViewer(data) {
       const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       const converted = materials.map(material => {
         const color = material?.color?.clone() ?? new THREE.Color(0xadb6ba);
-        if (Math.max(color.r,color.g,color.b) < .025) color.setHex(0xadb6ba);
+        if (Math.max(color.r,color.g,color.b) < .025) {
+          color.setHex(isConcrete(mesh) ? 0xb6b1a6 : /(?:heb|hea|ipe)[ _-]*\d/i.test(mesh.name) ? 0x50677a : 0xadb6ba);
+        }
         if (mesh.isLine) return new THREE.LineBasicMaterial({color});
         if (mesh.isPoints) return new THREE.PointsMaterial({color,size:2,sizeAttenuation:false});
         return new THREE.MeshBasicMaterial({color,map:material?.map ?? null,
@@ -550,8 +556,9 @@ function createViewer(data) {
 
   function setCamera(top = false) {
     if (!bounds) return;
-    const viewBounds = mode === 'rebar' && model === stockModel
-      ? new THREE.Box3().setFromObject(bars) : bounds.clone();
+    const rebarGroup = model === stockModel ? bars : importedOverlay;
+    const viewBounds = mode === 'rebar' && rebarGroup
+      ? new THREE.Box3().setFromObject(rebarGroup) : bounds.clone();
     const grid = model === stockModel ? groundGrid : customGrid;
     if (top && grid?.visible) viewBounds.union(new THREE.Box3().setFromObject(grid));
     const center = viewBounds.getCenter(new THREE.Vector3());
@@ -586,7 +593,8 @@ function createViewer(data) {
     if (customGrid) scene.remove(customGrid);
     customGrid = importedPlan?.grid ? createGroundGrid(importedPlan.grid,bounds) : null;
     if (customGrid) scene.add(customGrid);
-    const center = bounds.getCenter(new THREE.Vector3());
+    const center = (importedOverlay
+      ? new THREE.Box3().setFromObject(importedOverlay) : bounds).getCenter(new THREE.Vector3());
     setAxes(importedPlan?.grid ?? {x:[['X Mitte',center.x]],y:[['Y Mitte',center.y]]});
     update();
     setCamera();
@@ -746,31 +754,45 @@ function createViewer(data) {
   };
 }
 
-function setupInput(dropId, inputId, onFile) {
+function setupInput(dropId, inputId, onFile, multiple = false) {
   const zone = byId(dropId), input = byId(inputId);
-  const pick = file => { if (file) onFile(file); };
-  input.addEventListener('change', () => { pick(input.files[0]); input.value = ''; });
+  const pick = files => { if (files.length) onFile(multiple ? [...files] : files[0]); };
+  input.addEventListener('change', () => { pick(input.files); input.value = ''; });
   zone.addEventListener('dragover', event => { event.preventDefault(); zone.classList.add('drag'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
   zone.addEventListener('drop', event => {
-    event.preventDefault(); zone.classList.remove('drag'); pick(event.dataTransfer.files[0]);
+    event.preventDefault(); zone.classList.remove('drag'); pick(event.dataTransfer.files);
   });
 }
 
-setupInput('planDrop','planFile',file => {
-  if (!file.name.toLowerCase().endsWith('.pdf')) {
-    byId('uploadStatus').textContent = 'Bitte einen Bewehrungsplan im PDF-Format auswählen.';
-    return;
-  }
-  if (planUrl) URL.revokeObjectURL(planUrl);
-  planUrl = URL.createObjectURL(file);
+function previewPlan(name) {
+  planUrl = localPlans.get(name)?.url;
+  if (!planUrl) return;
   const preview = byId('planPreview'), link = byId('openPlan');
   preview.src = link.href = planUrl;
   preview.hidden = link.hidden = false;
-  byId('uploadStatus').textContent = file.name + ' · Planvorschau geöffnet.'
-    + (viewer?.isCustom() ? ' Gewählte Positionen können den Plan öffnen.' : ' Lade das zugehörige GLB für die 3D-Ansicht.');
+}
+const planChoice = byId('planChoice');
+planChoice.addEventListener('change', () => previewPlan(planChoice.value));
+setupInput('planDrop','planFile',files => {
+  const pdfs = files.filter(file => /\.pdf$/i.test(file.name));
+  if (!pdfs.length) {
+    byId('uploadStatus').textContent = 'Bitte Bewehrungspläne im PDF-Format auswählen.';
+    return;
+  }
+  for (const file of pdfs) {
+    const previous = localPlans.get(file.name);
+    if (previous) URL.revokeObjectURL(previous.url);
+    const sheet = file.name.match(/_E02_(2438|2448|2458|2648)(?=[_\-.])/i)?.[1];
+    localPlans.set(file.name,{url:URL.createObjectURL(file),sheet});
+  }
+  planChoice.replaceChildren(...[...localPlans.keys()].map(name => new Option(name,name)));
+  planChoice.hidden = localPlans.size < 2;
+  planChoice.value = pdfs[0].name;
+  previewPlan(planChoice.value);
+  byId('uploadStatus').textContent = localPlans.size + ' Original-PDF(s) geladen.';
   if (viewer?.isCustom() && active) selection(active);
-});
+},true);
 
 let modelRequest = 0;
 setupInput('modelDrop','modelFile',async file => {
@@ -781,14 +803,30 @@ setupInput('modelDrop','modelFile',async file => {
   const request = ++modelRequest;
   byId('uploadStatus').textContent = file.name + ' wird geladen …';
   try {
-    const result = await loader.parseAsync(await file.arrayBuffer(), './');
+    const bytes = await file.arrayBuffer();
+    const result = await loader.parseAsync(bytes, './');
+    let projectPlan;
+    if (crypto.subtle && bytes.byteLength === 1916120) {
+      const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
+        .map(byte => byte.toString(16).padStart(2,'0')).join('');
+      if (hash === 'd7576f41e671a6d75ddc6fa0595425d7d92df09b2be869d9bb0d3104e7cd25fc') {
+        projectPlan = readImportPlan(await json('./bauteil6-bewehrung.json'));
+      }
+    }
     if (request !== modelRequest) return;
+    byId('zUpImport').checked = false;
     viewer.useModel(result.scene,false,true);
+    if (projectPlan) {
+      importedPlan = projectPlan;
+      viewer.refreshImport();
+    }
     selection(null);
     const count = showImportOptions();
     setMode(count ? 'combined' : 'structure');
     byId('restore').hidden = false;
-    byId('uploadStatus').textContent = file.name + (count
+    byId('uploadStatus').textContent = file.name + (projectPlan
+      ? ' · Gebäude mit rekonstruierter Teilbewehrung. Für das Stabdetail Originalplan 2448 laden.'
+      : count
       ? ' · ' + count + ' Bewehrungsgruppen erkannt.'
       : ' · Modell sichtbar. Für die Bewehrungsansicht Bewehrungsgeometrie mit Positionsnamen oder passende JSON-Daten laden.');
   } catch (error) {
@@ -806,7 +844,7 @@ function readImportPlan(source) {
     if (!row || !Number.isFinite(row.diameter) || row.diameter <= 0) {
       throw new Error('Positionsdurchmesser in mm fehlt: ' + id);
     }
-    positions[id] = {diameter:row.diameter,
+    positions[id] = {diameter:row.diameter,sheet:typeof row.sheet === 'string' ? row.sheet : null,
       detail:typeof row.detail === 'string' ? row.detail : '',
       page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0};
   }
@@ -838,7 +876,7 @@ function readImportPlan(source) {
       grid[kind] = [...items].sort((a,b)=>a[1]-b[1]);
     }
   }
-  return {positions,elements,grid};
+  return {positions,elements,grid,scope:typeof source.scope === 'string' ? source.scope : ''};
 }
 
 function showImportOptions() {
@@ -847,7 +885,8 @@ function showImportOptions() {
   byId('importPanel').hidden = false;
   byId('importSettings').hidden = false;
   byId('importMass').textContent = importedPlan
-    ? 'Modellmasse der Bewehrung: ca. ' + fmt(Object.values(importedPlan.positions)
+    ? (importedPlan.scope ? importedPlan.scope + ' ' : '') +
+      'Modellmasse der dargestellten Bewehrung: ca. ' + fmt(Object.values(importedPlan.positions)
       .reduce((sum,p) => sum+p.modelMass,0)) + ' kg (Stabdurchmesser, Länge und 7.850 kg/m³).'
     : 'Gewichte und Planpositionen aus einem Zusatzdatensatz können hier ergänzt werden.';
   const panel = byId('importGroups');
