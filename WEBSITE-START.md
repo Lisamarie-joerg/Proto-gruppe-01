@@ -1,8 +1,18 @@
-# Stockerau – Tragwerk und Bewehrung
+# Projekt 6 und Stockerau - Tragwerk und Bewehrung
 
 ## Website öffnen
 
 Unter Windows mit installiertem Python im entpackten Ordner auf `Website-oeffnen.bat` doppelklicken. Alternativ `python website_starten.py` ausführen. Die Startdatei öffnet den Browser auf einem freien lokalen Port. Das Terminalfenster geöffnet lassen.
+
+Die Website startet mit Projekt 6. Modell, vier Original-PDFs mit insgesamt fünf Seiten und Originalplanbilder sind enthalten. Über **Stockerau-Modell öffnen** gelangt man zum Pavillon. **Projekt 6 mit fünf PDF-Seiten öffnen** lädt das Gebäude erneut.
+
+Die Projektansicht bietet Filter nach Bauteilgruppe und einzelnen Bauteilen. **Betondeckkraft** steuert die Sichtbarkeit des umgebenden Betons. **Geometrische Ergänzungen anzeigen** schaltet die orange Darstellung um. Ein Klick auf einen solchen Stab markiert die geraden Ergänzungsstäbe desselben Durchmessers und derselben auf Millimeter gerundeten Länge pink.
+
+Die Geschossnamen, Materialien und IFC-Kennungen wurden aus `Bauteil6.3dm` gelesen. Sie erscheinen bei der Bauteilauswahl. **Geschoss laut Rhino** filtert nach diesen Modellinformationen. 51 zugeordnete Mauerwerksbauteile erhalten keine schematische Betonbewehrung. 537 Bauteile enthalten geometrische Ergänzungen; 96 weitere Betongeometrien bleiben offen.
+
+Die orange Geometrie ist ein schematischer Vorschlag aus den vorhandenen Bauteilmeshes, mit angenommenen Ø12, max. 20 cm Raster und nominell 4 cm Randabstand entlang der Koordinatenachsen. Abschnitte werden mit max. 7,50 m und angenommener Überdeckung von 1,06 m erzeugt. Diese Annahmen ersetzen keine fehlenden Ausführungspläne oder Biegeformen. Die Bauteil-CSV nennt offene Geometrien. Im Positionsvergleich zählen weiterhin nur die 101 aus Blatt 2448 rekonstruierten Stäbe zu den tatsächlichen Planpositionen.
+
+Die vier Original-PDFs beschreiben E02. Ihre fünfte Seite ist eine Gebäudeansicht. Eine plangetreue vollständige Bewehrung der weiteren Geschosse und Treppen erfordert deren Positions- und Verlegepläne. Die schematischen Ergänzungen werden deshalb weder den Biegelistenpositionen zugerechnet noch im Rhino-Download der 101 rekonstruierten Stäbe als Planbewehrung ausgegeben.
 
 Im Viewer zwischen Tragwerk, transparenter Überlagerung und reiner Bewehrung wechseln. Beim Klick auf einen Stab werden Stäbe derselben Planposition pink, die anderen grau. Die Positionsliste markiert alle zugehörigen Modellstäbe. Das kleine Detailfenster zeigt einen unveränderten Ausschnitt aus dem Original-PDF. Für die Bewehrung sind Original- und Modellmasse ausgewiesen. Im Modell beträgt die lichte Betondeckung mindestens 4 cm. Die Längsstöße überdecken sich 1,06 m. Sie liegen in A–A nahe E und in B–B zwischen 4/5 und 5/6. Benachbarte Lagen sind versetzt. Die Zuschnitte sind maximal 7,50 m lang. Die Tragwerksmassen sind Schätzwerte aus den Modellvolumina und den in der App angegebenen Dichten.
 
@@ -12,7 +22,7 @@ Für einen Achsschnitt im Raster auf ein Achsenlabel klicken und anschließend e
 
 ## Eigene Dateien
 
-Für Projekt 6 im Ordner `Dateien Projekt6` zuerst `Bauteil6.glb` öffnen und dann die vier Original-PDFs gemeinsam ins Planfeld ziehen. Unter **Importierte Bewehrung** das Planblatt wählen. **Soll** ist die Stückzahl aus der Biegeliste, **In 3D** zählt die vorhandenen Modellstäbe. Beim Klick auf eine Position öffnet sich ihr Originalblatt. Vorhandene Stäbe der Gruppe werden pink.
+Die Quelldateien für Projekt 6 liegen unter `Abgabe_20.11/Dateien Projekt6`. Unter **Importierte Bewehrung** das Planblatt wählen. **Soll** ist die Stückzahl aus der Biegeliste, **In 3D** zählt die vorhandenen Modellstäbe dieser Planposition. Beim Klick auf eine Position öffnet sich ihr Originalblatt. Vorhandene Stäbe der Gruppe werden pink.
 
 Das Teilmodell enthält 101 angenäherte Stäbe aus Blatt 2448 in den Positionen 1, 2 und 9. Die zugehörige **3D-Teilbewehrung für Rhino** lässt sich in die Originaldatei `Bauteil6.3dm` importieren. Beide verwenden dieselben Weltkoordinaten in Millimetern. In den Positionslayern sind die rekonstruierten Stäbe nach Planblatt und Position abgelegt.
 

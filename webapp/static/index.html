@@ -10,8 +10,8 @@
 </head>
 <body>
 <header class="page-header">
-  <div><p class="project">Prototypenbau · Gruppe 01</p><h1>Pavillon Stockerau</h1></div>
-  <a class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Originalplan P-01 ↗</a>
+  <div><p class="project">Prototypenbau · Gruppe 01</p><h1 id="projectTitle">Pavillon Stockerau</h1></div>
+  <a id="headerPlan" class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Originalplan P-01 ↗</a>
 </header>
 <main>
   <section class="viewer" aria-label="3D-Modell">
@@ -50,7 +50,7 @@
       </dialog>
     </div>
     <div class="viewer-footer">
-      <div class="legend" aria-label="Materialien">
+      <div id="materialLegend" class="legend" aria-label="Materialien">
         <span><i class="concrete"></i>Betonfundamente</span><span><i class="steel"></i>Stahlstützen</span>
         <span><i class="wood"></i>Holzdach</span><span><i class="pink"></i>Gewählte Stabposition</span>
       </div>
@@ -78,9 +78,29 @@
     </section>
     <section class="panel" id="importPanel" hidden>
       <h2>Importierte Bewehrung</h2>
+      <div id="buildingControls" hidden>
+        <label for="buildingCategory">Bauteile</label>
+        <select id="buildingCategory">
+          <option value="">Gesamtes Gebäude</option>
+          <option>Treppen</option><option>Decken und Fundamente</option>
+          <option>Wände</option><option>Stützen</option><option>Träger</option>
+          <option>Mauerwerk</option>
+        </select>
+        <label for="buildingStorey">Geschoss laut Rhino</label>
+        <select id="buildingStorey"><option value="">Alle Geschosse</option></select>
+        <label for="buildingHost">Bauteil im Modell</label>
+        <select id="buildingHost"><option value="">Alle Bauteile</option></select>
+        <label><input id="showSchematic" type="checkbox" checked> Geometrische Ergänzungen anzeigen</label>
+        <label for="concreteOpacity">Betondeckkraft</label>
+        <input id="concreteOpacity" type="range" min="0.05" max="0.8" step="0.05" value="0.25">
+        <p class="note">Orange Ergänzungen folgen der Bauteilgeometrie. Durchmesser, Verlegung, Stöße und Biegeformen sind Annahmen und müssen mit den zugehörigen Ausführungsplänen abgeglichen werden.</p>
+        <p id="buildingCoverage" role="status"></p>
+        <p id="buildingHostInfo" class="note"></p>
+        <a href="./projekt6-bauteile.csv" download>Bauteilzuordnung und offene Geometrien als CSV ↓</a>
+      </div>
       <p id="importSelection" aria-live="polite"></p>
       <div id="projectPlans" hidden>
-        <p><a class="download" href="./Bauteil6-Bewehrung-Import.3dm" download>3D-Teilbewehrung für Rhino laden ↓</a></p>
+        <p><a class="download" href="./Bauteil6-Bewehrung-Import.3dm" download>101 rekonstruierte Stäbe für Rhino laden ↓</a></p>
         <label for="projectSheet">Planblatt E02</label>
         <select id="projectSheet"></select>
         <p id="projectCoverage" class="note"></p>
@@ -94,6 +114,7 @@
     </section>
     <section class="panel">
       <h2>Eigene Dateien öffnen</h2>
+      <p><button id="openBuilding">Projekt 6 mit fünf PDF-Seiten öffnen</button></p>
       <div class="drop" id="modelDrop">
         <label for="modelFile"><strong>3D-Modell ablegen</strong><span>GLB · Export aus Rhino</span></label>
         <input id="modelFile" type="file" accept=".glb">

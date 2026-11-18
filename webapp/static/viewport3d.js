@@ -12,6 +12,7 @@ const densities = { Beton: 2400, Metall: 7850, Holz: 450, Stahlseil: 7850 };
 const grossMass = bar => bar.V_m3 * densities[bar.material_etappe03];
 const buttons = [...document.querySelectorAll('[data-mode]')];
 const detail = byId('detail');
+const stockLegend = byId('materialLegend').innerHTML;
 const loader = new GLTFLoader();
 
 let mode = 'combined';
@@ -61,6 +62,10 @@ function selection(position, item = null) {
     byId('importSelection').textContent = position
       ? ['Position ' + position, item?.id, amount, row && fmt(row.modelMass) + ' kg'].filter(Boolean).join(' · ')
       : 'Position im Modell oder in der Liste auswählen.';
+    if (row?.schematic) {
+      byId('importSelection').textContent = row.detail + ' · ' + row.modelCount + ' Stababschnitte · ca. '
+        + fmt(row.modelMass) + ' kg · ohne Zuordnung zu einer PDF-Position.';
+    }
     const sheet = record?.sheet ?? row?.sheet;
     const selectedPlanUrl = sheet
       ? [...localPlans.values()].find(file => file.sheet === sheet)?.url
@@ -76,6 +81,12 @@ function selection(position, item = null) {
       byId('detailPlanLink').href = url;
       byId('detailPdf').hidden = false;
       byId('detailPdf').src = url;
+      if (selectedPlanUrl.startsWith('./projekt6/')) {
+        byId('detailImage').parentElement.hidden = false;
+        byId('detailImage').src = './projekt6/' + sheet + '.png';
+        byId('detailOriginal').href = './projekt6/' + sheet + '.png';
+        byId('detailPdf').hidden = true;
+      }
       if (!detail.open) detail.show();
     } else {
       if (sheet) byId('importSelection').textContent += ' · Originalplan ' + sheet + ' laden.';
@@ -295,7 +306,9 @@ function createViewer(data) {
   const muted = new THREE.MeshBasicMaterial({ color: 0x7b8584, transparent: true, opacity: .40, depthWrite: false });
   function makeBars(dataset) {
     const group = new THREE.Group();
+    const schematic = dataset.elements.filter(item => item.schematic);
     for (const item of dataset.elements) {
+      if (item.schematic) continue;
       const path = new THREE.CurvePath();
       const points = item.points.map(p => new THREE.Vector3(...p));
       for (let i = 1; i < points.length; i++) {
@@ -307,12 +320,37 @@ function createViewer(data) {
       mesh.userData.centerline = points;
       group.add(mesh);
     }
+    if (schematic.length) {
+      const material = new THREE.MeshBasicMaterial({color:0xffffff});
+      const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1,1,1,6),material,schematic.length);
+      const matrix = new THREE.Matrix4();
+      const up = new THREE.Vector3(0,1,0);
+      const rotation = new THREE.Quaternion();
+      const scale = new THREE.Vector3();
+      schematic.forEach((item,index) => {
+        const a = new THREE.Vector3(...item.points[0]);
+        const b = new THREE.Vector3(...item.points[1]);
+        rotation.setFromUnitVectors(up,b.clone().sub(a).normalize());
+        const radius = dataset.positions[item.position].diameter / 2000;
+        scale.set(radius,a.distanceTo(b),radius);
+        matrix.compose(a.add(b).multiplyScalar(.5),rotation,scale);
+        mesh.setMatrixAt(index,matrix);
+        mesh.setColorAt(index,new THREE.Color(0xbf6b20));
+      });
+      mesh.userData.instances = schematic;
+      mesh.userData.originalMatrices = mesh.instanceMatrix.array.slice();
+      group.add(mesh);
+    }
     return group;
   }
   function disposeOverlay() {
     if (!importedOverlay) return;
     scene.remove(importedOverlay);
     importedOverlay.children.forEach(mesh => mesh.geometry.dispose());
+    importedOverlay.children.filter(mesh => mesh.isInstancedMesh).forEach(mesh => {
+      mesh.material.dispose();
+      mesh.dispose();
+    });
     importedOverlay = null;
   }
 
@@ -336,6 +374,7 @@ function createViewer(data) {
   let stockModel;
   let importedMeshes = [];
   let importedOverlay;
+  let hostById = new Map();
   let activeGrid;
   let customGrid;
 
@@ -500,7 +539,12 @@ function createViewer(data) {
       (direction > 0 ? '+' : '−') + axisChoice.kind.toUpperCase();
     fitSection();
     cutSurfaces.geometry.dispose();
-    const dataset = model === stockModel ? plan : importedPlan;
+    let dataset = model === stockModel ? plan : importedPlan;
+    if (model !== stockModel && dataset) {
+      dataset = {...dataset,elements:dataset.elements.filter(item =>
+        (!item.schematic || byId('showSchematic').checked) &&
+        hostMatches(hostById.get(item.host ?? '729')))};
+    }
     cutSurfaces.geometry = dataset ? sectionCaps(dataset,cutPlane,axisChoice.kind) : new THREE.BufferGeometry();
     cutSurfaces.visible = Boolean(dataset) && mode !== 'structure';
     byId('sectionZoom').hidden = false;
@@ -533,6 +577,13 @@ function createViewer(data) {
   let parts = [];
   const ray = new THREE.Raycaster();
   ray.params.Line.threshold = .04;
+  function hostMatches(host) {
+    const category = byId('buildingCategory').value;
+    const hostId = byId('buildingHost').value;
+    const storey = byId('buildingStorey').value;
+    return (!category || category === host?.category) && (!hostId || hostId === host?.id)
+      && (!storey || storey === host?.storey);
+  }
 
   function update() {
     const custom = model !== stockModel;
@@ -542,13 +593,32 @@ function createViewer(data) {
     if (custom) {
       const showConcrete = mode === 'combined' && (importedOverlay || importedMeshes.some(item => item.position));
       for (const item of importedMeshes) {
+        if (item.concrete) item.concrete.opacity = Number(byId('concreteOpacity').value) || .25;
         item.mesh.visible = item.position ? !importedPlan && mode !== 'structure' : mode !== 'rebar';
+        if (importedPlan?.hosts?.length) item.mesh.visible = item.mesh.visible && hostMatches(item.host);
         item.mesh.material = item.position ? item.rebar[item.position === active ? 1 : active ? 2 : 0]
           : showConcrete && item.concrete ? item.concrete : byId('neutralImport').checked ? item.neutral : item.material;
       }
     }
     const selectedOverlayPosition = importedPlan?.positions[active]?.modelCount ? active : null;
     for (const mesh of importedOverlay?.children ?? []) {
+      if (mesh.isInstancedMesh) {
+        mesh.visible = byId('showSchematic').checked;
+        const selected = new THREE.Color(0xff1495), gray = new THREE.Color(0x9da4a5);
+        const normal = new THREE.Color(0xbf6b20);
+        const hiddenMatrix = new THREE.Matrix4().makeScale(0,0,0).toArray();
+        mesh.userData.instances.forEach((item,index) => {
+          const visible = hostMatches(hostById.get(item.host));
+          const original = mesh.userData.originalMatrices;
+          const offset = index * 16;
+          mesh.instanceMatrix.array.set(visible ? original.subarray(offset,offset+16) : hiddenMatrix,offset);
+          mesh.setColorAt(index,item.position === active ? selected : active ? gray : normal);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.instanceColor.needsUpdate = true;
+        continue;
+      }
+      mesh.visible = !importedPlan?.hosts?.length || hostMatches(hostById.get('729'));
       mesh.material = mesh.userData.rebar.position === selectedOverlayPosition ? highlighted
         : selectedOverlayPosition ? muted : ordinary;
     }
@@ -575,6 +645,18 @@ function createViewer(data) {
     const rebarGroup = model === stockModel ? bars : importedOverlay;
     const viewBounds = mode === 'rebar' && rebarGroup
       ? new THREE.Box3().setFromObject(rebarGroup) : bounds.clone();
+    const category = byId('buildingCategory').value;
+    const storey = byId('buildingStorey').value;
+    const hostId = byId('buildingHost').value;
+    const selectedHost = importedPlan?.hosts?.find(host => host.id === hostId);
+    if (model !== stockModel && selectedHost?.bounds) {
+      viewBounds.min.set(...selectedHost.bounds[0]);
+      viewBounds.max.set(...selectedHost.bounds[1]);
+    }
+    if (model !== stockModel && (category || storey) && importedPlan && !selectedHost) {
+      const points = importedPlan.elements.filter(item => hostMatches(hostById.get(item.host ?? '729'))).flatMap(item => item.points);
+      if (points.length) viewBounds.setFromPoints(points.map(p => new THREE.Vector3(...p)));
+    }
     const grid = model === stockModel ? groundGrid : customGrid;
     if (top && grid?.visible) viewBounds.union(new THREE.Box3().setFromObject(grid));
     const center = viewBounds.getCenter(new THREE.Vector3());
@@ -599,6 +681,20 @@ function createViewer(data) {
     endSection();
     model.rotation.x = byId('zUpImport').checked ? 0 : Math.PI/2;
     model.updateMatrixWorld(true);
+    const normalize = name => name.replace(/[^a-z0-9]/gi,'').toLowerCase();
+    const hostsByName = new Map((importedPlan?.hosts ?? []).map(host => [normalize(host.name),host]));
+    hostById = new Map((importedPlan?.hosts ?? []).map(host => [host.id,host]));
+    importedMeshes.forEach(item => {
+      item.host = hostsByName.get(normalize(item.mesh.name));
+      if (item.host?.category === 'Mauerwerk') {
+        const materials = Array.isArray(item.material) ? item.material : [item.material];
+        materials.forEach(material => material.color.setHex(0xba9c78));
+      }
+      if (item.host && !item.concrete) {
+        item.concrete = new THREE.MeshBasicMaterial({color:0xaeb7bb,transparent:true,opacity:.25,depthWrite:false,
+          side:THREE.DoubleSide});
+      }
+    });
     bounds = new THREE.Box3().setFromObject(model);
     disposeOverlay();
     importedOverlay = importedPlan ? makeBars(importedPlan) : null;
@@ -668,6 +764,7 @@ function createViewer(data) {
     let thresholdSquared = Infinity;
     for (const mesh of meshes) {
       const points = mesh.userData.centerline;
+      if (!points || !mesh.visible) continue;
       for (let i = 1; i < points.length; i++) {
         a.copy(points[i - 1]);
         b.copy(points[i]);
@@ -701,12 +798,27 @@ function createViewer(data) {
     }
     if (model !== stockModel && mode !== 'structure') {
       const meshes = importedOverlay?.children ?? importedMeshes.filter(item => item.position).map(item => item.mesh);
-      const selected = ray.intersectObjects(meshes,false).find(hit => visiblePoint(hit.point))?.object
-        ?? (importedOverlay ? nearBar(meshes) : null);
+      const hit = ray.intersectObjects(meshes.filter(mesh => mesh.visible),false).find(hit => visiblePoint(hit.point));
+      const selected = hit?.object ?? (importedOverlay ? nearBar(meshes) : null);
       if (selected) {
-        const data = selected.userData.rebar;
+        const data = selected.userData.instances?.[hit?.instanceId] ?? selected.userData.rebar;
         const position = data?.position ?? importedMeshes.find(item => item.mesh === selected)?.position;
         if (position) selection(position,data);
+        return;
+      }
+    }
+    if (model !== stockModel && mode !== 'rebar') {
+      const hit = ray.intersectObjects(importedMeshes.map(item => item.mesh).filter(mesh => mesh.visible),false)
+        .find(hit => visiblePoint(hit.point));
+      const host = hit && importedMeshes.find(item => item.mesh === hit.object)?.host;
+      if (host) {
+        byId('buildingCategory').value = host.category;
+        drawBuildingHosts(host.id);
+        selection(null);
+        update();
+        byId('importSelection').textContent = host.name + ' · ' + host.count + ' geometrische Stababschnitte · '
+          + host.status;
+        showHostInfo(host);
         return;
       }
     }
@@ -798,7 +910,7 @@ setupInput('planDrop','planFile',files => {
   }
   for (const file of pdfs) {
     const previous = localPlans.get(file.name);
-    if (previous) URL.revokeObjectURL(previous.url);
+    if (previous?.url.startsWith('blob:')) URL.revokeObjectURL(previous.url);
     const sheet = file.name.match(/_E02_(2438|2448|2458|2648)(?=[_\-.])/i)?.[1];
     localPlans.set(file.name,{url:URL.createObjectURL(file),sheet});
   }
@@ -823,7 +935,7 @@ async function loadProjectCatalog() {
     return {sheet,position,count:Number(count),key:sheet + ' / ' + position};
   });
 }
-setupInput('modelDrop','modelFile',async file => {
+async function loadCustomModel(file) {
   if (!viewer || !file.name.toLowerCase().endsWith('.glb')) {
     byId('uploadStatus').textContent = 'Bitte bei geladenem Viewer eine GLB-Datei auswählen. 3DM in Rhino als GLB exportieren.';
     return;
@@ -847,6 +959,9 @@ setupInput('modelDrop','modelFile',async file => {
     byId('zUpImport').checked = false;
     viewer.useModel(result.scene,false,true);
     projectCatalog = catalog;
+    byId('buildingCategory').value = '';
+    byId('buildingHost').value = '';
+    byId('buildingStorey').value = '';
     if (projectPlan) {
       importedPlan = projectPlan;
       viewer.refreshImport();
@@ -863,7 +978,31 @@ setupInput('modelDrop','modelFile',async file => {
   } catch (error) {
     if (request === modelRequest) byId('uploadStatus').textContent = 'GLB konnte nicht geladen werden: ' + error.message;
   }
-});
+}
+setupInput('modelDrop','modelFile',loadCustomModel);
+
+async function openBundledProject() {
+  const button = byId('openBuilding');
+  button.disabled = true;
+  try {
+    const response = await fetch('./projekt6/Bauteil6.glb');
+    if (!response.ok) throw new Error('Projektmodell fehlt im Websiteordner.');
+    for (const sheet of ['2438','2448','2458','2648']) {
+      const name = 'Plan ' + sheet;
+      localPlans.set(name,{sheet,url:'./projekt6/' + sheet + '.pdf'});
+    }
+    planChoice.replaceChildren(...[...localPlans.keys()].map(name => new Option(name,name)));
+    planChoice.hidden = false;
+    planChoice.value = 'Plan 2448';
+    previewPlan(planChoice.value);
+    await loadCustomModel(new File([await response.arrayBuffer()],'Bauteil6.glb'));
+  } catch(error) {
+    byId('uploadStatus').textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+byId('openBuilding').addEventListener('click',openBundledProject);
 
 function readImportPlan(source) {
   if (!source || !Array.isArray(source.elements) || !source.elements.length || !source.positions
@@ -875,7 +1014,8 @@ function readImportPlan(source) {
     if (!row || !Number.isFinite(row.diameter) || row.diameter <= 0) {
       throw new Error('Positionsdurchmesser in mm fehlt: ' + id);
     }
-    positions[id] = {diameter:row.diameter,sheet:typeof row.sheet === 'string' ? row.sheet : null,
+    positions[id] = {diameter:row.diameter,schematic:Boolean(row.schematic),category:row.category,host:row.host,
+      sheet:typeof row.sheet === 'string' ? row.sheet : null,
       detail:typeof row.detail === 'string' ? row.detail : '',
       page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0,modelCount:0};
   }
@@ -894,7 +1034,8 @@ function readImportPlan(source) {
     }
     positions[position].modelMass += length * 7850 * Math.PI * (positions[position].diameter/2000)**2;
     positions[position].modelCount++;
-    return {position,points,id:String(item.id ?? ('Stab '+(i+1))),length};
+    return {position,points,id:String(item.id ?? ('Stab '+(i+1))),length,
+      schematic:Boolean(item.schematic),host:item.host,category:item.category};
   });
   let grid;
   if (source.grid != null) {
@@ -908,7 +1049,7 @@ function readImportPlan(source) {
       grid[kind] = [...items].sort((a,b)=>a[1]-b[1]);
     }
   }
-  return {positions,elements,grid,scope:typeof source.scope === 'string' ? source.scope : ''};
+  return {positions,elements,grid,hosts:source.hosts ?? [],scope:typeof source.scope === 'string' ? source.scope : ''};
 }
 
 function drawProjectPositions() {
@@ -944,11 +1085,38 @@ function showImportOptions() {
   byId('stockPanel').hidden = true;
   byId('importPanel').hidden = false;
   byId('importSettings').hidden = false;
+  byId('buildingControls').hidden = !importedPlan?.hosts?.length;
+  if (importedPlan?.hosts?.length) {
+    const hosts = importedPlan.hosts;
+    const concrete = hosts.filter(host => host.reinforcementExpected);
+    byId('buildingCoverage').textContent = hosts.filter(host => host.count).length + ' von ' + hosts.length
+      + ' erfassten Bauteilen mit geometrischen Ergänzungen. '
+      + concrete.filter(host => !host.count).length + ' Beton-Geometrien sind offen. '
+      + hosts.filter(host => !host.reinforcementExpected).length + ' Mauerwerksbauteile laut Rhino-Material.';
+    const storeys = [...new Set(hosts.map(host => host.storey).filter(Boolean))].sort();
+    const storeySelect = byId('buildingStorey');
+    storeySelect.replaceChildren(new Option('Alle Geschosse',''),...storeys.map(name => new Option(name,name)));
+    storeySelect.value = '';
+    byId('projectTitle').textContent = 'Projekt 6 · Tragwerk und Bewehrung';
+    document.title = 'Projekt 6 · Tragwerk und Bewehrung';
+    byId('materialLegend').innerHTML = '<span><i class="concrete"></i>Betonbauteile</span>'
+      + '<span><i class="wood"></i>Orange geometrische Ergänzungen</span>'
+      + '<span><i class="pink"></i>Gleiche Stäbe ausgewählt</span>';
+    byId('headerPlan').href = './projekt6/2448.pdf';
+    byId('headerPlan').textContent = 'Originalplan E02 · 2448 ↗';
+    drawBuildingHosts();
+  }
   byId('importMass').textContent = importedPlan
     ? (importedPlan.scope ? importedPlan.scope + ' ' : '') +
       'Modellmasse der dargestellten Bewehrung: ca. ' + fmt(Object.values(importedPlan.positions)
       .reduce((sum,p) => sum+p.modelMass,0)) + ' kg (Stabdurchmesser, Länge und 7.850 kg/m³).'
     : 'Gewichte und Planpositionen aus einem Zusatzdatensatz können hier ergänzt werden.';
+  if (importedPlan?.hosts?.length) {
+    const sum = schematic => Object.values(importedPlan.positions)
+      .filter(row => row.schematic === schematic).reduce((sum,row) => sum + row.modelMass,0);
+    byId('importMass').textContent = 'Rekonstruierte E02-Stäbe ca. ' + fmt(sum(false)) + ' kg. '
+      + 'Geometrische Ergänzungen unter den gewählten Annahmen ca. ' + fmt(sum(true)) + ' kg.';
+  }
   const panel = byId('importGroups');
   panel.replaceChildren();
   byId('projectPlans').hidden = !projectCatalog;
@@ -958,10 +1126,11 @@ function showImportOptions() {
     sheet.value = '2448';
     const planned = projectCatalog.reduce((sum,row) => sum + row.count,0);
     byId('projectCoverage').textContent = fmt(planned,0) + ' Stück laut Biegelisten · '
-      + fmt(importedPlan.elements.length,0) + ' Stäbe in 3D';
+      + fmt(importedPlan.elements.filter(item => !item.schematic).length,0) + ' rekonstruierte Stäbe in 3D. '
+      + fmt(importedPlan.elements.filter(item => item.schematic).length,0) + ' geometrische Ergänzungen im Gebäude.';
     drawProjectPositions();
   }
-  for (const position of projectCatalog ? [] : positions) {
+  for (const position of projectCatalog ? [] : positions.filter(id => !importedPlan?.positions[id]?.schematic)) {
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.position = position;
@@ -997,11 +1166,65 @@ setupInput('rebarDrop','rebarFile',async file => {
   }
 });
 byId('neutralImport').addEventListener('change',() => viewer?.update());
+byId('concreteOpacity').addEventListener('input',() => viewer?.update());
+byId('showSchematic').addEventListener('change',() => {
+  viewer?.endSection();
+  viewer?.update();
+});
+byId('buildingCategory').addEventListener('change',() => {
+  drawBuildingHosts();
+  selection(null);
+  viewer?.endSection();
+  viewer?.update();
+  viewer?.setCamera();
+});
+function drawBuildingHosts(selected = '') {
+  const category = byId('buildingCategory').value;
+  const storey = byId('buildingStorey').value;
+  const select = byId('buildingHost');
+  select.replaceChildren(new Option('Alle Bauteile',''),...(importedPlan?.hosts ?? [])
+    .filter(host => !category || category === host.category)
+    .filter(host => !storey || storey === host.storey)
+    .map(host => new Option(host.name + ' · ' + host.count + ' Abschnitte',host.id)));
+  select.value = selected;
+}
+function showHostInfo(host) {
+  const ratio = Object.entries(host?.ifc ?? {}).find(([key]) => /bewehrungsgrad/i.test(key));
+  byId('buildingHostInfo').textContent = host
+    ? [host.storey,host.ifc?.IfcClass,host.ifc?.Material,host.ifc?.GlobalId,
+      ratio ? 'IFC-Bewehrungsgrad ' + ratio[1] : ''].filter(Boolean).join(' · ')
+    : '';
+}
+byId('buildingStorey').addEventListener('change',() => {
+  drawBuildingHosts();
+  selection(null);
+  showHostInfo(null);
+  viewer?.endSection();
+  viewer?.update();
+  viewer?.setCamera();
+});
+byId('buildingHost').addEventListener('change',() => {
+  selection(null);
+  viewer?.endSection();
+  viewer?.update();
+  viewer?.setCamera();
+  const host = importedPlan?.hosts?.find(host => host.id === byId('buildingHost').value);
+  if (host) byId('importSelection').textContent = host.name + ' · ' + host.count + ' geometrische Abschnitte · ' + host.status;
+  showHostInfo(host);
+});
 byId('zUpImport').addEventListener('change',() => viewer?.refreshImport());
 
 byId('restore').addEventListener('click', () => {
   ++modelRequest;
   projectCatalog = null;
+  byId('buildingCategory').value = '';
+  byId('buildingHost').value = '';
+  byId('buildingStorey').value = '';
+  byId('projectTitle').textContent = 'Pavillon Stockerau';
+  document.title = 'Stockerau · Tragwerk und Bewehrung';
+  byId('materialLegend').innerHTML = stockLegend;
+  byId('headerPlan').href = './bewehrungsplan.pdf';
+  byId('headerPlan').textContent = 'Originalplan P-01 ↗';
   viewer.restore();
   byId('importPanel').hidden = true;
   byId('importSettings').hidden = true;
@@ -1029,6 +1252,7 @@ try {
   const gltf = await loader.loadAsync('./model.glb');
   viewer = createViewer(data);
   viewer.useModel(gltf.scene, true);
+  await openBundledProject();
   showStatus('');
 } catch (error) {
   showStatus('3D-Ansicht konnte nicht gestartet werden: ' + error.message);
