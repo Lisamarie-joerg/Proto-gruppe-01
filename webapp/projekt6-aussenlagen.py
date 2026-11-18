@@ -30,12 +30,10 @@ positions={key:value for key,value in data["positions"].items() if not value.get
 for item in kept:
     if not item.get("schematic"): continue
     length=round(sum((a-b)**2 for a,b in zip(*item["points"]))**0.5,3)
-    direction="XYZ"[max(range(3),key=lambda axis:abs(item["points"][1][axis]-item["points"][0][axis]))]
-    key="Ergänzung / "+item["host"]+" / "+direction+" / Ø12 / "+format(length,".3f")+" m"
+    key="Ergänzung / Ø12 / "+format(length,".3f")+" m"
     item["position"]=key
     positions[key]={"diameter":12,"schematic":True,
-                    "detail":"Geometrische Ergänzung · Bauteil "+item["host"]+" · Richtung "+direction+
-                             " · gerade Ø12 · "+format(length,".3f")+" m · Planzuordnung offen."}
+                    "detail":"Geometrische Ergänzung · gerade Ø12 · "+format(length,".3f")+" m · Planzuordnung offen."}
 data["positions"]=positions
 active={item["position"] for item in kept}
 data["positions"]={key:value for key,value in data["positions"].items() if key in active}

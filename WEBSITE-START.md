@@ -13,7 +13,7 @@ Die Website startet mit leerem Viewport. Die Dateien für die Präsentation lieg
 
 Die beiden mitgelieferten GLBs werden unabhängig vom Dateinamen erkannt. Die vier Projekt-6-PDFs werden anhand ihres Inhalts den zugehörigen Positionen und Originalplanbildern zugeordnet.
 
-Die Projektansicht bietet Filter nach Bauteilgruppe und einzelnen Bauteilen. **Betondeckkraft** steuert die Sichtbarkeit des umgebenden Betons. **Geometrische Ergänzungen anzeigen** schaltet die orange Darstellung um. Ein Klick auf einen solchen Stab isoliert die Gruppe mit demselben Bauteil, derselben Stabrichtung, demselben Durchmesser und derselben auf Millimeter gerundeten Länge. Die ausgewählte Gruppe erscheint pink.
+Die Projektansicht bietet Filter nach Bauteilgruppe und einzelnen Bauteilen. **Betondeckkraft** steuert die Sichtbarkeit des umgebenden Betons. **Geometrische Ergänzungen anzeigen** schaltet die orange Darstellung um. Beim Klick auf einen Stab werden gleiche Stäbe anhand von Länge, Biegeform und Durchmesser gruppiert und pink angezeigt. Bauteil, Einbauort und Stabrichtung bestimmen diese Gruppe nicht. Die anderen Bewehrungsstäbe werden ausgeblendet. Längen und Formabmessungen werden auf Millimeter verglichen. Die Positionsliste dient zusätzlich zur Auswahl einer Planposition.
 
 Die Geschossnamen, Materialien und IFC-Kennungen wurden aus `Bauteil6.3dm` gelesen. Sie erscheinen bei der Bauteilauswahl. **Geschoss laut Rhino** filtert nach diesen Modellinformationen. 51 zugeordnete Mauerwerksbauteile erhalten keine schematische Betonbewehrung. 537 Bauteile enthalten geometrische Ergänzungen; 96 weitere Betongeometrien bleiben offen.
 

@@ -321,3 +321,9 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 
 - Die schematischen Ergänzungen wurden zu breit gebäudeweit anhand von Durchmesser und Länge zusammengefasst. Die Gruppen sind jetzt zusätzlich nach Bauteil und Stabrichtung getrennt. Echte Planpositionen behalten ihre Positionszuordnung.
 - Den Klicktest ohne vorherige Bauteil- oder Geschossfilter erweitert: Nach der Auswahl ist genau eine Gruppe mit genau einem Bauteil und einer Stabrichtung sichtbar. Die anderen Stäbe sind ausgeblendet. Pavillon-Position 2 mit 60 sichtbaren Stäben und das Aufheben der Auswahl erneut geprüft.
+
+## 18.11.2026 - Stabgruppen nach Länge, Biegeform und Durchmesser
+
+- Nach Präzisierung der Anforderung die Gruppierung von Bauteil und Stabrichtung gelöst. Beim Klick im Viewport sind ausschließlich Länge, Biegeform und Durchmesser maßgebend. Die Formprüfung nutzt die Abstände zwischen den Biegepunkten und berücksichtigt räumliche Biegungen. Verschobene, gedrehte und in umgekehrter Reihenfolge gespeicherte Stäbe werden gemeinsam erkannt.
+- Die ausgewählte geometrische Gruppe bleibt pink sichtbar; die übrigen Stäbe und deren Schnittflächen werden ausgeblendet. Die Positionsliste bleibt als zusätzliche Auswahl der jeweiligen Planposition verfügbar.
+- Gleiche und unterschiedliche U-/L-Formen, rechteckige Bügel, Durchmesser, Länge, räumliche Biegungen, Drehungen und verschiedene Startpunkte geschlossener Bügel geprüft. Direkte Viewport-Klicks im Pavillon und Projekt 6 zeigen jeweils genau die ermittelte geometrische Gruppe. Präsentationsablauf mit leerem Start erneut getestet.

@@ -17,6 +17,7 @@ const loader = new GLTFLoader();
 
 let mode = 'combined';
 let active = null;
+let activeGroup = null;
 let plan;
 let planUrl;
 const localPlans = new Map();
@@ -42,6 +43,65 @@ const planHashes = {
   '305d7331c142665f82d94d96dbcc3850435236a9244eaf7925131e031750bbed':'2648',
 };
 
+function rebarGroupKey(item, diameter) {
+  const distance = (a,b) => Math.hypot(...a.map((value,i) => value-b[i]));
+  const points = [];
+  for (const point of item.points) {
+    if (!points.length || distance(points.at(-1),point) > .000001) points.push(point);
+  }
+  // Extra vertices on a straight length do not change its bending shape.
+  for (let i=1;i<points.length-1;) {
+    const a=points[i-1], b=points[i], c=points[i+1];
+    if (Math.abs(distance(a,b)+distance(b,c)-distance(a,c)) < .0000001) points.splice(i,1);
+    else i++;
+  }
+  let length = 0;
+  for (let i=1;i<points.length;i++) length += distance(points[i-1],points[i]);
+  const closed = points.length>2 && distance(points[0],points.at(-1)) < .000001;
+  if (closed) points.pop();
+  let simplifyClosed = closed;
+  while (simplifyClosed && points.length>3) {
+    simplifyClosed = false;
+    for (let i=0;i<points.length;i++) {
+      const a=points[(i+points.length-1)%points.length], b=points[i], c=points[(i+1)%points.length];
+      if (Math.abs(distance(a,b)+distance(b,c)-distance(a,c)) < .0000001) {
+        points.splice(i,1);
+        simplifyClosed = true;
+        break;
+      }
+    }
+  }
+  const describe = ordered => {
+    const measurements = [];
+    for (let i=0;i<ordered.length;i++) {
+      for (let j=i+1;j<ordered.length;j++) measurements.push(Math.round(distance(ordered[i],ordered[j])*1000));
+    }
+    // Signed volumes preserve the handedness of non-planar bending shapes.
+    const turns = [];
+    for (let i=0;i<ordered.length-3;i++) {
+      const origin=ordered[i];
+      const u=ordered[i+1].map((value,j)=>value-origin[j]);
+      const v=ordered[i+2].map((value,j)=>value-origin[j]);
+      const w=ordered[i+3].map((value,j)=>value-origin[j]);
+      const volume=u[0]*(v[1]*w[2]-v[2]*w[1])-u[1]*(v[0]*w[2]-v[2]*w[0])+u[2]*(v[0]*w[1]-v[1]*w[0]);
+      turns.push(Math.abs(volume)<.000000001 ? 0 : Math.sign(volume));
+    }
+    return measurements.join(',')+';'+turns.join(',');
+  };
+  const candidates = [];
+  for (const ordered of [points,[...points].reverse()]) {
+    for (let shift=0;shift<(closed ? ordered.length : 1);shift++) {
+      candidates.push(describe([...ordered.slice(shift),...ordered.slice(0,shift)]));
+    }
+  }
+  return [Math.round(diameter*1000),Math.round(length*1000),closed ? 'closed' : 'open',
+    points.length,candidates.sort()[0]].join('|');
+}
+
+function matchesRebar(item) {
+  return activeGroup ? item.groupKey === activeGroup : !active || item.position === active;
+}
+
 function showStatus(text) {
   status.textContent = text;
   status.hidden = !text;
@@ -59,6 +119,7 @@ function renderMasses(data) {
 
 function selection(position, item = null) {
   active = position;
+  activeGroup = item?.groupKey ?? null;
   byId('clearSelection').hidden = !position;
   if (!viewer?.hasModel()) return;
   if (viewer?.isCustom()) {
@@ -79,6 +140,11 @@ function selection(position, item = null) {
     if (row?.schematic) {
       byId('importSelection').textContent = row.detail + ' · ' + row.modelCount + ' Stababschnitte · ca. '
         + fmt(row.modelMass) + ' kg · ohne Zuordnung zu einer PDF-Position.';
+    }
+    if (activeGroup && importedPlan) {
+      const same = importedPlan.elements.filter(element => matchesRebar(element));
+      byId('importSelection').textContent = item.id + ' · ' + same.length + ' gleiche Stäbe · '
+        + fmt(item.length) + ' m · Ø' + row.diameter + ' mm';
     }
     const sheet = record?.sheet ?? row?.sheet;
     const selectedPlan = sheet ? [...localPlans.values()].find(file => file.sheet === sheet)
@@ -130,9 +196,9 @@ function selection(position, item = null) {
   const url = './' + (section ?? 'position-' + position) + '.png';
   byId('detailImage').src = byId('detailOriginal').href = url;
   const barMass = item && item.length * 7850 * Math.PI * (row.diameter / 2000)**2;
-  const equivalents = item && plan.elements.filter(element => element.position === item.position).length;
+  const equivalents = item && plan.elements.filter(element => matchesRebar(element)).length;
   selected.textContent = item
-    ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} Stäbe der Planposition`
+    ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} gleiche Stäbe · Ø${row.diameter} mm`
     : `Position ${position} · ${row.modelCount} Modellstäbe · ca. ${fmt(row.modelMass)} kg im Modell`;
   if (planUrl) {
     if (!detail.open) detail.show();
@@ -327,6 +393,7 @@ function createViewer(data) {
     const group = new THREE.Group();
     const schematic = dataset.elements.filter(item => item.schematic);
     for (const item of dataset.elements) {
+      item.groupKey ??= rebarGroupKey(item,dataset.positions[item.position].diameter);
       if (item.schematic) continue;
       const path = new THREE.CurvePath();
       const points = item.points.map(p => new THREE.Vector3(...p));
@@ -569,7 +636,7 @@ function createViewer(data) {
         (!item.schematic || byId('showSchematic').checked) &&
         hostMatches(hostById.get(item.host ?? '729')))};
     }
-    if (dataset && active) dataset = {...dataset,elements:dataset.elements.filter(item => item.position === active)};
+    if (dataset && active) dataset = {...dataset,elements:dataset.elements.filter(matchesRebar)};
     cutSurfaces.geometry = dataset ? sectionCaps(dataset,cutPlane,axisChoice.kind) : new THREE.BufferGeometry();
     cutSurfaces.visible = Boolean(dataset) && mode !== 'structure';
   }
@@ -635,24 +702,27 @@ function createViewer(data) {
     const selectedOverlayPosition = importedPlan?.positions[active]?.modelCount ? active : null;
     for (const mesh of importedOverlay?.children ?? []) {
       if (mesh.isInstancedMesh) {
-        mesh.visible = byId('showSchematic').checked && (!active || Boolean(importedPlan.positions[active]?.schematic));
+        mesh.visible = byId('showSchematic').checked;
         const selected = new THREE.Color(0xff1495);
         const normal = new THREE.Color(0xbf6b20);
         const hiddenMatrix = new THREE.Matrix4().makeScale(0,0,0).toArray();
+        let anyVisible = false;
         mesh.userData.instances.forEach((item,index) => {
-          const visible = hostMatches(hostById.get(item.host)) && (!active || item.position === active);
+          const visible = hostMatches(hostById.get(item.host)) && matchesRebar(item);
+          anyVisible ||= visible;
           const original = mesh.userData.originalMatrices;
           const offset = index * 16;
           mesh.instanceMatrix.array.set(visible ? original.subarray(offset,offset+16) : hiddenMatrix,offset);
-          mesh.setColorAt(index,item.position === active ? selected : normal);
+          mesh.setColorAt(index,active && matchesRebar(item) ? selected : normal);
         });
         mesh.instanceMatrix.needsUpdate = true;
         mesh.instanceColor.needsUpdate = true;
+        mesh.visible = mesh.visible && anyVisible;
         continue;
       }
       mesh.visible = !importedPlan?.hosts?.length || hostMatches(hostById.get('729'));
-      mesh.visible = mesh.visible && (!active || mesh.userData.rebar.position === active);
-      mesh.material = mesh.userData.rebar.position === selectedOverlayPosition ? highlighted
+      mesh.visible = mesh.visible && matchesRebar(mesh.userData.rebar);
+      mesh.material = active && matchesRebar(mesh.userData.rebar) ? highlighted
         : selectedOverlayPosition ? muted : ordinary;
     }
     if (model) model.visible = custom || mode !== 'rebar';
@@ -667,10 +737,10 @@ function createViewer(data) {
     }
     for (const mesh of bars.children) {
       const item = mesh.userData.rebar;
-      const matches = item.position === active;
-      mesh.visible = !active || matches;
-      mesh.material = matches ? highlighted : active ? muted : ordinary;
-      mesh.renderOrder = matches ? 2 : 0;
+      const matches = matchesRebar(item);
+      mesh.visible = matches;
+      mesh.material = active && matches ? highlighted : ordinary;
+      mesh.renderOrder = active && matches ? 2 : 0;
     }
     if (cutDirection) updateCaps();
   }
@@ -1051,6 +1121,7 @@ async function loadCustomModel(file) {
     projectKind = projectPlan ? 'project6' : 'custom';
     importedPlan = null;
     active = null;
+    activeGroup = null;
     byId('zUpImport').checked = false;
     viewer.useModel(result.scene,false,true);
     projectCatalog = catalog;
@@ -1319,6 +1390,7 @@ function emptyViewport() {
   projectCatalog = null;
   projectKind = null;
   active = null;
+  activeGroup = null;
   clearPlans();
   byId('stockPanel').hidden = true;
   byId('importPanel').hidden = true;
