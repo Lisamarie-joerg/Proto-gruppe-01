@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stockerau · Tragwerk und Bewehrung</title>
+<title>Bewehrung · Projektimport</title>
 <link rel="stylesheet" href="./viewer.css">
 <script type="importmap">{"imports":{"three":"./three/three.module.js","three/addons/":"./three/addons/"}}</script>
 <script type="module" src="./viewport3d.js"></script>
 </head>
 <body>
 <header class="page-header">
-  <div><p class="project">Prototypenbau · Gruppe 01</p><h1 id="projectTitle">Pavillon Stockerau</h1></div>
-  <a id="headerPlan" class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Originalplan P-01 ↗</a>
+  <div><p class="project">Prototypenbau · Gruppe 01</p><h1 id="projectTitle">Projekt importieren</h1></div>
+  <a id="headerPlan" class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener" hidden>Originalplan P-01 ↗</a>
 </header>
 <main>
   <section class="viewer" aria-label="3D-Modell">
@@ -23,6 +23,8 @@
       </div>
       <div class="switch">
         <button id="reset">Gesamtansicht</button><button id="top">Draufsicht</button>
+        <button id="clearSelection" hidden>Alle Stäbe anzeigen</button>
+        <button id="emptyViewport">Viewport leeren</button>
         <select id="sectionAxis" aria-label="Schnittachse"><option value="">Schnittachse …</option></select>
       </div>
     </div>
@@ -50,7 +52,7 @@
       </dialog>
     </div>
     <div class="viewer-footer">
-      <div id="materialLegend" class="legend" aria-label="Materialien">
+      <div id="materialLegend" class="legend" aria-label="Materialien" hidden>
         <span><i class="concrete"></i>Betonfundamente</span><span><i class="steel"></i>Stahlstützen</span>
         <span><i class="wood"></i>Holzdach</span><span><i class="pink"></i>Gewählte Stabposition</span>
       </div>
@@ -58,7 +60,7 @@
     </div>
   </section>
   <aside>
-    <section class="panel" id="stockPanel">
+    <section class="panel" id="stockPanel" hidden>
       <p class="project">Mengen und Gewichte</p>
       <h2>Bewehrung laut Plan</h2>
       <p><a class="download" href="./Stockerau-Bewehrung-Import.3dm" download>3D-Bewehrung für Rhino laden ↓</a></p>
@@ -114,7 +116,13 @@
     </section>
     <section class="panel">
       <h2>Eigene Dateien öffnen</h2>
-      <p><button id="openBuilding">Projekt 6 mit fünf PDF-Seiten öffnen</button></p>
+      <details>
+        <summary>Dateien für die Präsentation</summary>
+        <p>Im entpackten Ordner liegen die Dateien unter <strong>Praesentationsdateien</strong>.</p>
+        <p><a href="./model.glb" download="01-Pavillon.glb">Pavillon · GLB ↓</a> ·
+        <a href="./bewehrungsplan.pdf" download="01-Pavillon-Bewehrungsplan.pdf">Bewehrungsplan ↓</a></p>
+        <p><a href="./projekt6/Bauteil6.glb" download="02-Projekt6.glb">Projekt 6 · GLB ↓</a></p>
+      </details>
       <div class="drop" id="modelDrop">
         <label for="modelFile"><strong>3D-Modell ablegen</strong><span>GLB · Export aus Rhino</span></label>
         <input id="modelFile" type="file" accept=".glb">
@@ -131,9 +139,8 @@
         <label><input type="checkbox" id="neutralImport"> Neutral anzeigen</label>
         <label><input type="checkbox" id="zUpImport"> Z ist oben</label>
       </div>
-      <p id="uploadStatus" class="note" role="status">Eigene Dateien bleiben auf deinem Rechner.</p>
+      <p id="uploadStatus" class="note" role="status">Zuerst ein GLB-Modell importieren, danach den zugehörigen PDF-Bewehrungsplan.</p>
       <div class="upload-links">
-        <button id="restore" hidden>Stockerau-Modell öffnen</button>
         <a id="openPlan" target="_blank" rel="noopener" hidden>Eigenen Plan öffnen ↗</a>
       </div>
       <select id="planChoice" aria-label="Bewehrungsplan auswählen" hidden></select>

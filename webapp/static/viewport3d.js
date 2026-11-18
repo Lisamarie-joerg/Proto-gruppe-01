@@ -23,12 +23,24 @@ const localPlans = new Map();
 let importedPlan;
 let projectCatalog;
 let viewer;
+let projectKind = null;
 
 async function json(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(url + ' · HTTP ' + res.status);
   return res.json();
 }
+async function contentHash(bytes) {
+  if (!crypto.subtle) return null;
+  return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
+    .map(byte => byte.toString(16).padStart(2,'0')).join('');
+}
+const planHashes = {
+  '069772f8a6a7b4af1301d6d6fc94d491e4fa1e0505a5dbd232fd545697a1303b':'2438',
+  '39a57322b1480686593811c6d2f880e413bc30eb178665e63aa27da68f2c1b79':'2448',
+  '5e706b82c55dfb3e3dee59d613886c0730c2596a8a7ef2986460d39b95183e9f':'2458',
+  '305d7331c142665f82d94d96dbcc3850435236a9244eaf7925131e031750bbed':'2648',
+};
 
 function showStatus(text) {
   status.textContent = text;
@@ -47,6 +59,8 @@ function renderMasses(data) {
 
 function selection(position, item = null) {
   active = position;
+  byId('clearSelection').hidden = !position;
+  if (!viewer?.hasModel()) return;
   if (viewer?.isCustom()) {
     viewer.update();
     const record = projectCatalog?.find(row => row.key === position);
@@ -67,9 +81,9 @@ function selection(position, item = null) {
         + fmt(row.modelMass) + ' kg · ohne Zuordnung zu einer PDF-Position.';
     }
     const sheet = record?.sheet ?? row?.sheet;
-    const selectedPlanUrl = sheet
-      ? [...localPlans.values()].find(file => file.sheet === sheet)?.url
-      : planUrl;
+    const selectedPlan = sheet ? [...localPlans.values()].find(file => file.sheet === sheet)
+      : [...localPlans.values()].find(file => file.url === planUrl);
+    const selectedPlanUrl = selectedPlan?.url;
     byId('projectPositions').querySelectorAll('button').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.position === position));
     });
@@ -81,10 +95,10 @@ function selection(position, item = null) {
       byId('detailPlanLink').href = url;
       byId('detailPdf').hidden = false;
       byId('detailPdf').src = url;
-      if (selectedPlanUrl.startsWith('./projekt6/')) {
+      if (selectedPlan?.image) {
         byId('detailImage').parentElement.hidden = false;
-        byId('detailImage').src = './projekt6/' + sheet + '.png';
-        byId('detailOriginal').href = './projekt6/' + sheet + '.png';
+        byId('detailImage').src = selectedPlan.image;
+        byId('detailOriginal').href = selectedPlan.image;
         byId('detailPdf').hidden = true;
       }
       if (!detail.open) detail.show();
@@ -96,7 +110,7 @@ function selection(position, item = null) {
   }
   byId('detailImage').parentElement.hidden = false;
   byId('detailPdf').hidden = true;
-  byId('detailPlanLink').href = './bewehrungsplan.pdf';
+  byId('detailPlanLink').href = planUrl ?? './bewehrungsplan.pdf';
   const row = plan?.positions[position];
   const selected = byId('selection');
   document.querySelectorAll('#positions [data-position]').forEach(button => {
@@ -120,7 +134,12 @@ function selection(position, item = null) {
   selected.textContent = item
     ? `${item.id} · ${fmt(item.length)} m · ca. ${fmt(barMass)} kg · ${equivalents} Stäbe der Planposition`
     : `Position ${position} · ${row.modelCount} Modellstäbe · ca. ${fmt(row.modelMass)} kg im Modell`;
-  if (!detail.open) detail.show();
+  if (planUrl) {
+    if (!detail.open) detail.show();
+  } else {
+    if (detail.open) detail.close();
+    selected.textContent += ' · Bewehrungsplan importieren, um das Detail zu öffnen.';
+  }
 }
 
 function renderPlan() {
@@ -538,6 +557,11 @@ function createViewer(data) {
     byId('sectionInfo').textContent = 'Schnitt ' + axisChoice.name + ' · Blick nach ' +
       (direction > 0 ? '+' : '−') + axisChoice.kind.toUpperCase();
     fitSection();
+    updateCaps();
+    byId('sectionZoom').hidden = false;
+  }
+
+  function updateCaps() {
     cutSurfaces.geometry.dispose();
     let dataset = model === stockModel ? plan : importedPlan;
     if (model !== stockModel && dataset) {
@@ -545,9 +569,9 @@ function createViewer(data) {
         (!item.schematic || byId('showSchematic').checked) &&
         hostMatches(hostById.get(item.host ?? '729')))};
     }
+    if (dataset && active) dataset = {...dataset,elements:dataset.elements.filter(item => item.position === active)};
     cutSurfaces.geometry = dataset ? sectionCaps(dataset,cutPlane,axisChoice.kind) : new THREE.BufferGeometry();
     cutSurfaces.visible = Boolean(dataset) && mode !== 'structure';
-    byId('sectionZoom').hidden = false;
   }
 
   function zoomSection(factor) {
@@ -586,6 +610,13 @@ function createViewer(data) {
   }
 
   function update() {
+    if (!model) {
+      bars.visible = foundations.visible = cutSurfaces.visible = false;
+      if (groundGrid) groundGrid.visible = false;
+      if (customGrid) customGrid.visible = false;
+      if (importedOverlay) importedOverlay.visible = false;
+      return;
+    }
     const custom = model !== stockModel;
     bars.visible = !custom && mode !== 'structure';
     cutSurfaces.visible = Boolean(cutDirection) && (bars.visible || (custom && importedPlan && mode !== 'structure'));
@@ -595,6 +626,7 @@ function createViewer(data) {
       for (const item of importedMeshes) {
         if (item.concrete) item.concrete.opacity = Number(byId('concreteOpacity').value) || .25;
         item.mesh.visible = item.position ? !importedPlan && mode !== 'structure' : mode !== 'rebar';
+        if (item.position && active) item.mesh.visible = item.mesh.visible && item.position === active;
         if (importedPlan?.hosts?.length) item.mesh.visible = item.mesh.visible && hostMatches(item.host);
         item.mesh.material = item.position ? item.rebar[item.position === active ? 1 : active ? 2 : 0]
           : showConcrete && item.concrete ? item.concrete : byId('neutralImport').checked ? item.neutral : item.material;
@@ -603,22 +635,23 @@ function createViewer(data) {
     const selectedOverlayPosition = importedPlan?.positions[active]?.modelCount ? active : null;
     for (const mesh of importedOverlay?.children ?? []) {
       if (mesh.isInstancedMesh) {
-        mesh.visible = byId('showSchematic').checked;
-        const selected = new THREE.Color(0xff1495), gray = new THREE.Color(0x9da4a5);
+        mesh.visible = byId('showSchematic').checked && (!active || Boolean(importedPlan.positions[active]?.schematic));
+        const selected = new THREE.Color(0xff1495);
         const normal = new THREE.Color(0xbf6b20);
         const hiddenMatrix = new THREE.Matrix4().makeScale(0,0,0).toArray();
         mesh.userData.instances.forEach((item,index) => {
-          const visible = hostMatches(hostById.get(item.host));
+          const visible = hostMatches(hostById.get(item.host)) && (!active || item.position === active);
           const original = mesh.userData.originalMatrices;
           const offset = index * 16;
           mesh.instanceMatrix.array.set(visible ? original.subarray(offset,offset+16) : hiddenMatrix,offset);
-          mesh.setColorAt(index,item.position === active ? selected : active ? gray : normal);
+          mesh.setColorAt(index,item.position === active ? selected : normal);
         });
         mesh.instanceMatrix.needsUpdate = true;
         mesh.instanceColor.needsUpdate = true;
         continue;
       }
       mesh.visible = !importedPlan?.hosts?.length || hostMatches(hostById.get('729'));
+      mesh.visible = mesh.visible && (!active || mesh.userData.rebar.position === active);
       mesh.material = mesh.userData.rebar.position === selectedOverlayPosition ? highlighted
         : selectedOverlayPosition ? muted : ordinary;
     }
@@ -635,13 +668,15 @@ function createViewer(data) {
     for (const mesh of bars.children) {
       const item = mesh.userData.rebar;
       const matches = item.position === active;
+      mesh.visible = !active || matches;
       mesh.material = matches ? highlighted : active ? muted : ordinary;
       mesh.renderOrder = matches ? 2 : 0;
     }
+    if (cutDirection) updateCaps();
   }
 
   function setCamera(top = false) {
-    if (!bounds) return;
+    if (!bounds || !model) return;
     const rebarGroup = model === stockModel ? bars : importedOverlay;
     const viewBounds = mode === 'rebar' && rebarGroup
       ? new THREE.Box3().setFromObject(rebarGroup) : bounds.clone();
@@ -784,6 +819,7 @@ function createViewer(data) {
   let pointer;
   renderer.domElement.addEventListener('pointerdown', e => { pointer = [e.clientX,e.clientY]; });
   renderer.domElement.addEventListener('pointerup', e => {
+    if (!model) return;
     if (!pointer || Math.hypot(e.clientX-pointer[0],e.clientY-pointer[1]) > 6) return;
     const box = renderer.domElement.getBoundingClientRect();
     const coords = new THREE.Vector2((e.clientX-box.left)/box.width*2-1, 1-(e.clientY-box.top)/box.height*2);
@@ -823,7 +859,8 @@ function createViewer(data) {
       }
     }
     if (bars.visible) {
-      const mesh = ray.intersectObjects(bars.children, false).find(hit => visiblePoint(hit.point))?.object || nearBar();
+      const mesh = ray.intersectObjects(bars.children.filter(mesh => mesh.visible), false)
+        .find(hit => visiblePoint(hit.point))?.object || nearBar();
       if (mesh) {
         selection(mesh.userData.rebar.position, mesh.userData.rebar);
         return;
@@ -875,9 +912,19 @@ function createViewer(data) {
   }
   new ResizeObserver(resize).observe(mount);
   resize();
+  update();
   renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,cutDirection ? sectionCamera : camera); });
   return {
     update, setCamera, endSection, useModel, refreshImport, importedPositions, isCustom: () => model !== stockModel,
+    hasModel: () => Boolean(model),
+    clear: () => {
+      if (model) scene.remove(model);
+      model = null;
+      bounds = null;
+      disposeOverlay();
+      endSection();
+      update();
+    },
     restore: () => useModel(stockModel),
   };
 }
@@ -899,27 +946,65 @@ function previewPlan(name) {
   const preview = byId('planPreview'), link = byId('openPlan');
   preview.src = link.href = planUrl;
   preview.hidden = link.hidden = false;
+  byId('headerPlan').href = planUrl;
+  byId('headerPlan').hidden = false;
+  byId('headerPlan').textContent = 'Importierten Originalplan öffnen ↗';
+}
+function clearPlans() {
+  for (const file of localPlans.values()) {
+    if (file.url.startsWith('blob:')) URL.revokeObjectURL(file.url);
+  }
+  localPlans.clear();
+  planUrl = null;
+  planChoice.replaceChildren();
+  planChoice.hidden = true;
+  byId('planPreview').src = 'about:blank';
+  byId('planPreview').hidden = true;
+  byId('openPlan').hidden = true;
+  byId('headerPlan').hidden = true;
+  byId('detailPdf').src = 'about:blank';
+  if (detail.open) detail.close();
+}
+function setViewerEnabled(enabled) {
+  buttons.forEach(button => { button.disabled = !enabled; });
+  for (const id of ['reset','top','sectionAxis']) byId(id).disabled = !enabled;
 }
 const planChoice = byId('planChoice');
 planChoice.addEventListener('change', () => previewPlan(planChoice.value));
-setupInput('planDrop','planFile',files => {
+setupInput('planDrop','planFile',async files => {
+  if (!viewer?.hasModel()) {
+    byId('uploadStatus').textContent = 'Bitte zuerst das zugehörige GLB-Modell importieren.';
+    return;
+  }
   const pdfs = files.filter(file => /\.pdf$/i.test(file.name));
   if (!pdfs.length) {
     byId('uploadStatus').textContent = 'Bitte Bewehrungspläne im PDF-Format auswählen.';
     return;
   }
-  for (const file of pdfs) {
-    const previous = localPlans.get(file.name);
-    if (previous?.url.startsWith('blob:')) URL.revokeObjectURL(previous.url);
-    const sheet = file.name.match(/_E02_(2438|2448|2458|2648)(?=[_\-.])/i)?.[1];
-    localPlans.set(file.name,{url:URL.createObjectURL(file),sheet});
+  const request = modelRequest;
+  try {
+    const prepared = await Promise.all(pdfs.map(async file => {
+      const hash = await contentHash(await file.arrayBuffer());
+      const knownSheet = projectKind === 'project6' ? planHashes[hash] : null;
+      const sheet = knownSheet ?? file.name.match(/_E02_(2438|2448|2458|2648)(?=[_\-.])/i)?.[1];
+      return {file,sheet,image:knownSheet ? './projekt6/' + knownSheet + '.png' : null};
+    }));
+    if (request !== modelRequest) return;
+    for (const {file,sheet,image} of prepared) {
+      const previous = localPlans.get(file.name);
+      if (previous?.url.startsWith('blob:')) URL.revokeObjectURL(previous.url);
+      localPlans.set(file.name,{url:URL.createObjectURL(file),sheet,image});
+    }
+    planChoice.replaceChildren(...[...localPlans.keys()].map(name => new Option(name,name)));
+    planChoice.hidden = localPlans.size < 2;
+    planChoice.value = pdfs[0].name;
+    previewPlan(planChoice.value);
+    byId('uploadStatus').textContent = localPlans.size + ' Original-PDF(s) geladen.';
+    if (mode === 'structure' && (projectKind === 'stock' || viewer.importedPositions().length)) setMode('combined');
+    if (active) selection(active);
+  } catch(error) {
+    if (request === modelRequest) byId('uploadStatus').textContent = 'PDF konnte nicht importiert werden: ' + error.message;
   }
-  planChoice.replaceChildren(...[...localPlans.keys()].map(name => new Option(name,name)));
-  planChoice.hidden = localPlans.size < 2;
-  planChoice.value = pdfs[0].name;
-  previewPlan(planChoice.value);
-  byId('uploadStatus').textContent = localPlans.size + ' Original-PDF(s) geladen.';
-  if (viewer?.isCustom() && active) selection(active);
 },true);
 
 let modelRequest = 0;
@@ -944,18 +1029,28 @@ async function loadCustomModel(file) {
   byId('uploadStatus').textContent = file.name + ' wird geladen …';
   try {
     const bytes = await file.arrayBuffer();
+    const hash = await contentHash(bytes);
+    if (hash === '6fd7b2273e968fd0e29732ff1d1b5f5aa6f15f3e8c7c7dea2708bf1583e8d894') {
+      if (request !== modelRequest) return;
+      clearPlans();
+      showStockModel();
+      byId('uploadStatus').textContent = file.name + ' · Pavillon importiert. Jetzt den Bewehrungsplan als PDF importieren.';
+      return;
+    }
     const result = await loader.parseAsync(bytes, './');
     let projectPlan;
     let catalog;
-    if (crypto.subtle && bytes.byteLength === 1916120) {
-      const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
-        .map(byte => byte.toString(16).padStart(2,'0')).join('');
+    if (hash && bytes.byteLength === 1916120) {
       if (hash === 'd7576f41e671a6d75ddc6fa0595425d7d92df09b2be869d9bb0d3104e7cd25fc') {
         projectPlan = readImportPlan(await json('./bauteil6-bewehrung.json'));
         catalog = await loadProjectCatalog();
       }
     }
     if (request !== modelRequest) return;
+    clearPlans();
+    projectKind = projectPlan ? 'project6' : 'custom';
+    importedPlan = null;
+    active = null;
     byId('zUpImport').checked = false;
     viewer.useModel(result.scene,false,true);
     projectCatalog = catalog;
@@ -968,8 +1063,11 @@ async function loadCustomModel(file) {
     }
     selection(null);
     const count = showImportOptions();
-    setMode(count ? 'combined' : 'structure');
-    byId('restore').hidden = false;
+    setViewerEnabled(true);
+    buttons.forEach(button => { button.disabled = !count && button.dataset.mode !== 'structure'; });
+    setMode('structure');
+    byId('materialLegend').hidden = false;
+    showStatus('');
     byId('uploadStatus').textContent = file.name + (projectPlan
       ? ' · Gebäude und Positionsliste E02 geladen. Original-PDFs für die Planansicht hinzufügen.'
       : count
@@ -980,29 +1078,6 @@ async function loadCustomModel(file) {
   }
 }
 setupInput('modelDrop','modelFile',loadCustomModel);
-
-async function openBundledProject() {
-  const button = byId('openBuilding');
-  button.disabled = true;
-  try {
-    const response = await fetch('./projekt6/Bauteil6.glb');
-    if (!response.ok) throw new Error('Projektmodell fehlt im Websiteordner.');
-    for (const sheet of ['2438','2448','2458','2648']) {
-      const name = 'Plan ' + sheet;
-      localPlans.set(name,{sheet,url:'./projekt6/' + sheet + '.pdf'});
-    }
-    planChoice.replaceChildren(...[...localPlans.keys()].map(name => new Option(name,name)));
-    planChoice.hidden = false;
-    planChoice.value = 'Plan 2448';
-    previewPlan(planChoice.value);
-    await loadCustomModel(new File([await response.arrayBuffer()],'Bauteil6.glb'));
-  } catch(error) {
-    byId('uploadStatus').textContent = error.message;
-  } finally {
-    button.disabled = false;
-  }
-}
-byId('openBuilding').addEventListener('click',openBundledProject);
 
 function readImportPlan(source) {
   if (!source || !Array.isArray(source.elements) || !source.elements.length || !source.positions
@@ -1102,8 +1177,6 @@ function showImportOptions() {
     byId('materialLegend').innerHTML = '<span><i class="concrete"></i>Betonbauteile</span>'
       + '<span><i class="wood"></i>Orange geometrische Ergänzungen</span>'
       + '<span><i class="pink"></i>Gleiche Stäbe ausgewählt</span>';
-    byId('headerPlan').href = './projekt6/2448.pdf';
-    byId('headerPlan').textContent = 'Originalplan E02 · 2448 ↗';
     drawBuildingHosts();
   }
   byId('importMass').textContent = importedPlan
@@ -1147,7 +1220,7 @@ function showImportOptions() {
 }
 
 setupInput('rebarDrop','rebarFile',async file => {
-  if (!viewer?.isCustom()) {
+  if (!viewer?.hasModel() || !viewer.isCustom()) {
     byId('uploadStatus').textContent = 'Bitte zuerst das eigene GLB laden, dem die Bewehrungsdaten zugeordnet werden sollen.';
     return;
   }
@@ -1214,8 +1287,9 @@ byId('buildingHost').addEventListener('change',() => {
 });
 byId('zUpImport').addEventListener('change',() => viewer?.refreshImport());
 
-byId('restore').addEventListener('click', () => {
-  ++modelRequest;
+function showStockModel() {
+  projectKind = 'stock';
+  importedPlan = null;
   projectCatalog = null;
   byId('buildingCategory').value = '';
   byId('buildingHost').value = '';
@@ -1223,6 +1297,7 @@ byId('restore').addEventListener('click', () => {
   byId('projectTitle').textContent = 'Pavillon Stockerau';
   document.title = 'Stockerau · Tragwerk und Bewehrung';
   byId('materialLegend').innerHTML = stockLegend;
+  byId('materialLegend').hidden = false;
   byId('headerPlan').href = './bewehrungsplan.pdf';
   byId('headerPlan').textContent = 'Originalplan P-01 ↗';
   viewer.restore();
@@ -1230,12 +1305,34 @@ byId('restore').addEventListener('click', () => {
   byId('importSettings').hidden = true;
   byId('stockPanel').hidden = false;
   selection(null);
-  setMode('combined');
+  setMode('structure');
   buttons.forEach(button => { button.disabled = false; });
   document.querySelectorAll('[data-position]').forEach(button => { button.disabled = false; });
-  byId('restore').hidden = true;
-  byId('uploadStatus').textContent = 'Stockerau-Modell wieder geöffnet.';
-});
+  setViewerEnabled(true);
+  showStatus('');
+}
+
+function emptyViewport() {
+  ++modelRequest;
+  viewer?.clear();
+  importedPlan = null;
+  projectCatalog = null;
+  projectKind = null;
+  active = null;
+  clearPlans();
+  byId('stockPanel').hidden = true;
+  byId('importPanel').hidden = true;
+  byId('importSettings').hidden = true;
+  byId('materialLegend').hidden = true;
+  byId('clearSelection').hidden = true;
+  byId('projectTitle').textContent = 'Projekt importieren';
+  document.title = 'Bewehrung · Projektimport';
+  setViewerEnabled(false);
+  showStatus('GLB-Modell importieren, danach den zugehörigen PDF-Bewehrungsplan.');
+  byId('uploadStatus').textContent = 'Bereit für den Import eines Projekts.';
+}
+byId('emptyViewport').addEventListener('click',emptyViewport);
+byId('clearSelection').addEventListener('click',() => selection(null));
 byId('reset').addEventListener('click', () => { selection(null); viewer?.endSection(); viewer?.setCamera(); });
 byId('top').addEventListener('click', () => { viewer?.endSection(); viewer?.setCamera(true); });
 buttons.forEach(button => button.addEventListener('click', () => {
@@ -1252,8 +1349,7 @@ try {
   const gltf = await loader.loadAsync('./model.glb');
   viewer = createViewer(data);
   viewer.useModel(gltf.scene, true);
-  await openBundledProject();
-  showStatus('');
+  emptyViewport();
 } catch (error) {
   showStatus('3D-Ansicht konnte nicht gestartet werden: ' + error.message);
   console.error(error);

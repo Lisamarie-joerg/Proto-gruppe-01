@@ -4,7 +4,14 @@
 
 Unter Windows mit installiertem Python im entpackten Ordner auf `Website-oeffnen.bat` doppelklicken. Alternativ `python website_starten.py` ausführen. Die Startdatei öffnet den Browser auf einem freien lokalen Port. Das Terminalfenster geöffnet lassen.
 
-Die Website startet mit Projekt 6. Modell, vier Original-PDFs mit insgesamt fünf Seiten und Originalplanbilder sind enthalten. Über **Stockerau-Modell öffnen** gelangt man zum Pavillon. **Projekt 6 mit fünf PDF-Seiten öffnen** lädt das Gebäude erneut.
+Die Website startet mit leerem Viewport. Die Dateien für die Präsentation liegen im entpackten Ordner unter `Praesentationsdateien`.
+
+1. Aus `01-Pavillon` zuerst `Pavillon.glb` ins Modellfeld ziehen. Danach `Pavillon-Bewehrungsplan.pdf` ins Planfeld ziehen.
+2. Aus `02-Projekt6` anschließend `Bauteil6.glb` ins Modellfeld ziehen. Danach die vier PDFs gemeinsam ins Planfeld ziehen. Beim Modellwechsel werden die zuvor importierten Pläne entfernt.
+3. Einen Stab oder eine vorhandene Planposition auswählen. Gleiche Stäbe werden pink angezeigt; alle anderen Bewehrungsstäbe werden ausgeblendet. **Alle Stäbe anzeigen** hebt die Auswahl auf. Die Bauteil- und Geschossfilter gelten dabei weiterhin.
+4. **Viewport leeren** setzt Modell und Planimporte für einen neuen Präsentationsdurchlauf zurück.
+
+Die beiden mitgelieferten GLBs werden unabhängig vom Dateinamen erkannt. Die vier Projekt-6-PDFs werden anhand ihres Inhalts den zugehörigen Positionen und Originalplanbildern zugeordnet.
 
 Die Projektansicht bietet Filter nach Bauteilgruppe und einzelnen Bauteilen. **Betondeckkraft** steuert die Sichtbarkeit des umgebenden Betons. **Geometrische Ergänzungen anzeigen** schaltet die orange Darstellung um. Ein Klick auf einen solchen Stab markiert die geraden Ergänzungsstäbe desselben Durchmessers und derselben auf Millimeter gerundeten Länge pink.
 
@@ -14,7 +21,7 @@ Die orange Geometrie ist ein schematischer Vorschlag aus den vorhandenen Bauteil
 
 Die vier Original-PDFs beschreiben E02. Ihre fünfte Seite ist eine Gebäudeansicht. Eine plangetreue vollständige Bewehrung der weiteren Geschosse und Treppen erfordert deren Positions- und Verlegepläne. Die schematischen Ergänzungen werden deshalb weder den Biegelistenpositionen zugerechnet noch im Rhino-Download der 101 rekonstruierten Stäbe als Planbewehrung ausgegeben.
 
-Im Viewer zwischen Tragwerk, transparenter Überlagerung und reiner Bewehrung wechseln. Beim Klick auf einen Stab werden Stäbe derselben Planposition pink, die anderen grau. Die Positionsliste markiert alle zugehörigen Modellstäbe. Das kleine Detailfenster zeigt einen unveränderten Ausschnitt aus dem Original-PDF. Für die Bewehrung sind Original- und Modellmasse ausgewiesen. Im Modell beträgt die lichte Betondeckung mindestens 4 cm. Die Längsstöße überdecken sich 1,06 m. Sie liegen in A–A nahe E und in B–B zwischen 4/5 und 5/6. Benachbarte Lagen sind versetzt. Die Zuschnitte sind maximal 7,50 m lang. Die Tragwerksmassen sind Schätzwerte aus den Modellvolumina und den in der App angegebenen Dichten.
+Im Viewer zwischen Tragwerk, transparenter Überlagerung und reiner Bewehrung wechseln. Beim Klick auf einen Stab werden Stäbe derselben Planposition pink; die übrigen Bewehrungsstäbe werden ausgeblendet. Die Positionsliste markiert alle zugehörigen Modellstäbe. Das kleine Detailfenster zeigt einen unveränderten Ausschnitt aus dem Original-PDF. Für die Bewehrung sind Original- und Modellmasse ausgewiesen. Im Pavillonmodell beträgt die lichte Betondeckung mindestens 4 cm. Die Längsstöße überdecken sich 1,06 m. Sie liegen in A–A nahe E und in B–B zwischen 4/5 und 5/6. Benachbarte Lagen sind versetzt. Die Zuschnitte sind maximal 7,50 m lang. Die Tragwerksmassen sind Schätzwerte aus den Modellvolumina und den in der App angegebenen Dichten.
 
 In der Draufsicht sind die Achsen B–H und 3–7 mit ihren Abständen auf der Grundfläche lesbar. C und G sind aus dem registrierten PDF-Plan abgeleitet.
 

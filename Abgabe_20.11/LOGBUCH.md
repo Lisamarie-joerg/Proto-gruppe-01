@@ -309,3 +309,10 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Die 101 rekonstruierten E02-Stäbe und die Biegelisten-Sollmengen werden durch die schematischen Ergänzungen nicht als vollständig modelliert ausgewiesen. Auswahl gleicher Ergänzungsstäbe nach Durchmesser und auf Millimeter gerundeter Länge. Geometrie wird als Instanzen dargestellt.
 - Anwendungseinstieg mit echten Dateien, PDF-Planbilder, Gruppen-, Treppen- und Einzelfilter sowie Rückkehr zum Pavillon getestet. Eine gerenderte Browserprüfung scheiterte zunächst am Verbindungsaufbau. Der direkte Zugriff auf den ursprünglichen OneDrive-Ordner ist durch Dateirechte begrenzt. Der Git-Push über HTTPS scheiterte an der DNS-Auflösung von github.com.
 - Anschließend die Live-Verbindung zu Rhino wiederhergestellt und IFC-Metadaten aller 883 Objekte ausgelesen. Alle 684 erfassten GLB-Bauteile über ihre Bounding Boxes mit Rhino verknüpft. Geschossfilter, Material und IFC-GlobalId in der App ergänzt. Das Rhino-Dokument enthält ausschließlich Meshes und keine Bewehrungsobjekte.
+
+## 18.11.2026 - Präsentationsablauf mit leerem Viewport
+
+- Startansicht geleert. GLB-Import erkennt Pavillon und Projekt 6 anhand des Dateiinhalts. Erst nach PDF-Import wird die Bewehrungsüberlagerung aktiviert. Vorherige PDFs und Auswahlzustände werden beim Wechsel des Modells entfernt.
+- Präsentationsdateien für beide Projekte in zwei Unterordnern zusammengestellt. Die vier Projekt-6-PDFs werden auch bei geändertem Dateinamen den bekannten Planblättern zugeordnet.
+- Stabauswahl isoliert gleiche Stäbe: übrige Modellstäbe, Ergänzungsinstanzen und Schnittflächen werden ausgeblendet. Schaltflächen zum Aufheben der Auswahl und zum Leeren des Viewports ergänzt.
+- Den vollständigen Ablauf mit echten GLB-/PDF-Dateien in einem Anwendungstest geprüft: leerer Start, Pavillon und Plan, Auswahl von Position 2 mit 60 sichtbaren Stäben, gefilterte Schnittflächen, Projektwechsel, vier umbenannte Projekt-6-Pläne, isolierte Instanzauswahl und Neustart des Ablaufs.
