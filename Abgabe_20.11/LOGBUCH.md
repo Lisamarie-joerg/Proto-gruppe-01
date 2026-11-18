@@ -316,3 +316,8 @@ Der Agent hat das Modell selbstständig geöffnet, Geometrie ausgewertet (Layer/
 - Präsentationsdateien für beide Projekte in zwei Unterordnern zusammengestellt. Die vier Projekt-6-PDFs werden auch bei geändertem Dateinamen den bekannten Planblättern zugeordnet.
 - Stabauswahl isoliert gleiche Stäbe: übrige Modellstäbe, Ergänzungsinstanzen und Schnittflächen werden ausgeblendet. Schaltflächen zum Aufheben der Auswahl und zum Leeren des Viewports ergänzt.
 - Den vollständigen Ablauf mit echten GLB-/PDF-Dateien in einem Anwendungstest geprüft: leerer Start, Pavillon und Plan, Auswahl von Position 2 mit 60 sichtbaren Stäben, gefilterte Schnittflächen, Projektwechsel, vier umbenannte Projekt-6-Pläne, isolierte Instanzauswahl und Neustart des Ablaufs.
+
+## 18.11.2026 - Auswahl auf die einzelne Stabgruppe begrenzt
+
+- Die schematischen Ergänzungen wurden zu breit gebäudeweit anhand von Durchmesser und Länge zusammengefasst. Die Gruppen sind jetzt zusätzlich nach Bauteil und Stabrichtung getrennt. Echte Planpositionen behalten ihre Positionszuordnung.
+- Den Klicktest ohne vorherige Bauteil- oder Geschossfilter erweitert: Nach der Auswahl ist genau eine Gruppe mit genau einem Bauteil und einer Stabrichtung sichtbar. Die anderen Stäbe sind ausgeblendet. Pavillon-Position 2 mit 60 sichtbaren Stäben und das Aufheben der Auswahl erneut geprüft.
