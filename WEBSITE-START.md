@@ -2,6 +2,8 @@
 
 ## Neu: Reuse catalogue
 
+Aktualisierung 19.11.: Für einzelne Stäbe **Bewehrungsübersicht** wählen. Dort werden gleiche Länge, Biegeform und Durchmesser gemeinsam pink angezeigt; andere Stäbe bleiben ausgeblendet. Im Katalog pausiert eine Bauteilauswahl die Sequenz und zeigt Lkw sowie X/Y-Ladeposition. Die Sequenz führt erst den sichtbaren Rückbau von oben nach unten aus, danach die Verladung und am Ende die Ausschlussliste. **Not reused** zeigt die ausgeschlossenen Teile und ihre Gründe. Schwach belegte Ladungen werden konsolidiert und nach Möglichkeit aufgefüllt.
+
 Nach dem Modell- und PDF-Import oben **Reuse catalogue** und **Create / recalculate catalogue** wählen. Der neue Ablauf bietet Geschossfilter, Schnittvorschläge, transparente Bauteilblöcke, Bewehrung, Bauteilliste mit Gewicht und Lkw-Zuordnung sowie eine Lade- und Demontageanimation. Transport- und Hubgrenzen sind einstellbar. Bedienung und Annahmen: `REUSE-KATALOG.md`. Englischer Zehn-Minuten-Demoablauf: `PRESENTATION-REUSE.md`.
 
 ## Website öffnen

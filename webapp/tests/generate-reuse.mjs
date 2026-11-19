@@ -16,6 +16,6 @@ const meshes=[];gltf.scene.traverse(mesh=>{if(mesh.isMesh)meshes.push(mesh);});
 const assigned=assignHosts(meshes,plan.hosts),sources=meshes.filter(mesh=>assigned.get(mesh)?.reinforcementExpected).map(mesh=>sourceFromHost(mesh,assigned.get(mesh)));
 console.log('Sources',sources.length);
 const result=buildPlan(sources,DEFAULTS,(i,n)=>{if(i%25===0)console.log(i+'/'+n);});
-result.version='reuse-v1';result.sourceIds=sources.map(s=>s.id);result.sourceSignature=sourceSignature(sources);
+result.version='reuse-v2';result.sourceIds=sources.map(s=>s.id);result.sourceSignature=sourceSignature(sources);
 fs.writeFileSync(path.join(base,'reuse-default-projekt6.json'),JSON.stringify(result));
 console.log(JSON.stringify({parts:result.parts.length,cuts:result.cuts.length,trucks:result.trucks.length,mass:result.totalMass,audit:result.audit.reduce((a,x)=>(a[x.method]=(a[x.method]||0)+1,a),{})}));

@@ -122,6 +122,11 @@ function renderMasses(data) {
 function selection(position, item = null) {
   active = position;
   activeGroup = item?.groupKey ?? null;
+  if(activeGroup&&importedPlan){
+    byId('buildingCategory').value=byId('buildingStorey').value=byId('buildingHost').value='';
+    drawBuildingHosts();
+    byId('showSchematic').checked=true;
+  }
   byId('clearSelection').hidden = !position;
   if (!viewer?.hasModel()) return;
   if (viewer?.isCustom()) {
@@ -727,6 +732,7 @@ function createViewer(data) {
           mesh.setColorAt(index,active && matchesRebar(item) ? selected : normal);
         });
         mesh.instanceMatrix.needsUpdate = true;
+        mesh.boundingSphere=null;mesh.boundingBox=null;
         mesh.instanceColor.needsUpdate = true;
         mesh.visible = mesh.visible && anyVisible;
         continue;
@@ -878,21 +884,29 @@ function createViewer(data) {
   const pointOnRay = new THREE.Vector3(), pointOnBar = new THREE.Vector3();
   const visiblePoint = p => !cutPlane || cutPlane.distanceToPoint(p) >= -1e-5;
   function nearBar(meshes = bars.children) {
-    let best;
-    let thresholdSquared = Infinity;
-    for (const mesh of meshes) {
-      const points = mesh.userData.centerline;
-      if (!points || !mesh.visible) continue;
-      for (let i = 1; i < points.length; i++) {
-        a.copy(points[i - 1]);
-        b.copy(points[i]);
-        const distanceSquared = ray.ray.distanceSqToSegment(a, b, pointOnRay, pointOnBar);
-        const depth = ray.ray.origin.distanceTo(pointOnRay);
-        const fourPixels = 8 * depth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / mount.clientHeight;
-        const tolerance = cutDirection ? 8*sectionCamera.top/mount.clientHeight : fourPixels;
-        if (visiblePoint(pointOnBar) && distanceSquared < tolerance ** 2 && distanceSquared < thresholdSquared) {
-          thresholdSquared = distanceSquared;
-          best = mesh;
+    let best,score=Infinity;
+    for(const mesh of meshes) {
+      if(!mesh.visible)continue;
+      const candidates=mesh.userData.instances
+        ? mesh.userData.instances.map((item,index)=>({item,index,points:item.points}))
+        : [{item:mesh.userData.rebar,points:mesh.userData.centerline}];
+      for(const candidate of candidates) {
+        if(!candidate.points||!candidate.item)continue;
+        if(mesh.isInstancedMesh) {
+          const o=candidate.index*16,m=mesh.instanceMatrix.array;
+          if(Math.abs(m[o])+Math.abs(m[o+5])+Math.abs(m[o+10])<1e-12)continue;
+        }
+        for(let i=1;i<candidate.points.length;i++) {
+          const p=candidate.points[i-1],q=candidate.points[i];
+          p.isVector3?a.copy(p):a.fromArray(p);q.isVector3?b.copy(q):b.fromArray(q);
+          const distanceSquared=ray.ray.distanceSqToSegment(a,b,pointOnRay,pointOnBar);
+          const depth=ray.ray.origin.distanceTo(pointOnRay);
+          const tolerance=cutDirection?10*sectionCamera.top/mount.clientHeight
+            :10*depth*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))/mount.clientHeight;
+          const next=distanceSquared/(tolerance*tolerance)+depth*.00000001;
+          if(visiblePoint(pointOnBar)&&distanceSquared<tolerance*tolerance&&next<score) {
+            score=next;best={mesh,item:candidate.item};
+          }
         }
       }
     }
@@ -919,10 +933,10 @@ function createViewer(data) {
     if (model !== stockModel && mode !== 'structure') {
       const meshes = importedOverlay?.children ?? importedMeshes.filter(item => item.position).map(item => item.mesh);
       const hit = ray.intersectObjects(meshes.filter(mesh => mesh.visible),false).find(hit => visiblePoint(hit.point));
-      const selected = hit?.object ?? (importedOverlay ? nearBar(meshes) : null);
+      const selected = hit ? {mesh:hit.object,item:hit.object.userData.instances?.[hit.instanceId]??hit.object.userData.rebar} : (importedOverlay ? nearBar(meshes) : null);
       if (selected) {
-        const data = selected.userData.instances?.[hit?.instanceId] ?? selected.userData.rebar;
-        const position = data?.position ?? importedMeshes.find(item => item.mesh === selected)?.position;
+        const data = selected.item;
+        const position = data?.position ?? importedMeshes.find(item => item.mesh === selected.mesh)?.position;
         if (position) selection(position,data);
         return;
       }
@@ -943,10 +957,10 @@ function createViewer(data) {
       }
     }
     if (bars.visible) {
-      const mesh = ray.intersectObjects(bars.children.filter(mesh => mesh.visible), false)
-        .find(hit => visiblePoint(hit.point))?.object || nearBar();
-      if (mesh) {
-        selection(mesh.userData.rebar.position, mesh.userData.rebar);
+      const hitBar=ray.intersectObjects(bars.children.filter(mesh=>mesh.visible),false).find(hit=>visiblePoint(hit.point))?.object;
+      const picked=hitBar?{mesh:hitBar,item:hitBar.userData.rebar}:nearBar();
+      if(picked) {
+        selection(picked.item.position,picked.item);
         return;
       }
     }
@@ -996,7 +1010,10 @@ function createViewer(data) {
   }
   new ResizeObserver(resize).observe(mount);
   resize();
-  reuse=createReuseWorkflow({scene,onChange:update,endSection,fit:box=>setCamera(false,box),snapshot:()=>{
+  reuse=createReuseWorkflow({scene,onChange:update,endSection,onRebarOverview:()=>{
+    byId('buildingCategory').value=byId('buildingStorey').value=byId('buildingHost').value='';
+    drawBuildingHosts();byId('showSchematic').checked=true;selection(null);setMode('rebar');setCamera();
+  },fit:box=>setCamera(false,box),snapshot:()=>{
     if(!model)return {sources:[],reinforcement:[]};
     if(model===stockModel){
       const sources=foundations.children.map((mesh,i)=>({id:'foundation-'+i,name:mesh.userData.foundation.strip,

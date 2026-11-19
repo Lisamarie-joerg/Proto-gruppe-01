@@ -45,8 +45,9 @@ const plan=JSON.parse(fs.readFileSync(path.join(base,'reuse-default-projekt6.jso
 assert.equal(plan.sourceSignature,sourceSignature(sources));assert.equal(plan.sourceIds.length,sources.length);
 const ids=new Map(plan.parts.map(p=>[p.id,p]));
 assert.equal(ids.size,plan.parts.length);
-assert.equal(new Set(plan.removal).size,ids.size);assert.equal(new Set(plan.loading).size,ids.size);
+assert.equal(new Set(plan.removal).size,ids.size);assert.equal(new Set(plan.loading).size,ids.size-plan.rejected.length);
 for(const p of plan.parts){
+ if(p.rejectionReason){assert.equal(p.load,null);assert.equal(p.truck,null);continue;}
  assert(p.mass<=plan.settings.liftLimit-plan.settings.rigging+.01);
  assert(p.load.height<=plan.settings.loadHeight+1e-6);
  assert(p.load.x>=plan.settings.gap-1e-6&&p.load.y>=plan.settings.gap-1e-6);
@@ -76,6 +77,7 @@ workflow.group.updateMatrixWorld(true);
 new THREE.Raycaster(new THREE.Vector3(...pickPart.center).add(new THREE.Vector3(0,0,100)),new THREE.Vector3(0,0,-1)).intersectObject(boxes);
 el('reuseCatalogue').listeners.click({target:{closest:()=>({dataset:{part:pickPart.id}})}});
 assert(el('reuseSelected').innerHTML.includes(pickPart.id));assert(el('reuseSelected').innerHTML.includes('Truck '+pickPart.truck));
+assert(el('reuseSelected').innerHTML.includes('from front'));assert(el('reuseSelected').innerHTML.includes('from left'));
 assert.equal(Number(el('reuseTruck').value),pickPart.truck);assert(el('reuseCatalogue').innerHTML.includes('class="selected"'));
 const color=new THREE.Color();boxes.getColorAt(plan.parts.findIndex(p=>p.id===pickPart.id),color);assert.equal(color.getHex(),0xff1495);
 el('reuseShowTruck').onclick();
@@ -90,9 +92,15 @@ assert(loadRay.intersectObject(boxes).some(hit=>hit.instanceId===plan.parts.find
 el('reuseNoFloors').onclick();assert.equal(workflow.bounds().max.x,plan.settings.deckLength);
 for(let i=0;i<boxes.count;i++){boxes.getMatrixAt(i,matrix);assert.equal(matrix.determinant(),0);}
 el('reuseAllFloors').onclick();assert(fits>0);
-el('reuseTimeline').value=plan.parts.length+20;el('reuseTimeline').oninput();assert.match(el('reuseStep').textContent,/Loading 20/);
 const visibleCount=()=>{let n=0;for(let i=0;i<boxes.count;i++){boxes.getMatrixAt(i,matrix);if(matrix.determinant()!==0)n++;}return n;};
-assert(visibleCount()>0&&visibleCount()<=20);
+for(let i=1;i<plan.removal.length;i++){const a=ids.get(plan.removal[i-1]),b=ids.get(plan.removal[i]);assert(a.center[2]+a.dimensions[2]/2>=b.center[2]+b.dimensions[2]/2-1e-8);}
+const first=ids.get(plan.removal[0]);el('reuseTimeline').value=.2;el('reuseTimeline').oninput();
+boxes.getMatrixAt(plan.parts.findIndex(p=>p.id===first.id),matrix);assert(matrix.elements[14]>first.center[2],'First upper piece must visibly lift before removal.');
+el('reuseTimeline').value=250;el('reuseTimeline').oninput();assert.match(el('reuseStep').textContent,/Top-down disassembly/);assert(visibleCount()>0&&visibleCount()<plan.parts.length);
+el('reuseTimeline').value=500;el('reuseTimeline').oninput();assert.equal(visibleCount(),0,'Complete disassembly must precede loading.');
+el('reuseTimeline').value=750;el('reuseTimeline').oninput();assert.match(el('reuseStep').textContent,/Loading:/);assert(visibleCount()>0);
+el('reuseTimeline').value=1000;el('reuseTimeline').oninput();assert.equal(visibleCount(),plan.rejected.length);assert.equal(el('reuseRejected').hidden,false);assert.match(el('reuseStep').textContent,/Completed:/);
+if(plan.rejected.length){const rejected=ids.get(plan.rejected[0]);el('reuseRejectedList').listeners.click({target:{closest:()=>({dataset:{part:rejected.id}})}});assert(el('reuseSelected').innerHTML.includes(rejected.rejectionReason));assert(el('reuseSelected').innerHTML.includes('Not allocated'));}
 el('reuseSequenceReset').onclick();assert.equal(visibleCount(),plan.parts.length);
 const ray=new THREE.Raycaster(new THREE.Vector3(...pickPart.center).add(new THREE.Vector3(0,0,100)),new THREE.Vector3(0,0,-1));
 assert(workflow.pick(ray));assert(el('reuseSelected').innerHTML.includes('Truck'));

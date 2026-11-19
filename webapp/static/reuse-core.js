@@ -5,6 +5,7 @@ export const DEFAULTS = Object.freeze({
   deckLength:13.6, deckWidth:2.45, loadHeight:2.6,
   payload:24000, liftLimit:5000, rigging:200, density:2500,
   gap:0.08, kerf:0.01,
+  minReuseMass:100, minReuseThickness:.08,
 });
 const subtract=(a,b)=>a.map((value,i)=>value-b[i]);
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
@@ -292,42 +293,95 @@ function occupy(free,used) {
   return next.filter((a,i)=>a.w>EPS&&a.h>EPS&&!next.some((b,j)=>j!==i&&inside(a,b)&&(!inside(b,a)||j<i)));
 }
 export function packParts(parts,input) {
-  const settings=validateSettings(input),trucks=[];
-  const sorted=[...parts].sort((a,b)=>{
-    const aa=orientations(a.dimensions,settings)[0],bb=orientations(b.dimensions,settings)[0];
-    if(!aa||!bb)throw new Error('Transport envelope exceeds limits: '+(!aa?a.id:b.id));
-    return bb.length*bb.width-aa.length*aa.width||b.mass-a.mass;
-  });
-  for(const part of sorted) {
-    const choices=orientations(part.dimensions,settings);
-    if(!choices.length||part.mass>settings.payload+.01)throw new Error('Part '+part.id+' exceeds transport limits.');
+  const settings=validateSettings(input),initial=()=>[{x:settings.gap,y:settings.gap,w:settings.deckLength-settings.gap,h:settings.deckWidth-settings.gap}];
+  const area=p=>p.load.length*p.load.width;
+  function spot(truck,part) {
+    if(truck.mass+part.mass>settings.payload+.01)return null;
     let best=null;
-    for(const truck of trucks) {
-      if(truck.mass+part.mass>settings.payload+.01)continue;
-      for(const rect of truck.free)for(const option of choices) {
-        const w=option.length+settings.gap,h=option.width+settings.gap;
-        if(w>rect.w+EPS||h>rect.h+EPS)continue;
-        const score=Math.min(rect.w-w,rect.h-h)+.001*Math.max(rect.w-w,rect.h-h);
-        if(!best||score<best.score)best={truck,rect,option,w,h,score};
+    for(const rect of truck.free)for(const option of orientations(part.dimensions,settings)) {
+      const w=option.length+settings.gap,h=option.width+settings.gap;
+      if(w>rect.w+EPS||h>rect.h+EPS)continue;
+      const score=Math.min(rect.w-w,rect.h-h)+.001*Math.max(rect.w-w,rect.h-h);
+      if(!best||score<best.score)best={x:rect.x,y:rect.y,...option,w,h,score};
+    }
+    return best;
+  }
+  function place(truck,part,load) {
+    part.load={x:load.x,y:load.y,order:load.order,length:load.length,width:load.width,height:load.height};
+    truck.parts.push(part);truck.mass+=part.mass;
+    truck.free=occupy(truck.free,{x:load.x,y:load.y,w:load.length+settings.gap,h:load.width+settings.gap});
+  }
+  function rebuild(truck) {
+    truck.mass=truck.parts.reduce((s,p)=>s+p.mass,0);truck.free=initial();
+    for(const p of truck.parts)truck.free=occupy(truck.free,{x:p.load.x,y:p.load.y,w:p.load.length+settings.gap,h:p.load.width+settings.gap});
+  }
+  const footprint=p=>{const o=orientations(p.dimensions,settings)[0];if(!o)throw new Error('Transport envelope exceeds limits: '+p.id);return o.length*o.width;};
+  const areaCache=new Map(parts.map(p=>[p.id,footprint(p)]));
+  const comparators=[
+    (a,b)=>b.mass-a.mass||areaCache.get(b.id)-areaCache.get(a.id),
+    (a,b)=>areaCache.get(b.id)-areaCache.get(a.id)||b.mass-a.mass,
+    (a,b)=>Math.max(...b.dimensions)-Math.max(...a.dimensions)||b.mass-a.mass,
+  ];
+  const utilization=t=>Math.max(t.mass/settings.payload,t.parts.reduce((s,p)=>s+area(p),0)/(settings.deckLength*settings.deckWidth));
+  let best=null;
+  for(const compare of comparators) {
+    const trucks=[];
+    for(const part of parts.map(p=>({...p})).sort(compare)) {
+      let target=null,load=null;
+      // First fill earlier trucks; do not scatter short leftovers across newly opened trucks.
+      for(const t of trucks){const candidate=spot(t,part);if(candidate){target=t;load=candidate;break;}}
+      if(!target){target={mass:0,parts:[],free:initial()};trucks.push(target);load=spot(target,part);}
+      if(!load)throw new Error('Part '+part.id+' exceeds transport limits.');
+      place(target,part,load);
+    }
+    const waste=trucks.reduce((sum,t)=>sum+(1-utilization(t))**2,0);
+    if(!best||trucks.length<best.trucks.length||(trucks.length===best.trucks.length&&waste<best.waste))best={trucks,waste};
+  }
+  const trucks=best?.trucks??[];
+  // Try to empty lightly loaded trucks into the remaining real free rectangles.
+  for(const source of [...trucks].sort((a,b)=>utilization(a)-utilization(b))) {
+    if(!trucks.includes(source)||trucks.length===1)continue;
+    const others=trucks.filter(t=>t!==source),trial=others.map(t=>({mass:t.mass,parts:t.parts.map(p=>({...p})),free:t.free.map(r=>({...r}))}));
+    let success=true;
+    for(const p of [...source.parts].sort(comparators[0])) {
+      let target=null,load=null;
+      for(const t of trial){const candidate=spot(t,p);if(candidate){target=t;load=candidate;break;}}
+      if(!target){success=false;break;}place(target,{...p},load);
+    }
+    if(success){others.forEach((t,i)=>Object.assign(t,trial[i]));trucks.splice(trucks.indexOf(source),1);}
+  }
+  // Balance feasible pieces into sparse trucks without creating a new sparse donor.
+  for(let pass=0;pass<80;pass++) {
+    let move=null;
+    const receivers=[...trucks].sort((a,b)=>utilization(a)-utilization(b)).slice(0,8);
+    for(const receiver of receivers) {
+      const before=utilization(receiver);if(before>=.86)continue;
+      for(const donor of trucks) {
+        if(donor===receiver||utilization(donor)<before+.08)continue;
+        for(const p of donor.parts) {
+          const load=spot(receiver,p);if(!load)continue;
+          const afterReceiver=Math.max((receiver.mass+p.mass)/settings.payload,
+            (receiver.parts.reduce((s,p)=>s+area(p),0)+load.length*load.width)/(settings.deckLength*settings.deckWidth));
+          const afterDonor=Math.max((donor.mass-p.mass)/settings.payload,
+            (donor.parts.reduce((s,p)=>s+area(p),0)-area(p))/(settings.deckLength*settings.deckWidth));
+          const gain=Math.min(afterReceiver,afterDonor)-before;
+          if(gain>.005&&(!move||gain>move.gain))move={receiver,donor,p,load,gain};
+        }
       }
     }
-    if(!best) {
-      const truck={id:trucks.length+1,mass:0,parts:[],free:[{x:settings.gap,y:settings.gap,
-        w:settings.deckLength-settings.gap,h:settings.deckWidth-settings.gap}]};
-      trucks.push(truck);
-      const option=choices[0];
-      best={truck,rect:truck.free[0],option,w:option.length+settings.gap,h:option.width+settings.gap};
-    }
-    const {truck,rect,option,w,h}=best;
-    part.truck=truck.id;
-    part.load={x:rect.x,y:rect.y,...option};
-    truck.parts.push(part.id);truck.mass+=part.mass;
-    truck.free=occupy(truck.free,{x:rect.x,y:rect.y,w,h});
+    if(!move)break;
+    const {receiver,donor,p,load}=move;donor.parts.splice(donor.parts.indexOf(p),1);rebuild(donor);place(receiver,p,load);
   }
-  return trucks.map(({free,...truck})=>truck);
+  const originals=new Map(parts.map(p=>[p.id,p]));
+  return trucks.filter(t=>t.parts.length).map((t,index)=>{
+    const id=index+1,usedArea=t.parts.reduce((sum,p)=>sum+area(p),0);
+    for(const p of t.parts)Object.assign(originals.get(p.id),{truck:id,load:p.load});
+    return {id,mass:t.mass,parts:t.parts.map(p=>p.id),area:usedArea,payloadUtilization:t.mass/settings.payload,
+      areaUtilization:usedArea/(settings.deckLength*settings.deckWidth)};
+  });
 }
 export function buildPlan(sources,input,onProgress=()=>{}) {
-  const settings=validateSettings(input),parts=[],cuts=[],audit=[];
+  const settings=validateSettings(input),parts=[],cuts=[],audit=[],rejected=[];
   let lossVolume=0;
   for(let i=0;i<sources.length;i++) {
     const result=partitionSource(sources[i],settings);
@@ -335,12 +389,24 @@ export function buildPlan(sources,input,onProgress=()=>{}) {
     audit.push({sourceId:sources[i].id,method:result.massMethod,volume:result.sourceVolume,parts:result.parts.length});
     onProgress(i+1,sources.length);
   }
-  const trucks=packParts(parts,settings);
-  const removal=[...parts].sort((a,b)=>b.elevation-a.elevation||b.center[2]-a.center[2]||b.mass-a.mass).map(p=>p.id);
+  for(const part of parts) {
+    const reasons=[];
+    if(part.mass<settings.minReuseMass)reasons.push('Below minimum product mass ('+settings.minReuseMass+' kg)');
+    if(Math.min(...part.dimensions)<settings.minReuseThickness-EPS)reasons.push('Below minimum product thickness ('+settings.minReuseThickness+' m)');
+    part.reuseStatus=reasons.length?'Excluded by chosen recovery rules':'Reuse candidate — engineering verification pending';
+    part.rejectionReason=reasons.join('; ');part.truck=null;part.load=null;
+    if(reasons.length)rejected.push(part.id);
+  }
+  const reusable=parts.filter(p=>!p.rejectionReason);
+  const trucks=packParts(reusable,settings);
+  const removal=[...parts].sort((a,b)=>(b.center[2]+b.dimensions[2]/2)-(a.center[2]+a.dimensions[2]/2)||b.elevation-a.elevation||b.mass-a.mass).map(p=>p.id);
   const loading=trucks.flatMap(truck=>truck.parts);
-  return {settings,parts,cuts,trucks,audit,removal,loading,lossVolume,
-    totalMass:parts.reduce((sum,p)=>sum+p.mass,0)};
+  return {settings,parts,cuts,trucks,audit,removal,loading,rejected,lossVolume,
+    totalMass:parts.reduce((sum,p)=>sum+p.mass,0),
+    reusedMass:reusable.reduce((sum,p)=>sum+p.mass,0),
+    rejectedMass:parts.filter(p=>p.rejectionReason).reduce((sum,p)=>sum+p.mass,0)};
 }
+
 export function clipSegment(a,b,box) {
   let low=0,high=1;
   for(let axis=0;axis<3;axis++) {

@@ -35,4 +35,11 @@ for(const truck of result.trucks){
 assert.deepEqual(core.clipSegment([-2,0,0],[2,0,0],[[-1,-1,-1],[1,1,1]]),[[-1,0,0],[1,0,0]]);
 assert.equal(core.clipSegment([-2,3,0],[2,3,0],[[-1,-1,-1],[1,1,1]]),null);
 console.log('Passed: closed mesh volumes, holes, exact clipping, mass and dimension limits, kerf conservation, truck non-overlap and payload, rebar clipping.');
+const rejectedPlan=core.buildPlan([{id:'Small',name:'Test piece',storey:'L1',elevation:3,category:'Concrete',triangles:cube}],{...settings,minReuseMass:100000});
+assert(rejectedPlan.rejected.length>0);assert.equal(rejectedPlan.loading.length,0);assert.equal(rejectedPlan.trucks.length,0);
+assert(rejectedPlan.parts.every(p=>p.truck===null&&p.load===null&&p.rejectionReason.includes('minimum product mass')));
+assert(Math.abs(rejectedPlan.rejectedMass-rejectedPlan.totalMass)<1e-6);
+const {prepareSequence}=await import(pathToFileURL(path.join(base,'reuse-sequence.js')));
+const sequence=prepareSequence(rejectedPlan);assert.equal(sequence(0).removed.size,0);assert.equal(sequence(500).removed.size,rejectedPlan.parts.length);assert.equal(sequence(1000).phase,'results');
+console.log('Passed recovery exclusion criteria, no truck assignment for rejected pieces, and empty-loading sequence.');
 

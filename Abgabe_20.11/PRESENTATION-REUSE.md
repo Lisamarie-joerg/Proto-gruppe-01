@@ -26,6 +26,8 @@ Select a concrete product. Point out its highlighted table row, dimensions, mass
 
 Use **Show assigned truck**. Select another product in the loading diagram. Show payload and available deck dimensions. Play or scrub the conceptual disassembly/loading sequence.
 
+Show the actual top-down lifting motion before loading starts. Pause on a product and point out its X/Y position on the truck. At the end, show **Not reused** and explain that exclusions follow the editable recovery thresholds; the remaining candidates still need structural verification. To inspect bar groups again, use **Reinforcement overview**.
+
 “Packing is a single-layer heuristic with rotations and clearance. The number of trucks belongs to these assumptions; it is not a claim of a globally optimal or approved transport plan.”
 
 ## 9:00–10:00 · What this supports
