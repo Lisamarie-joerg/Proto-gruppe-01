@@ -33,7 +33,8 @@ export function sourceFromHost(mesh,host) {
   return {id:String(host.id),name:host.name,storey:host.storey||'Unassigned',
     elevation:Number(host.ifc?.IfcStoreyElevation)||host.bounds?.[0]?.[2]||0,
     category:host.category,ifc:host.ifc,triangles:meshTriangles(mesh),
-    barEvidence:host.id==='729'?'Partial plan reconstruction + schematic additions':'Schematic additions; plan verification pending'};
+    barEvidence:host.id==='729'?'Partial plan reconstruction; erection laps assumed'+(host.count?'; schematic mats also present':'')
+      :host.count?'Schematic mats / cages only; no PDF proof':'Reinforcement not modelled — execution plan required'};
 }
 export function sourceSignature(sources) {
   let hash=2166136261;

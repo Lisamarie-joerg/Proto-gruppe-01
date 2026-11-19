@@ -1,5 +1,7 @@
 # Reuse catalogue – Bedienung und Konzept
 
+Die Bewehrungsdarstellung wurde mit V3 überarbeitet: Blau = angenäherter Planbezug, Orange = schematische Matten/Körbe, Grau = ungeprüfter Import. Geometrische Stabgruppen lassen sich einzeln isolieren. Fehlende Bewehrung wird in den Produktinformationen als offen ausgewiesen; die Zerlegung und Lkw-Belegung bleiben erhalten. Details: `BEWEHRUNG-V3.md`.
+
 ## Öffnen
 
 `Website-oeffnen.bat` im entpackten Projektordner doppelklicken. Python muss installiert sein. Das geöffnete Serverfenster geöffnet lassen. Nicht `index.html` direkt öffnen: Module, Modelldaten und Berechnungsworker benötigen den lokalen HTTP-Server.

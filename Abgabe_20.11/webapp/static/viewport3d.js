@@ -27,6 +27,10 @@ let importedPlan;
 let projectCatalog;
 let viewer;
 let projectKind = null;
+let shapeGroups=new Map();
+
+function rebarOrigin(item){return item.origin??(item.schematic?'schematic':item.planAxisId?'plan_reconstruction':'unverified');}
+function evidenceMatches(item){const filter=byId('rebarOrigin').value;const origin=rebarOrigin(item);return !filter||filter==='plan'&&origin==='plan_reconstruction'||filter==='schematic'&&origin==='schematic'||filter==='unverified'&&origin==='unverified';}
 
 async function json(url) {
   const res = await fetch(url);
@@ -86,7 +90,8 @@ function rebarGroupKey(item, diameter) {
       const v=ordered[i+2].map((value,j)=>value-origin[j]);
       const w=ordered[i+3].map((value,j)=>value-origin[j]);
       const volume=u[0]*(v[1]*w[2]-v[2]*w[1])-u[1]*(v[0]*w[2]-v[2]*w[0])+u[2]*(v[0]*w[1]-v[1]*w[0]);
-      turns.push(Math.abs(volume)<.000000001 ? 0 : Math.sign(volume));
+      const area=Math.hypot(u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]);
+      turns.push(Math.abs(volume)<Math.max(1e-9,area*.00001) ? 0 : Math.sign(volume));
     }
     return measurements.join(',')+';'+turns.join(',');
   };
@@ -102,6 +107,24 @@ function rebarGroupKey(item, diameter) {
 
 function matchesRebar(item) {
   return activeGroup ? item.groupKey === activeGroup : !active || item.position === active;
+}
+
+function renderShapeGroups(){
+  shapeGroups=new Map();const grouped=new Map();
+  for(const item of importedPlan?.elements??[]){
+    if(!evidenceMatches(item)||item.schematic&&!byId('showSchematic').checked)continue;
+    const key=item.groupKey??rebarGroupKey(item,importedPlan.positions[item.position].diameter);item.groupKey=key;
+    if(!grouped.has(key))grouped.set(key,{key,item,count:0,plan:0,assumed:0});
+    const g=grouped.get(key);g.count++;g.plan+=rebarOrigin(item)==='plan_reconstruction';g.assumed+=Boolean(item.schematic);
+  }
+  const list=[...grouped.values()].sort((a,b)=>importedPlan.positions[a.item.position].diameter-importedPlan.positions[b.item.position].diameter||b.item.length-a.item.length);
+  const options=[new Option('Alle Stäbe anzeigen','')];
+  list.forEach((g,i)=>{const id='G'+(i+1);shapeGroups.set(id,g);const diameter=importedPlan.positions[g.item.position].diameter;
+    options.push(new Option(`Ø${diameter} · ${fmt(g.item.length,3)} m · ${g.item.kind==='closed-link'?'Bügel':g.item.points.length>2?'gebogen':'gerade'} · ${g.count} Stäbe (Plan ${g.plan} / Annahme ${g.assumed})`,id));});
+  byId('rebarShapeGroup').replaceChildren(...options);
+  byId('rebarShapeGroup').value=[...shapeGroups].find(([,g])=>g.key===activeGroup)?.[0]??'';
+  const items=importedPlan?.elements??[],p=items.filter(e=>rebarOrigin(e)==='plan_reconstruction').length,s=items.filter(e=>e.schematic).length;
+  byId('rebarEvidenceSummary').textContent=`${p} blaue Abschnitte mit Planbezug · ${s} orange schematische Stäbe · ${items.length-p-s} ungeprüfte Importstäbe. ${importedPlan?.audit?.counts?.planAxes??''} ursprüngliche Planachsen; Lage und Montagestöße sind angenähert.`;
 }
 
 function showStatus(text) {
@@ -120,15 +143,20 @@ function renderMasses(data) {
 }
 
 function selection(position, item = null) {
+  if(position&&!item){const dataset=viewer?.isCustom()?importedPlan:plan;item=dataset?.elements.filter(e=>e.position===position).sort((a,b)=>(b.length??0)-(a.length??0))[0]??null;}
   active = position;
   activeGroup = item?.groupKey ?? null;
   if(activeGroup&&importedPlan){
     byId('buildingCategory').value=byId('buildingStorey').value=byId('buildingHost').value='';
     drawBuildingHosts();
-    byId('showSchematic').checked=true;
   }
   byId('clearSelection').hidden = !position;
   if (!viewer?.hasModel()) return;
+  const dataset=viewer.isCustom()?importedPlan:plan;
+  const same=dataset?.elements.filter(e=>matchesRebar(e)&&(!viewer.isCustom()||evidenceMatches(e)))??[];
+  const planCount=same.filter(e=>rebarOrigin(e)==='plan_reconstruction').length;
+  byId('rebarSelectionAudit').textContent=activeGroup?`${same.length} von ${dataset.elements.length} Stäben ausgewählt · ${planCount} mit Planbezug · ${same.filter(e=>e.schematic).length} schematisch · übrige Stäbe ausgeblendet`:position&&!item?'Planposition ohne zugeordnete 3D-Stäbe. Keine Modellierung als Nachweis vorhanden.':'Keine Gruppenisolation aktiv.';
+  byId('rebarShapeGroup').value=[...shapeGroups].find(([,g])=>g.key===activeGroup)?.[0]??'';
   if (viewer?.isCustom()) {
     viewer.update();
     const record = projectCatalog?.find(row => row.key === position);
@@ -154,15 +182,15 @@ function selection(position, item = null) {
         + fmt(item.length) + ' m · Ø' + row.diameter + ' mm';
     }
     const sheet = record?.sheet ?? row?.sheet;
-    const selectedPlan = sheet ? [...localPlans.values()].find(file => file.sheet === sheet)
-      : [...localPlans.values()].find(file => file.url === planUrl);
+    const selectedPlan = item?.schematic?null:sheet ? [...localPlans.values()].find(file => file.sheet === sheet)
+      : rebarOrigin(item??{})==='plan_reconstruction'?[...localPlans.values()].find(file => file.url === planUrl):null;
     const selectedPlanUrl = selectedPlan?.url;
     byId('projectPositions').querySelectorAll('button').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.position === position));
     });
     if (position && selectedPlanUrl) {
       byId('detailTitle').textContent = 'Planposition ' + position;
-      byId('detailText').textContent = row?.detail || amount || 'Bewehrungsplan zum importierten Modell';
+      byId('detailText').textContent = (item?'PLANBEZUG — 3D-Lage rekonstruiert; Montagestöße gegebenenfalls angenommen. ':'PLANPOSITION — noch keine 3D-Geometrie zugeordnet. ')+(row?.detail || amount || '');
       const url = selectedPlanUrl + (row?.page ? '#page=' + row.page : '');
       byId('detailImage').parentElement.hidden = true;
       byId('detailPlanLink').href = url;
@@ -176,6 +204,8 @@ function selection(position, item = null) {
       }
       if (!detail.open) detail.show();
     } else {
+      if(detail.open)detail.close();byId('detailPdf').src='about:blank';
+      if(item?.schematic)byId('importSelection').textContent+=' · SCHEMATISCH — kein Nachweis aus dem PDF. '+(item.kind??'')+' · '+(item.surface??'');
       if (sheet) byId('importSelection').textContent += ' · Originalplan ' + sheet + ' laden.';
       if (detail.open) detail.close();
     }
@@ -394,14 +424,17 @@ function createViewer(data) {
   const transparentConcrete = new THREE.MeshStandardMaterial({
     color: 0xa8aca1, roughness: .94, opacity: .56, transparent: true, depthWrite: false,
   });
-  const ordinary = new THREE.MeshBasicMaterial({ color: 0x811649 });
+  const ordinary = new THREE.MeshBasicMaterial({ color: 0x237bca });
+  const unverified = new THREE.MeshBasicMaterial({color:0x858f98});
   const highlighted = new THREE.MeshBasicMaterial({ color: 0xff1495 });
   const muted = new THREE.MeshBasicMaterial({ color: 0x7b8584, transparent: true, opacity: .40, depthWrite: false });
   function makeBars(dataset) {
     const group = new THREE.Group();
     const schematic = dataset.elements.filter(item => item.schematic);
     for (const item of dataset.elements) {
-      item.groupKey ??= rebarGroupKey(item,dataset.positions[item.position].diameter);
+      item.origin??=item.schematic?'schematic':dataset===plan||dataset.positions[item.position].sheet?'plan_reconstruction':'unverified';
+      item.length=item.points.slice(1).reduce((sum,p,i)=>sum+Math.hypot(...p.map((v,k)=>v-item.points[i][k])),0);
+      item.groupKey = rebarGroupKey(item,dataset.positions[item.position].diameter);
       if (item.schematic) continue;
       const path = new THREE.CurvePath();
       const points = item.points.map(p => new THREE.Vector3(...p));
@@ -416,22 +449,28 @@ function createViewer(data) {
     }
     if (schematic.length) {
       const material = new THREE.MeshBasicMaterial({color:0xffffff});
-      const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1,1,1,6),material,schematic.length);
+      const count=schematic.reduce((sum,item)=>sum+item.points.length-1,0);
+      const mesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(1,1,1,6),material,count);
       const matrix = new THREE.Matrix4();
       const up = new THREE.Vector3(0,1,0);
       const rotation = new THREE.Quaternion();
       const scale = new THREE.Vector3();
-      schematic.forEach((item,index) => {
-        const a = new THREE.Vector3(...item.points[0]);
-        const b = new THREE.Vector3(...item.points[1]);
+      const instances=[],pickItems=[];let index=0;
+      schematic.forEach(item => {
+        pickItems.push({item,index,points:item.points});
+        for(let segment=1;segment<item.points.length;segment++){
+        const a = new THREE.Vector3(...item.points[segment-1]);
+        const b = new THREE.Vector3(...item.points[segment]);
         rotation.setFromUnitVectors(up,b.clone().sub(a).normalize());
         const radius = dataset.positions[item.position].diameter / 2000;
         scale.set(radius,a.distanceTo(b),radius);
         matrix.compose(a.add(b).multiplyScalar(.5),rotation,scale);
         mesh.setMatrixAt(index,matrix);
         mesh.setColorAt(index,new THREE.Color(0xbf6b20));
+        instances.push(item);index++;
+        }
       });
-      mesh.userData.instances = schematic;
+      mesh.userData.instances = instances;mesh.userData.pickItems=pickItems;
       mesh.userData.originalMatrices = mesh.instanceMatrix.array.slice();
       group.add(mesh);
     }
@@ -642,7 +681,7 @@ function createViewer(data) {
     if (model !== stockModel && dataset) {
       dataset = {...dataset,elements:dataset.elements.filter(item =>
         (!item.schematic || byId('showSchematic').checked) &&
-        hostMatches(hostById.get(item.host ?? '729')))};
+        hostMatches(hostById.get(item.host ?? '729'))&&evidenceMatches(item))};
     }
     if (dataset && active) dataset = {...dataset,elements:dataset.elements.filter(matchesRebar)};
     cutSurfaces.geometry = dataset ? sectionCaps(dataset,cutPlane,axisChoice.kind) : new THREE.BufferGeometry();
@@ -724,7 +763,7 @@ function createViewer(data) {
         const hiddenMatrix = new THREE.Matrix4().makeScale(0,0,0).toArray();
         let anyVisible = false;
         mesh.userData.instances.forEach((item,index) => {
-          const visible = hostMatches(hostById.get(item.host)) && matchesRebar(item);
+          const visible = hostMatches(hostById.get(item.host)) && matchesRebar(item) && evidenceMatches(item);
           anyVisible ||= visible;
           const original = mesh.userData.originalMatrices;
           const offset = index * 16;
@@ -738,9 +777,9 @@ function createViewer(data) {
         continue;
       }
       mesh.visible = !importedPlan?.hosts?.length || hostMatches(hostById.get('729'));
-      mesh.visible = mesh.visible && matchesRebar(mesh.userData.rebar);
+      mesh.visible = mesh.visible && matchesRebar(mesh.userData.rebar)&&evidenceMatches(mesh.userData.rebar);
       mesh.material = active && matchesRebar(mesh.userData.rebar) ? highlighted
-        : selectedOverlayPosition ? muted : ordinary;
+        : rebarOrigin(mesh.userData.rebar)==='plan_reconstruction'?ordinary:unverified;
     }
     if (model) model.visible = custom || mode !== 'rebar';
     foundations.visible = !custom && mode !== 'rebar';
@@ -888,7 +927,7 @@ function createViewer(data) {
     for(const mesh of meshes) {
       if(!mesh.visible)continue;
       const candidates=mesh.userData.instances
-        ? mesh.userData.instances.map((item,index)=>({item,index,points:item.points}))
+        ? mesh.userData.pickItems??mesh.userData.instances.map((item,index)=>({item,index,points:item.points}))
         : [{item:mesh.userData.rebar,points:mesh.userData.centerline}];
       for(const candidate of candidates) {
         if(!candidate.points||!candidate.item)continue;
@@ -1115,7 +1154,7 @@ setupInput('planDrop','planFile',async files => {
     previewPlan(planChoice.value);
     byId('uploadStatus').textContent = localPlans.size + ' Original-PDF(s) geladen.';
     if (mode === 'structure' && (projectKind === 'stock' || viewer.importedPositions().length)) setMode('combined');
-    if (active) selection(active);
+    if (active) selection(active,(projectKind==='stock'?plan:importedPlan)?.elements.find(item=>item.groupKey===activeGroup&&item.position===active));
   } catch(error) {
     if (request === modelRequest) byId('uploadStatus').textContent = 'PDF konnte nicht importiert werden: ' + error.message;
   }
@@ -1135,6 +1174,7 @@ async function loadProjectCatalog() {
   });
 }
 async function loadCustomModel(file) {
+  byId('rebarOrigin').value='';byId('showSchematic').checked=true;
   if (!viewer || !file.name.toLowerCase().endsWith('.glb')) {
     byId('uploadStatus').textContent = 'Bitte bei geladenem Viewer eine GLB-Datei auswählen. 3DM in Rhino als GLB exportieren.';
     return;
@@ -1204,7 +1244,7 @@ function readImportPlan(source) {
     if (!row || !Number.isFinite(row.diameter) || row.diameter <= 0) {
       throw new Error('Positionsdurchmesser in mm fehlt: ' + id);
     }
-    positions[id] = {diameter:row.diameter,schematic:Boolean(row.schematic),category:row.category,host:row.host,
+    positions[id] = {diameter:row.diameter,schematic:Boolean(row.schematic),origin:row.origin,category:row.category,host:row.host,
       sheet:typeof row.sheet === 'string' ? row.sheet : null,
       detail:typeof row.detail === 'string' ? row.detail : '',
       page:Number.isInteger(row.page) && row.page > 0 ? row.page : null,modelMass:0,modelCount:0};
@@ -1225,7 +1265,8 @@ function readImportPlan(source) {
     positions[position].modelMass += length * 7850 * Math.PI * (positions[position].diameter/2000)**2;
     positions[position].modelCount++;
     return {position,points,id:String(item.id ?? ('Stab '+(i+1))),length,
-      schematic:Boolean(item.schematic),host:item.host,category:item.category};
+      schematic:Boolean(item.schematic??positions[position].schematic),origin:item.origin??positions[position].origin,host:item.host,category:item.category,
+      kind:item.kind,surface:item.surface,evidence:item.evidence,planAxisId:item.planAxisId,detailingAssumed:item.detailingAssumed};
   });
   let grid;
   if (source.grid != null) {
@@ -1239,7 +1280,7 @@ function readImportPlan(source) {
       grid[kind] = [...items].sort((a,b)=>a[1]-b[1]);
     }
   }
-  return {positions,elements,grid,hosts:source.hosts ?? [],scope:typeof source.scope === 'string' ? source.scope : ''};
+  return {positions,elements,grid,hosts:source.hosts ?? [],audit:source.audit,assumptions:source.assumptions,scope:typeof source.scope === 'string' ? source.scope : ''};
 }
 
 function drawProjectPositions() {
@@ -1272,6 +1313,7 @@ byId('projectSheet').addEventListener('change', drawProjectPositions);
 
 function showImportOptions() {
   const positions = viewer.importedPositions();
+  renderShapeGroups();
   byId('stockPanel').hidden = true;
   byId('importPanel').hidden = false;
   byId('importSettings').hidden = false;
@@ -1279,8 +1321,8 @@ function showImportOptions() {
   if (importedPlan?.hosts?.length) {
     const hosts = importedPlan.hosts;
     const concrete = hosts.filter(host => host.reinforcementExpected);
-    byId('buildingCoverage').textContent = hosts.filter(host => host.count).length + ' von ' + hosts.length
-      + ' erfassten Bauteilen mit geometrischen Ergänzungen. '
+    byId('buildingCoverage').textContent = hosts.filter(host => host.count).length + ' von ' + concrete.length
+      + ' Betonbauteilen mit schematischen Matten / Körben. '
       + concrete.filter(host => !host.count).length + ' Beton-Geometrien sind offen. '
       + hosts.filter(host => !host.reinforcementExpected).length + ' Mauerwerksbauteile laut Rhino-Material.';
     const storeys = [...new Set(hosts.map(host => host.storey).filter(Boolean))].sort();
@@ -1289,8 +1331,8 @@ function showImportOptions() {
     storeySelect.value = '';
     byId('projectTitle').textContent = 'Projekt 6 · Tragwerk und Bewehrung';
     document.title = 'Projekt 6 · Tragwerk und Bewehrung';
-    byId('materialLegend').innerHTML = '<span><i class="concrete"></i>Betonbauteile</span>'
-      + '<span><i class="wood"></i>Orange geometrische Ergänzungen</span>'
+    byId('materialLegend').innerHTML = '<span><i class="evidence-blue"></i>Blau: Planbezug / rekonstruiert</span>'
+      + '<span><i class="wood"></i>Orange: schematische Matten / Körbe</span>'
       + '<span><i class="pink"></i>Gleiche Stäbe ausgewählt</span>';
     drawBuildingHosts();
   }
@@ -1314,7 +1356,8 @@ function showImportOptions() {
     sheet.value = '2448';
     const planned = projectCatalog.reduce((sum,row) => sum + row.count,0);
     byId('projectCoverage').textContent = fmt(planned,0) + ' Stück laut Biegelisten · '
-      + fmt(importedPlan.elements.filter(item => !item.schematic).length,0) + ' rekonstruierte Stäbe in 3D. '
+      + fmt(importedPlan.audit?.counts?.planAxes??importedPlan.elements.filter(item=>!item.schematic).length,0)+' Planachsen / '
+      + fmt(importedPlan.elements.filter(item => !item.schematic).length,0) + ' rekonstruierte Montageabschnitte in 3D. '
       + fmt(importedPlan.elements.filter(item => item.schematic).length,0) + ' geometrische Ergänzungen im Gebäude.';
     drawProjectPositions();
   }
@@ -1356,9 +1399,12 @@ setupInput('rebarDrop','rebarFile',async file => {
 byId('neutralImport').addEventListener('change',() => viewer?.update());
 byId('concreteOpacity').addEventListener('input',() => viewer?.update());
 byId('showSchematic').addEventListener('change',() => {
+  renderShapeGroups();
   viewer?.endSection();
   viewer?.update();
 });
+byId('rebarOrigin').addEventListener('change',()=>{selection(null);renderShapeGroups();viewer?.update();});
+byId('rebarShapeGroup').addEventListener('change',()=>{const group=shapeGroups.get(byId('rebarShapeGroup').value);selection(group?.item.position??null,group?.item??null);});
 byId('buildingCategory').addEventListener('change',() => {
   drawBuildingHosts();
   selection(null);
@@ -1380,7 +1426,7 @@ function showHostInfo(host) {
   const ratio = Object.entries(host?.ifc ?? {}).find(([key]) => /bewehrungsgrad/i.test(key));
   byId('buildingHostInfo').textContent = host
     ? [host.storey,host.ifc?.IfcClass,host.ifc?.Material,host.ifc?.GlobalId,
-      ratio ? 'IFC-Bewehrungsgrad ' + ratio[1] : ''].filter(Boolean).join(' · ')
+      host.status,...(host.rebarWarnings??[]),ratio ? 'IFC-Bewehrungsgrad ' + ratio[1] : ''].filter(Boolean).join(' · ')
     : '';
 }
 byId('buildingStorey').addEventListener('change',() => {
@@ -1428,6 +1474,7 @@ function showStockModel() {
 }
 
 function emptyViewport() {
+  byId('rebarOrigin').value='';byId('rebarShapeGroup').replaceChildren(new Option('Alle Stäbe anzeigen',''));shapeGroups.clear();
   ++modelRequest;
   viewer?.clear();
   importedPlan = null;

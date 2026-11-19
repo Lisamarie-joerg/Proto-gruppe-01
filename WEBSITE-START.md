@@ -1,5 +1,9 @@
 # Projekt 6 und Stockerau - Tragwerk und Bewehrung
 
+## Aktuell: Bewehrung V3
+
+Die aktuelle Oberfläche zeigt **Bewehrung V3 · 19.11.2026**. **Blau** kennzeichnet Planbezug mit rekonstruierter räumlicher Lage, **Orange** die angenommenen Matten und Körbe, **Grau** einen Import ohne belegte Herkunft. **Bewehrungsübersicht → Einzelne geometrische Stabgruppe** isoliert gleiche Länge, Biegeform und Durchmesser. Andere Stäbe werden ausgeblendet. Schematische Stäbe erhalten keine PDF-Zuordnung. Erklärung und Grenzen: `BEWEHRUNG-V3.md`. Die folgenden älteren Mengenangaben dokumentieren vorangegangene Datenstände; maßgebend sind die V3-Herkunftsanzeige und die aktuelle Bauteil-CSV.
+
 ## Neu: Reuse catalogue
 
 Aktualisierung 19.11.: Für einzelne Stäbe **Bewehrungsübersicht** wählen. Dort werden gleiche Länge, Biegeform und Durchmesser gemeinsam pink angezeigt; andere Stäbe bleiben ausgeblendet. Im Katalog pausiert eine Bauteilauswahl die Sequenz und zeigt Lkw sowie X/Y-Ladeposition. Die Sequenz führt erst den sichtbaren Rückbau von oben nach unten aus, danach die Verladung und am Ende die Ausschlussliste. **Not reused** zeigt die ausgeschlossenen Teile und ihre Gründe. Schwach belegte Ladungen werden konsolidiert und nach Möglichkeit aufgefüllt.

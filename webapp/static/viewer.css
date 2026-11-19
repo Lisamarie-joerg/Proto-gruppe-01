@@ -52,3 +52,5 @@ input[type=file]{font-size:.77rem;max-width:100%}
 .project-position-list{max-height:22rem;overflow:auto}
 #projectSheet{max-width:100%}
 @media(max-width:860px){main{grid-template-columns:1fr}.page-header{padding:16px}#viewport3d{height:58vh;min-height:340px}}
+
+.rebar-evidence{margin:12px 0;padding:12px;background:#f0f5fa;border:1px solid #c6d6e4;border-radius:8px;font-size:.8rem}.rebar-evidence p{line-height:1.5}.rebar-evidence label{display:block;margin-top:8px}.rebar-evidence select{width:100%;max-width:100%;padding:7px;margin-top:4px}.evidence-blue{color:#237bca;background:transparent!important}.evidence-orange{color:#b66b19}.evidence-grey{color:#75818b}.legend i.evidence-blue{background:#237bca!important}#rebarSelectionAudit{font-weight:650;color:#ae0861}.app-version{font-size:.75rem;white-space:nowrap;color:#456270}

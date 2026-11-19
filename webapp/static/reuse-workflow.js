@@ -132,7 +132,7 @@ export function createReuseWorkflow({scene,snapshot,onChange,fit,endSection,onRe
     }
     if(barSegments.length) {
       barMesh=new THREE.InstancedMesh(new THREE.CylinderGeometry(1,1,1,5),new THREE.MeshBasicMaterial(),barSegments.length);barMesh.frustumCulled=false;
-      barSegments.forEach((s,i)=>{barMesh.setColorAt(i,new THREE.Color(s.schematic?0xb6752b:0x3c454a));
+      barSegments.forEach((s,i)=>{barMesh.setColorAt(i,new THREE.Color(s.schematic?0xb6752b:0x237bca));
         const a=new THREE.Vector3(...s.a),b=new THREE.Vector3(...s.b);direction.subVectors(b,a);const length=direction.length();quaternion.setFromUnitVectors(up,direction.normalize());
         s.matrix=new THREE.Matrix4().compose(a.add(b).multiplyScalar(.5),quaternion.clone(),new THREE.Vector3(s.radius,length,s.radius));});root.add(barMesh);
     }
