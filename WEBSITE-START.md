@@ -1,5 +1,9 @@
 # Projekt 6 und Stockerau - Tragwerk und Bewehrung
 
+## Neu: Reuse catalogue
+
+Nach dem Modell- und PDF-Import oben **Reuse catalogue** und **Create / recalculate catalogue** wählen. Der neue Ablauf bietet Geschossfilter, Schnittvorschläge, transparente Bauteilblöcke, Bewehrung, Bauteilliste mit Gewicht und Lkw-Zuordnung sowie eine Lade- und Demontageanimation. Transport- und Hubgrenzen sind einstellbar. Bedienung und Annahmen: `REUSE-KATALOG.md`. Englischer Zehn-Minuten-Demoablauf: `PRESENTATION-REUSE.md`.
+
 ## Website öffnen
 
 Unter Windows mit installiertem Python im entpackten Ordner auf `Website-oeffnen.bat` doppelklicken. Alternativ `python website_starten.py` ausführen. Die Startdatei öffnet den Browser auf einem freien lokalen Port. Das Terminalfenster geöffnet lassen.

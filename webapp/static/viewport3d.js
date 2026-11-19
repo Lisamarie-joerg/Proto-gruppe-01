@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import {createReuseWorkflow} from './reuse-workflow.js';
+import {meshTriangles,sourceFromHost,assignHosts} from './reuse-sources.js';
 
 const byId = id => document.getElementById(id);
 const fmt = (value, digits = 2) => value.toLocaleString('de-DE', {
@@ -361,6 +363,7 @@ function sectionCaps(plan, plane, axis) {
 }
 
 function createViewer(data) {
+  let reuse;
   const mount = byId('viewport3d');
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -677,6 +680,14 @@ function createViewer(data) {
   }
 
   function update() {
+    if (reuse?.isActive() && reuse.hasPlan()) {
+      if(model)model.visible=false;
+      bars.visible=foundations.visible=cutSurfaces.visible=false;
+      if(importedOverlay)importedOverlay.visible=false;
+      if(groundGrid)groundGrid.visible=false;
+      if(customGrid)customGrid.visible=false;
+      return;
+    }
     if (!model) {
       bars.visible = foundations.visible = cutSurfaces.visible = false;
       if (groundGrid) groundGrid.visible = false;
@@ -745,10 +756,10 @@ function createViewer(data) {
     if (cutDirection) updateCaps();
   }
 
-  function setCamera(top = false) {
+  function setCamera(top = false, override = null) {
     if (!bounds || !model) return;
     const rebarGroup = model === stockModel ? bars : importedOverlay;
-    const viewBounds = mode === 'rebar' && rebarGroup
+    let viewBounds = mode === 'rebar' && rebarGroup
       ? new THREE.Box3().setFromObject(rebarGroup) : bounds.clone();
     const category = byId('buildingCategory').value;
     const storey = byId('buildingStorey').value;
@@ -764,6 +775,7 @@ function createViewer(data) {
     }
     const grid = model === stockModel ? groundGrid : customGrid;
     if (top && grid?.visible) viewBounds.union(new THREE.Box3().setFromObject(grid));
+    viewBounds=override || reuse?.bounds() || viewBounds;
     const center = viewBounds.getCenter(new THREE.Vector3());
     const size = Math.max(.001,viewBounds.getSize(new THREE.Vector3()).length());
     const half = THREE.MathUtils.degToRad(camera.fov / 2);
@@ -783,14 +795,14 @@ function createViewer(data) {
 
   function refreshImport() {
     if (model === stockModel) return;
+    reuse?.reset();
     endSection();
     model.rotation.x = byId('zUpImport').checked ? 0 : Math.PI/2;
     model.updateMatrixWorld(true);
-    const normalize = name => name.replace(/[^a-z0-9]/gi,'').toLowerCase();
-    const hostsByName = new Map((importedPlan?.hosts ?? []).map(host => [normalize(host.name),host]));
+    const assignedHosts=assignHosts(importedMeshes.map(item=>item.mesh),importedPlan?.hosts??[]);
     hostById = new Map((importedPlan?.hosts ?? []).map(host => [host.id,host]));
     importedMeshes.forEach(item => {
-      item.host = hostsByName.get(normalize(item.mesh.name));
+      item.host = assignedHosts.get(item.mesh);
       if (item.host?.category === 'Mauerwerk') {
         const materials = Array.isArray(item.material) ? item.material : [item.material];
         materials.forEach(material => material.color.setHex(0xba9c78));
@@ -818,6 +830,7 @@ function createViewer(data) {
   }
 
   function useModel(next, stock = false, importing = false) {
+    reuse?.reset();
     if (importing) {
       next = prepareImport(next);
       importedPlan = null;
@@ -894,6 +907,7 @@ function createViewer(data) {
     const box = renderer.domElement.getBoundingClientRect();
     const coords = new THREE.Vector2((e.clientX-box.left)/box.width*2-1, 1-(e.clientY-box.top)/box.height*2);
     ray.setFromCamera(coords, cutDirection ? sectionCamera : camera);
+    if(reuse?.isActive() && reuse.pick(ray))return;
     const clickableGrid = model === stockModel ? groundGrid : customGrid;
     if (clickableGrid?.visible) {
       const axis = ray.intersectObjects(clickableGrid.children.filter(item => item.userData.axis),false)[0];
@@ -982,12 +996,25 @@ function createViewer(data) {
   }
   new ResizeObserver(resize).observe(mount);
   resize();
+  reuse=createReuseWorkflow({scene,onChange:update,endSection,fit:box=>setCamera(false,box),snapshot:()=>{
+    if(!model)return {sources:[],reinforcement:[]};
+    if(model===stockModel){
+      const sources=foundations.children.map((mesh,i)=>({id:'foundation-'+i,name:mesh.userData.foundation.strip,
+        storey:'Foundations',elevation:0,category:'Concrete foundation',triangles:meshTriangles(mesh),
+        barEvidence:'P-01 reinforcement reconstruction'}));
+      const stripIds=new Map(foundations.children.map((mesh,i)=>[mesh.userData.foundation.strip,'foundation-'+i]));
+      return {sources,reinforcement:plan.elements.map(item=>({...item,host:stripIds.get(item.strip),diameter:plan.positions[item.position].diameter}))};
+    }
+    return {sources:importedMeshes.filter(item=>item.host?.reinforcementExpected).map(item=>sourceFromHost(item.mesh,item.host)),
+      reinforcement:(importedPlan?.elements??[]).map(item=>({...item,host:item.host??'729',diameter:importedPlan.positions[item.position].diameter}))};
+  }});
   update();
   renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,cutDirection ? sectionCamera : camera); });
   return {
     update, setCamera, endSection, useModel, refreshImport, importedPositions, isCustom: () => model !== stockModel,
     hasModel: () => Boolean(model),
     clear: () => {
+      reuse.reset();
       if (model) scene.remove(model);
       model = null;
       bounds = null;
