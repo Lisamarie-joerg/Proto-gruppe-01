@@ -163,8 +163,10 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 - **Module C und D:** Standard: C = +262,9 kg (Demontage/Entsorgung), D = +1.470,9 kg. Alternative: C = +300,5 kg, D = **−10.924,4 kg** (Grobblech hat eine hohe Recycling-Gutschrift von −1,467 kg CO₂e/kg). Über den Lebenszyklus (A1–A3+C+D) liegt die Alternative mit 9.873,7 kg nur knapp über Standard (8.606,4 kg) – die Modulwahl ist also entscheidend.
 
 **Was wir gemacht haben:**
-- Lokale Web-App (FastAPI + Plotly.js, läuft offline, Start: `python webapp/app.py` → http://localhost:8501). **3D-Viewport in der Seitenmitte** (Pavillon mit Maus drehbar), 736 Stäbe als Punkte **nach CO₂e gefärbt** (grün→rot), Punktgröße = Querschnittsfläche, Hover zeigt Nr/Profil/Länge/Volumen/CO₂e.
-- Steuerung per Buttons: **Datensatz Standard/Alternative**, **Modul A1–A3 / C / D**, **Materialien aus-/einschaltbar** (Baustahl / Beton / Bewehrung), Ansichten (Perspektive/Draufsicht/Seite), Stabachsen einblenden.
+- Lokale Web-App (FastAPI + Three.js/Plotly.js, läuft offline, Start: `python webapp/app.py` → http://localhost:8501). **3D-Viewport in der Seitenmitte** mit zwei Ansichten (Umschalter oben links):
+  - **Rhino-Modell (3D)**: echtes RFEM-Modell als GLB (`model.glb`, 1.297 Meshes = 736 Achsen + 561 Stabkörper, 31 Layer-Gruppen) in Three.js – drehen/zoomen per Maus, Layer-Checkboxes (Achse/Körper pro Profil), Farbmodus „Rhino-Material" oder „nach CO₂e" (grün→rot, gleiche Skala wie Plotly), Bauteil-Klick zeigt Nr/BeamId/Profil/Länge/Volumen/Masse/CO₂e, Kamera-Presets (Perspektive/Draufsicht/Vorne/Seite).
+  - **CO₂-Punktwolke (Plotly)**: 736 Stäbe als Punkte **nach CO₂e gefärbt** (grün→rot), Punktgröße = Querschnittsfläche, Hover zeigt Nr/Profil/Länge/Volumen/CO₂e, Stabachsen einblendbar.
+- Steuerung per Buttons: **Datensatz Standard/Alternative**, **Modul A1–A3 / C / D**, **Materialien aus-/einschaltbar** (Baustahl / Beton / Bewehrung – wirkt in beiden Ansichten), Ansichten (Perspektive/Draufsicht/Vorne/Seite).
 - Datenaggregat `etappe5_webapp_data.py`: liest **alle Excel-Dateien** aus `Abgabe_23.10/` (EmbodiedCarbon_Staebe_Liste.xlsx mit Materialgruppen/Querschnitte/OEKOBAU.DAT, Staebe_UEbersicht.xlsx, Staebe_Querschnitt_Volumen.xlsx, Etappe02_Traegerliste_T001-T736_ETAPPE04.xlsx mit Trägerliste/Rahmenausführungen/Profil-Übersicht) plus die CSVs der Etappen 2/4 und die ÖKOBAU.DAT-Rohdaten (`oekobaudat_raw/`, GWP-total je Modul A1–A3/C1–C4/D) → `webapp/static/data.json` (756 KB). Die Excel-Tabellen sind in der App im rechten Panel eingebunden.
 - Plausibilitätscheck: Standard A1–A3 = 6.872,6 kg vs. Etappe 4: 6.872,7 kg → **Abweichung 0,00 %**.
 
@@ -174,9 +176,10 @@ One entry per stage. Short is fine. The log is part of the submission and the ba
 **Was schiefging und woran wir es gemerkt haben:**
 - Die Excel-Tabellen landeten zuerst als `null` in der data.json – bei der Reparatur des Daten-Skripts war die `return`-Zeile von `read_excel_table` verloren gegangen; aufgefallen an der Zeilen-/Spalten-Prüfung der JSON-Ausgabe.
 - PowerShell-Escapes haben Inline-Python zerschossen → alle Skripte als Dateien geschrieben.
+- Der Three.js-Viewport war nur angedeutet: `index.html` verwies auf `window.__rhinoSetView`/`__rhinoResize` und einen Lade-Hinweis, aber das Modul-Script fehlte komplett → Viewport blieb leer. Zudem importiert `GLTFLoader.js` eine `utils/BufferGeometryUtils.js`, die beim Download der three.js-Addons vergessen wurde → Modul-Import fehlgeschlagen. Beides nachgeholt (`viewport3d.js` geschrieben, Datei aus three@0.160.0 nachgeladen).
 
 **Was wir selbst geprüft haben:**
-- Endpunkte per HTTP-Test: `/` (200), `/api/data` (200, 736 Stäbe, 2 Datensätze, 3 Module, 8 Excel-Tabellen), `/static/plotly.min.js` (200).
+- Endpunkte per HTTP-Test (Server gestartet, alle Assets abgefragt, danach beendet): `/` (200), `/api/data` (200, 736 Stäbe, 2 Datensätze, 3 Module, 8 Excel-Tabellen, 736 eindeutige beam_ids), `/static/viewport3d.js` (200), `/static/model.glb` (200, 2,6 MB), `/static/plotly.min.js` (200), alle three.js-Module inkl. `BufferGeometryUtils.js` (200). JS-Syntax aller Module per esprima geprüft (OK).
 - Summen gegen Etappe 4 (0,00 % Abweichung); Gruppensummen Baustahl 4.152,2 / Beton 2.720,4 kg stimmen mit dem Excel-Sheet „Materialgruppen" (4.152,33 / 2.720,37) überein.
 - Materialgruppen: Baustahl 689 Stäbe (7.410,9 kg), Beton 47 Stäbe (11,756 m³, 28.214 kg, Bewehrung 999 kg).
 

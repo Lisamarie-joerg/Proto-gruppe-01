@@ -38,7 +38,17 @@ button.active { background: var(--accent); border-color: var(--accent);
 button.mat.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
 .chip { display: inline-block; width: 10px; height: 10px;
         border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-#viewport { width: 100%; height: 100%; }
+#viewport, #viewport3d { width: 100%; height: 100%; }
+#viewport3d canvas { display: block; }
+.hidden { display: none !important; }
+#glbHint { position: absolute; inset: 0; display: flex; align-items: center;
+           justify-content: center; color: var(--muted); font-size: 13px;
+           background: var(--panel); border-radius: 6px; z-index: 5; }
+.layerlist { max-height: 240px; overflow-y: auto; border: 1px solid var(--line);
+             border-radius: 7px; padding: 4px 6px; background: #fff; }
+.layerlist label { display: flex; align-items: center; gap: 6px;
+                   padding: 2px 0; cursor: pointer; font-size: 11.5px; }
+.layerlist .cnt { color: var(--muted); margin-left: auto; font-size: 10.5px; }
 table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
 th, td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--line); }
 th { color: var(--muted); font-weight: 600; text-align: right; }
@@ -51,6 +61,11 @@ tr.gesamt td { font-weight: 700; border-top: 2px solid var(--ink); }
 footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
          border-top: 1px solid var(--line); background: #fff; }
 .scroll { max-height: 220px; overflow-y: auto; }
+.partinfo-row { display: flex; justify-content: space-between; gap: 8px;
+                font-size: 12px; padding: 3px 0;
+                border-bottom: 1px solid var(--line); }
+.partinfo-row .v { font-weight: 600; text-align: right; }
+#partInfo { min-height: 60px; }
 </style>
 </head>
 <body>
@@ -66,6 +81,18 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
 </header>
 <main>
   <div class="panel" id="controls">
+    <h2>Ansicht</h2>
+    <div class="btngroup" id="viewModeBtns">
+      <button data-vm="rhino" class="active">Rhino-Modell (3D)</button>
+      <button data-vm="plotly">CO₂-Punktwolke</button>
+    </div>
+    <div id="colorModeSection">
+      <h2>Farbmodus (3D)</h2>
+      <div class="btngroup" id="colorModeBtns">
+        <button data-cm="rhino" class="active">Rhino-Material</button>
+        <button data-cm="co2">nach CO₂e</button>
+      </div>
+    </div>
     <h2>Datensatz</h2>
     <div class="btngroup" id="datasetBtns">
       <button data-ds="standard" class="active">Standard</button>
@@ -83,20 +110,36 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
       <button data-mat="Beton" class="mat active"><span class="chip" style="background:#cbd5e1"></span>Beton</button>
       <button data-mat="Bewehrung" class="mat active"><span class="chip" style="background:#78716c"></span>Bewehrung*</button>
     </div>
-    <h2>Ansicht</h2>
+    <div id="layerSection">
+      <h2>Layer (Rhino-Modell)</h2>
+      <div class="btngroup" style="margin-bottom:6px">
+        <button id="layersAll">Alle ein</button>
+        <button id="layersNone">Alle aus</button>
+      </div>
+      <div class="layerlist" id="layerList"></div>
+    </div>
+    <h2>Kamera</h2>
     <div class="btngroup" id="viewBtns">
       <button data-view="persp">Perspektive</button>
       <button data-view="top">Draufsicht</button>
+      <button data-view="front">Vorne</button>
       <button data-view="side">Seite</button>
     </div>
     <div class="btngroup" style="margin-top:6px">
-      <button id="axesBtn">Stabachsen einblenden</button>
+      <button id="axesBtn">Stabachsen einblenden (Plotly)</button>
     </div>
     <p class="note">*Bewehrung: pauschal 85 kg/m³ Betonstahl, sitzt im Beton (kein eigener Körper).</p>
-    <p class="note">Farbe = CO₂e je Stab (grün → rot). Punktgröße = Querschnittsfläche.</p>
+    <p class="note">3D-Ansicht: Bauteil anklicken für Material, Gewicht &amp; CO₂e; Layer per Checkbox ein/ausschalten.</p>
+    <p class="note">Plotly-Ansicht: Farbe = CO₂e je Stab (grün → rot), Punktgröße = Querschnittsfläche.</p>
   </div>
-  <div class="panel" style="padding:4px"><div id="viewport"></div></div>
+  <div class="panel" style="padding:4px; position:relative; overflow:hidden">
+    <div id="viewport3d"></div>
+    <div id="viewport" class="hidden"></div>
+    <div id="glbHint">Lade Rhino-Modell (model.glb) …</div>
+  </div>
   <div class="panel">
+    <h2>Bauteil-Info (3D-Klick)</h2>
+    <div id="partInfo"><p class="note">Bauteil im 3D-Viewport anklicken …</p></div>
     <h2>Auswahl</h2>
     <div id="kpiBox"></div>
     <h2>Materialgruppen (berechnet)</h2>
@@ -107,15 +150,27 @@ footer { padding: 8px 20px; font-size: 11px; color: var(--muted);
   </div>
 </main>
 <footer id="footer"></footer>
+<script type="importmap">
+{ "imports": { "three": "/static/three/three.module.js",
+               "three/addons/": "/static/three/addons/" } }
+</script>
 <script>
-const state = { dataset: 'standard', module: 'A1-A3',
+const state = { dataset: 'standard', module: 'A1-A3', view: 'rhino',
+  colorMode: 'rhino',
   mats: { Baustahl: true, Beton: true, Bewehrung: true }, axes: false };
 let DATA = null;
 let BASELINE = 0;   // Standard A1-A3 Gesamtsumme (Referenz)
 
+// Bruecke zum Three.js-Modul-Script (state/DATA gemeinsam nutzen)
+window.__appState = state;
+window.__barValue = barValue;
+window.__rhinoSetView = null;   // wird vom Modul-Script gesetzt
+window.__rhinoResize = null;
+
 const VIEWS = {
   persp: { eye: { x: 1.7, y: -1.7, z: 1.15 }, up: { x: 0, y: 0, z: 1 } },
   top:   { eye: { x: 0, y: -0.001, z: 2.7 },  up: { x: 0, y: 1, z: 0 } },
+  front: { eye: { x: 0, y: -2.7, z: 0.12 },   up: { x: 0, y: 0, z: 1 } },
   side:  { eye: { x: 2.7, y: 0, z: 0.12 },    up: { x: 0, y: 0, z: 1 } },
 };
 const fmt = (x, d = 1) =>
@@ -136,6 +191,25 @@ function barValue(b) {   // angezeigter Wert (Beruecksichtigung Bewehrung-Toggle
   return b.gruppe === 'Beton'
     ? (state.mats.Bewehrung ? c.total : c.pure)
     : c.total;
+}
+
+function showView(mode) {
+  // Umschalten zwischen Rhino-3D-Modell und Plotly-Punktwolke
+  state.view = mode;
+  document.querySelectorAll('#viewModeBtns button').forEach(b =>
+    b.classList.toggle('active', b.dataset.vm === mode));
+  const isRhino = mode === 'rhino';
+  document.getElementById('viewport3d').classList.toggle('hidden', !isRhino);
+  document.getElementById('viewport').classList.toggle('hidden', isRhino);
+  document.getElementById('colorModeSection').style.display =
+    isRhino ? '' : 'none';
+  document.getElementById('layerSection').style.display =
+    isRhino ? '' : 'none';
+  if (isRhino) {
+    if (window.__rhinoResize) window.__rhinoResize();
+  } else {
+    render();   // Plotly braucht sichtbaren Container fuer die Groesse
+  }
 }
 
 function buildTraces() {
@@ -207,6 +281,7 @@ function render() {
   Plotly.react('viewport', traces, layout,
                { displaylogo: false, responsive: true });
   updateSummary();
+  document.dispatchEvent(new Event('appchange'));
 }
 
 function updateSummary() {
@@ -336,10 +411,34 @@ function init() {
     btn.classList.toggle('active', state.mats[m]);
     render();
   });
+  // Ansicht: Rhino-3D vs Plotly-Punktwolke
+  document.getElementById('viewModeBtns')
+    .addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      showView(btn.dataset.vm);
+    });
+  // Farbmodus (3D)
+  document.getElementById('colorModeBtns')
+    .addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      document.querySelectorAll('#colorModeBtns button')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.colorMode = btn.dataset.cm;
+      document.dispatchEvent(new Event('appchange'));
+    });
+  // Kamera-Presets: je nach Ansicht Plotly oder Three.js
   document.getElementById('viewBtns').addEventListener('click', e => {
     const btn = e.target.closest('button');
     if (!btn) return;
-    Plotly.relayout('viewport', { 'scene.camera': VIEWS[btn.dataset.view] });
+    const v = btn.dataset.view;
+    if (state.view === 'plotly') {
+      Plotly.relayout('viewport', { 'scene.camera': VIEWS[v] });
+    } else if (window.__rhinoSetView) {
+      window.__rhinoSetView(v);
+    }
   });
   document.getElementById('axesBtn').addEventListener('click', e => {
     state.axes = !state.axes;
@@ -347,11 +446,17 @@ function init() {
     render();
   });
   render();
+  showView('rhino');
 }
 
 fetch('/api/data')
   .then(r => r.json())
-  .then(d => { DATA = d; init(); })
+  .then(d => {
+    DATA = d;
+    window.__appData = d;
+    document.dispatchEvent(new Event('appdata'));
+    init();
+  })
   .catch(err => {
     document.getElementById('viewport').innerHTML =
       '<p style="padding:20px">Daten konnten nicht geladen werden: ' +
@@ -360,6 +465,7 @@ fetch('/api/data')
 
 
 </script>
+<script type="module" src="/static/viewport3d.js"></script>
 
 </body>
 </html>
