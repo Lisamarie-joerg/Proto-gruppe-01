@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const src=fs.readFileSync('webapp/static/viewport3d.js','utf8');
+const body=src.slice(src.indexOf('function rebarGroupKey'),src.indexOf('function matchesRebar'));
+const group=Function(body+';return rebarGroupKey;')();
+const key=(points,d=12)=>group({points},d);
+const straight=[[0,0,0],[3,0,0]];
+assert.equal(key(straight),key([[7,2,5],[7,5,5]]));
+assert.equal(key(straight),key([[3,0,0],[0,0,0]]));
+assert.equal(key(straight),key([[0,0,0],[1,0,0],[3,0,0]]));
+assert.notEqual(key(straight),key(straight,14));
+assert.notEqual(key(straight),key([[0,0,0],[3.01,0,0]]));
+const u=[[0,0,0],[0,.2,0],[1,.2,0],[1,0,0]];
+const turn=p=>[p[2]+20,p[0]-5,p[1]+2];
+assert.equal(key(u),key(u.map(turn)));
+assert.equal(key(u),key([...u].reverse().map(turn)));
+assert.notEqual(key(u),key([[0,0,0],[.4,0,0],[.4,.6,0],[.8,.6,0]]));
+assert.notEqual(key([[0,0,0],[1,0,0],[1,.4,0]]),key([[0,0,0],[.8,0,0],[.8,.6,0]]));
+const ring=[[0,0,0],[.3,0,0],[.3,.5,0],[0,.5,0],[0,0,0]];
+assert.equal(key(ring),key([[.3,.5,0],[0,.5,0],[0,0,0],[.3,0,0],[.3,.5,0]].map(turn)));
+assert.equal(key(ring),key([[.1,0,0],[.3,0,0],[.3,.5,0],[0,.5,0],[0,0,0],[.1,0,0]]));
+assert.notEqual(key(ring),key([[0,0,0],[.4,0,0],[.4,.4,0],[0,.4,0],[0,0,0]]));
+const spatial=[[0,0,0],[1,0,0],[1,1,0],[1,1,1]];
+assert.equal(key(spatial),key(spatial.map(turn)));
+assert.notEqual(key(spatial),key(spatial.map(([x,y,z])=>[x,y,-z])));
+console.log('Passed geometric groups: rigid rotations, translations, reversed paths, closed-loop start, segmentation, diameter, length, bend geometry and spatial handedness.');
+

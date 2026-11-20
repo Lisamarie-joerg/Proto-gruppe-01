@@ -1,0 +1,685 @@
+﻿host_id,storey,IFC_GlobalId,category,name,concrete_expected,plan_axes,plan_segments,schematic_rods,schematic_kinds,status,open_notes
+0,"MG3_OG04_RDOK_+15,74=+42,21",24gODSjFr4dBP1arXR5icN,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:3795082",True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+1,"MG3_E00_RDOK_-0,62",2a4xBUKe9CaBspoinp_QEg,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 80/80:3789262",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+2,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYxU0,Träger,Slab Edge:Voute_45°_47.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+3,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYxP4,Träger,Slab Edge:Voute_30°_40.0cm,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+4,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyZq,Träger,Slab Edge:Voute_30°_40.0cm,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+5,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyrT,Träger,Slab Edge:Voute_45°_185.0cm,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+6,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyrR,Träger,Slab Edge:Voute_45°_145.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+7,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyx4,Träger,Slab Edge:Voute_45°_115.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+8,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyvw,Träger,Slab Edge:Voute_45°_68.0cm,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+9,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYy2A,Decken und Fundamente,"Foundation Slab:STB, d=80:3716848",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+10,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyFy,Träger,Slab Edge:Voute_45°_55.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+11,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyC6,Träger,Slab Edge:Voute_45°_55.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+12,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyCT,Träger,Slab Edge:Voute_45°_55.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+13,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyCv,Träger,Slab Edge:Voute_45°_55.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+14,"MG5_UG02_RDOK_-9,57",2QjeqnhnnDcBEfToyYYyB2,Träger,Slab Edge:Voute_45°_35.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+15,"MG5_UG02_RDOK_-9,57",3HlDZk2yvBkOMNHf3kyllm,Träger,Slab Edge:Voute_45°_35.0cm,True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+16,"MG3_E00_RDOK_-0,62",0SyJGJFo90fQ4hjFsoJRDm,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 98/80:3612265",True,0,0,0,,OPEN — no plausible cage generated,44 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+17,"MG5_UG01_RDOK_-4,52",2tOt8oofz87Q0Ajpq1oxXG,Wände,"Basic Wall:STB, d=30:3610830",True,0,0,74,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+18,"MG3_E00_RDOK_-0,62",2tOt8oofz87Q0Ajpq1oxOI,Wände,"Basic Wall:STB, d=25:3610252",True,0,0,204,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+19,"MG3_OG01_RDOK_+3,05",1SeiGEslz7IgCBTW7lMm5b,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/31:3588601",True,0,0,84,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+20,"MG3_E00_RDOK_-0,62",1yNGj9g7n5SumrNBaZbx8X,Wände,"Basic Wall:STB, d=25:3587997",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+21,"MG3_E00_RDOK_-0,62",1yNGj9g7n5SumrNBaZbxC_,Wände,"Basic Wall:STB, d=25:3587714",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+22,"MG3_UG02_RDOK_-5,95",386XT$unj5ZAZUEGARa464,Decken und Fundamente,"Foundation Slab:STB, d=20:3584310",True,0,0,22,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+23,"MG3_UG01_RDOK_-3,88",05HNM3OyT7TAUsvNujs7yZ,Wände,"Basic Wall:STB, d=30:3581316",True,0,0,318,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+24,"MG3_UG01_RDOK_-3,88",05HNM3OyT7TAUsvNujs7vz,Wände,"Basic Wall:STB, d=30:3581146",True,0,0,80,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+25,"MG5_UG02_RDOK_-9,57",05HNM3OyT7TAUsvNujs7Z$,Wände,"Basic Wall:STB, d=30:3580504",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+26,"MG5_UG02_RDOK_-9,57",05HNM3OyT7TAUsvNujs7iR,Wände,"Basic Wall:STB, d=30:3580348",True,0,0,310,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+41,"MG3_OG03_RDOK_+12,13",0HIUstacv2jQZpgsAXzl9j,Decken und Fundamente,"Floor:STB, d=23:3544371:4",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+42,"MG3_OG03_RDOK_+12,13",0zenZ9ag13XRm1RaA2kAjO,Decken und Fundamente,"Floor:STB, d=23:3544371:3",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+43,"MG3_OG03_RDOK_+12,13",2QylpnHiv1RuH33$hndjuY,Decken und Fundamente,"Floor:STB, d=23:3544371:2",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+44,"MG3_OG03_RDOK_+12,13",3wMunIihf4_A630oGVYEEL,Decken und Fundamente,"Floor:STB, d=23:3544371",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+45,"MG3_OG04_RDOK_+15,74=+42,21",3wMunIihf4_A630oGVYEMe,Decken und Fundamente,"Floor:STB, d=16:3543822",True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+46,"MG3_OG03_RDOK_+12,13",0fKxfLGtfDzPsEagNfED$Y,Decken und Fundamente,"Floor:STB, d=23:3542298:5",True,0,0,12,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+47,"MG3_OG03_RDOK_+12,13",1PEZkrmFzCXhIb7uOcXzvt,Decken und Fundamente,"Floor:STB, d=23:3542298:4",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+48,"MG3_OG03_RDOK_+12,13",3dvVm8hKH4983p_BUFRySH,Decken und Fundamente,"Floor:STB, d=23:3542298:3",True,0,0,12,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+49,"MG3_OG03_RDOK_+12,13",1W94can45A_g867GAAr4aj,Decken und Fundamente,"Floor:STB, d=23:3542298:2",True,0,0,12,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+50,"MG3_OG03_RDOK_+12,13",0CxIrkz15FzhevFaW$jMTg,Decken und Fundamente,"Floor:STB, d=23:3542298",True,0,0,10,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+51,"MG3_OG02_RDOK_+7,63",0CxIrkz15FzhevFaW$jM6w,Decken und Fundamente,"Floor:STB, d=23:3541962",True,0,0,16,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+52,"MG3_OG03_RDOK_+12,13",2PCnjdgnb4Ugu9iQ304jFh,Decken und Fundamente,"Floor:STB, d=23:3541349:6",True,0,0,10,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+53,"MG3_OG03_RDOK_+12,13",0IMeLeT8fFAh3BcT7aGPly,Decken und Fundamente,"Floor:STB, d=23:3541349:5",True,0,0,10,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+54,"MG3_OG03_RDOK_+12,13",0HzhC9sIT8uhIIQMd0Qn_l,Decken und Fundamente,"Floor:STB, d=23:3541349:4",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+55,"MG3_OG03_RDOK_+12,13",0gfDVIXar6rBzcp_CRIjAw,Decken und Fundamente,"Floor:STB, d=23:3541349:3",True,0,0,10,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+56,"MG3_OG03_RDOK_+12,13",1_0O45FVf5hvWOeiWRzqYm,Decken und Fundamente,"Floor:STB, d=23:3541349:2",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+57,"MG3_OG03_RDOK_+12,13",0CxIrkz15FzhevFaW$jMCL,Decken und Fundamente,"Floor:STB, d=23:3541349",True,0,0,10,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+58,"MG3_OG02_RDOK_+7,63",21Ml3zBOv9Xx9PItEw_RFu,Decken und Fundamente,"Floor:STB, d=23:3540329",True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+59,"MG3_OG01_RDOK_+3,05",2zY8GwXeH5AethUip1RS1e,Decken und Fundamente,"Floor:STB, d=23:3539955:2",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+60,"MG3_OG01_RDOK_+3,05",3z1NOjea159u8mT1rWPqBc,Decken und Fundamente,"Floor:STB, d=23:3539955",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+61,"MG3_OG02_RDOK_+7,63",32lJuUHm54LhH_98FikBbm,Decken und Fundamente,"Floor:STB, d=23:3539178:6",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+62,"MG3_OG02_RDOK_+7,63",0bi9_W3jz3gfKWQwX9sskm,Decken und Fundamente,"Floor:STB, d=23:3539178:5",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+63,"MG3_OG02_RDOK_+7,63",0H2GN7Lw1CpuslgHgD8Q_T,Decken und Fundamente,"Floor:STB, d=23:3539178:4",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+64,"MG3_OG02_RDOK_+7,63",0R1gD8J_b4SRGLXQTo5Hwc,Decken und Fundamente,"Floor:STB, d=23:3539178:3",True,0,0,8,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+65,"MG3_OG02_RDOK_+7,63",11Fqg7tjPA$fnlh78EyBWm,Decken und Fundamente,"Floor:STB, d=23:3539178:2",True,0,0,12,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+66,"MG3_OG02_RDOK_+7,63",0R91Qql6r8Sx_DnkC3e2YO,Decken und Fundamente,"Floor:STB, d=23:3539178",True,0,0,12,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+67,"MG3_E00_RDOK_-0,62",1CWFsCXjPFmBSb2I_js0Py,Decken und Fundamente,"Floor:STB, d=23:3536670",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+68,"MG3_E00_RDOK_-0,62",1CWFsCXjPFmBSb2I_js0Jw,Decken und Fundamente,"Floor:STB, d=23:3536280",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+69,"MG3_OG01_RDOK_+3,05",1CWFsCXjPFmBSb2I_js1$j,Decken und Fundamente,"Floor:STB, d=23:3534479",True,0,0,28,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+78,"MG3_E00_RDOK_-0,62",2Kz5bKH0j97RO1QDBreRos,Wände,"Basic Wall:STB, d=20:3512400",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+79,"MG3_E00_RDOK_-0,62",2Kz5bKH0j97RO1QDBreQbK,Mauerwerk,Wände 6:Wände 5:3509682,False,0,0,0,,Outside concrete reinforcement scope,
+82,"MG3_OG02_RDOK_+7,63",3BDBkRn6X1fexRJgWHJ2T1,Treppen,Treppen 3:Treppen 3:3491986,True,0,0,35,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+83,"MG3_E00_RDOK_-0,62",1Hzr2N$DT8vPEececPCP3x,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/147,5:3488309",True,0,0,0,,OPEN — no plausible cage generated,Some assumed lap offsets could not be fitted at 40 mm cover.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+84,"MG3_OG01_RDOK_+3,05",1Hzr2N$DT8vPEececPCPDi,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/63:3488162",True,0,0,84,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+85,"MG3_OG02_RDOK_+7,63",1Hzr2N$DT8vPEececPCPk8,Wände,"Basic Wall:STB, d=20:3486022",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+86,"MG5_UG01_RDOK_-4,52",1QfJrY9EzAhhPREbN7Z4Ty,Wände,"Basic Wall:STB, d=15_Nichttragend:3476948",True,0,0,26,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+87,"MG5_UG01_RDOK_-4,52",1QfJrY9EzAhhPREbN7Z4Pt,Wände,"Basic Wall:STB, d=15_Nichttragend:3476703",True,0,0,120,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+88,"MG5_UG01_RDOK_-4,52",1QfJrY9EzAhhPREbN7Z4RG,Wände,"Basic Wall:STB, d=15_Nichttragend:3476600",True,0,0,35,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+89,"MG5_UG01_RDOK_-4,52",1QfJrY9EzAhhPREbN7Z4Qx,Wände,"Basic Wall:STB, d=15_Nichttragend:3476499",True,0,0,53,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+90,"MG5_UG01_RDOK_-4,52",1QfJrY9EzAhhPREbN7Z46M,Wände,"Basic Wall:STB, d=15_Nichttragend:3476286",True,0,0,65,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+91,"MG3_E00_RDOK_-0,62",28$aRk5MH7PfNqLnaIgnn5,Wände,"Basic Wall:STB, d=25:3469872",True,0,0,21,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+92,"MG3_E00_RDOK_-0,62",28$aRk5MH7PfNqLnaIgn_w,Wände,"Basic Wall:STB, d=25:3469775",True,0,0,22,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+93,"MG3_E00_RDOK_-0,62",28$aRk5MH7PfNqLnaIgnuz,Wände,"Basic Wall:STB, d=25:3469384",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+94,"MG3_E00_RDOK_-0,62",28$aRk5MH7PfNqLnaIgm7S,Wände,"Basic Wall:STB, d=25:3469225",True,0,0,30,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+95,"MG5_UG02_RDOK_-9,57",1omo7jqXfD4Q3PBhqu6m1l,Decken und Fundamente,"Foundation Slab:STB, d=69:3467160",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+96,"MG3_E00_RDOK_-0,62",3B0o4QRKv2y8iCtTyH_r68,Mauerwerk,"Basic Wall:MW, d=30:3454330",False,0,0,0,,Outside concrete reinforcement scope,
+97,"MG3_EDD_RDOK_+18,87",0fDM_FeBD5sA4olEs1QCnJ,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 34/49:3418448",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+98,"MG3_OG04_RDOK_+15,74=+42,21",0fDM_FeBD5sA4olEs1QFxv,Decken und Fundamente,Decken 1:Decken 1:3415034,True,0,0,220,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+99,"MG5_UG02_RDOK_-9,57",1yMavjLHfFJARfOvbWMj7D,Wände,"Basic Wall:STB, d=60:3389040",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+100,"MG3_E00_RDOK_-0,62",3qITyNLr9A4gQYWlJ$5Ebq,Decken und Fundamente,"Floor:STB, d=25 variabel:3387446",True,0,0,20,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+149,"MG3_OG03_RDOK_+12,13",1vCiKjb657$eZGMsXpj2CW,Wände,Walls 4:Walls 4:3369962,True,0,0,242,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+150,"MG3_OG03_RDOK_+12,13",1vCiKjb657$eZGMsXpj28t,Mauerwerk,"Basic Wall:MW, d=38:3369725",False,0,0,0,,Outside concrete reinforcement scope,
+151,"MG3_OG03_RDOK_+12,13",1vCiKjb657$eZGMsXpj2A8,Mauerwerk,"Basic Wall:MW, d=38:3369538",False,0,0,0,,Outside concrete reinforcement scope,
+152,"MG3_OG03_RDOK_+12,13",1vCiKjb657$eZGMsXpj24R,Mauerwerk,"Basic Wall:MW, d=38:3369425",False,0,0,0,,Outside concrete reinforcement scope,
+153,"MG3_OG04_RDOK_+15,74=+42,21",1vCiKjb657$eZGMsXpj2jN,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 60/30:3367837,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+154,"MG5_OG03_RDOK_+12,27",1vCiKjb657$eZGMsXpj2fj,Decken und Fundamente,Decken 3:Decken 1:3367591,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+155,"MG3_OG04_RDOK_+15,74=+42,21",1vCiKjb657$eZGMsXpj2ao,Decken und Fundamente,Decken 2:Decken 1:3367416,True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+156,"MG3_EDD_RDOK_+18,87",1vCiKjb657$eZGMsXpj1Pa,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 34/49:3366574",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+157,"MG3_OG04_RDOK_+15,74=+42,21",1vCiKjb657$eZGMsXpj1QF,Wände,"Basic Wall:STB, d=33:3366469",True,0,0,90,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+158,"MG3_OG04_RDOK_+15,74=+42,21",1vCiKjb657$eZGMsXpj19Z,Wände,"Basic Wall:STB, d=33:3365545",True,0,0,26,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+159,"MG3_OG04_RDOK_+15,74=+42,21",3BsOerklPBIQp6$sz1Y8vd,Wände,"Basic Wall:STB, d=33:3364712",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+162,"MG5_OG03_RDOK_+12,27",3x_Wzsv5v3kQyvSbv06GYI,Wände,"Basic Wall:STB, d=50:3356022",True,0,0,92,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+163,"MG5_OG03_RDOK_+12,27",3x_Wzsv5v3kQyvSbv06Gsa,Wände,"Basic Wall:STB, d=33:3354688",True,0,0,120,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+166,"MG3_OG02_RDOK_+7,63",27de9zquT4DuZbPS3rvsXP,Mauerwerk,"Basic Wall:MW, d=30:3345323",False,0,0,0,,Outside concrete reinforcement scope,
+168,"MG3_OG02_RDOK_+7,63",3iXK5u97DAxQVtPu6tD$gT,Mauerwerk,Walls 3:Walls 3:3338991,False,0,0,0,,Outside concrete reinforcement scope,
+172,"MG3_OG01_RDOK_+3,05",2GWCnlmIL7eO$BTxyhKZdC,Mauerwerk,Walls 2:Walls 1:3326419,False,0,0,0,,Outside concrete reinforcement scope,
+173,"MG3_OG01_RDOK_+3,05",2GWCnlmIL7eO$BTxyhKaSW,Wände,Walls 1:Walls 1:3325759,True,0,0,34,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+174,"MG3_OG01_RDOK_+3,05",3_u3oZk_5AefbcFMvNobkE,Mauerwerk,"Basic Wall:MW, d=45:3319274",False,0,0,0,,Outside concrete reinforcement scope,
+175,"MG3_E00_RDOK_-0,62",1kJxFwJ0T7BBCIxQHnTkHT,Mauerwerk,"Basic Wall:MW, d=44:3307975",False,0,0,0,,Outside concrete reinforcement scope,
+176,"MG3_E00_RDOK_-0,62",1kJxFwJ0T7BBCIxQHnTlb7,Mauerwerk,Stützen 1:Stützen 1:3302621,False,0,0,0,,Outside concrete reinforcement scope,
+177,"MG3_E00_RDOK_-0,62",1kJxFwJ0T7BBCIxQHnTlrX,Mauerwerk,"Basic Wall:MW, d=48:3301627",False,0,0,0,,Outside concrete reinforcement scope,
+178,"MG3_E00_RDOK_-0,62",1E2nD_m7r1cB$7qys3f$PP,Mauerwerk,"Basic Wall:MW, d=65:3299470",False,0,0,0,,Outside concrete reinforcement scope,
+179,"MG3_E00_RDOK_-0,62",1E2nD_m7r1cB$7qys3f_P$,Mauerwerk,Wände 5:Wände 5:3295400,False,0,0,0,,Outside concrete reinforcement scope,
+180,"MG3_UG01_RDOK_-4,60",1Tlr6ThcvFUBgCpI2WYO6p,Wände,"Basic Wall:STB, d=30:3291514",True,0,0,68,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+181,"MG5_UG02_RDOK_-9,57",1Tlr6ThcvFUBgCpI2WYO3M,Decken und Fundamente,"Foundation Slab:STB, d=158:3291167",True,0,0,118,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+182,"MG3_UG01_RDOK_-4,60",1Tlr6ThcvFUBgCpI2WYOjE,Wände,"Basic Wall:STB, d=35:3289991",True,0,0,98,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+183,"MG3_UG01_RDOK_-4,60",1Tlr6ThcvFUBgCpI2WYOdE,Wände,"Basic Wall:STB, d=50:3289351",True,0,0,73,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+184,"MG5_UG02_RDOK_-9,57",1H_xv9nYzFfRWluYnoTvF7,Decken und Fundamente,"Foundation Slab:STB, d=140:3286753",True,0,0,45,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+185,"MG3_UG01_RDOK_-2,59",1H_xv9nYzFfRWluYnoTvU3,Wände,Wände 4:Wände 1:3285669,True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+186,"MG3_UG01_RDOK_-2,59",1H_xv9nYzFfRWluYnoTvS2,Wände,Wände 3:Wände 1:3285540,True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+187,"MG3_UG01_RDOK_-2,59",1H_xv9nYzFfRWluYnoTvGJ,Wände,Wände 2:Wände 1:3285301,True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+188,"MG3_UG01_RDOK_-2,59",1H_xv9nYzFfRWluYnoTvNT,Wände,Wände 1:Wände 1:3285243,True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+189,"MG5_UG02_RDOK_-9,57",1H_xv9nYzFfRWluYnoTwPl,Wände,"Basic Wall:STB, d=60:3281737",True,0,0,32,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+190,"MG5_UG02_RDOK_-9,57",1H_xv9nYzFfRWluYnoTwGJ,Decken und Fundamente,"Foundation Slab:STB, d=180:3281205",True,0,0,23,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+191,"MG5_UG02_RDOK_-9,57",1H_xv9nYzFfRWluYnoTwLi,Decken und Fundamente,"Foundation Slab:STB, d=120:3280970",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+192,"MG3_UG02_RDOK_-5,95",2zFLODI8L4XwS7LS339OvM,Wände,"Basic Wall:STB, d=20:3275231",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+193,"MG3_E00_RDOK_-0,62",2zFLODI8L4XwS7LS339OxG,Wände,"Basic Wall:STB, d=20:3275097",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+194,"MG3_UG01_RDOK_-4,60",2zFLODI8L4XwS7LSB39O9g,Treppen,Treppen 2:Treppen 2:3274211,True,0,0,30,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+195,"MG5_UG01_RDOK_-4,52",1GaQZkYt55dPZlosuWrPqy,Treppen,Treppen 1:Treppen 1:3270800,True,0,0,41,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,6 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+196,"MG3_E00_RDOK_-0,62",3OnsXOUS9BjwBBdR54no_T,Wände,"Basic Wall:STB, d=20:3265985",True,0,0,62,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+197,"MG3_E00_RDOK_-0,62",3OnsXOUS9BjwBBdR54noym,Wände,"Basic Wall:STB, d=20:3265900",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+198,"MG3_E00_RDOK_-0,62",3OnsXOUS9BjwBBdR54nouF,Wände,"Basic Wall:STB, d=20:3265619",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+199,"MG3_E00_RDOK_-0,62",3OnsXOUS9BjwBBdR54nocV,Decken und Fundamente,"Foundation Slab:STB, d=25:3265475",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+200,"MG3_E00_RDOK_-0,62",3OnsXOUS9BjwBBdR54noWY,Wände,"Basic Wall:STB, d=20:3265150",True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+201,"MG3_OG04_RDOK_+15,74=+42,21",33wUcRXRH12vs0PKMdoeGT,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 60/30:3260193,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+202,"MG3_OG04_RDOK_+15,74=+42,21",1i8SkSfxzDH9uYGA4pc6Ka,Treppen,MG_TH2/12:MG_TH2/1:3257550,True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+203,"MG5_OG03_RDOK_+12,27",1i8SkSfxzDH9uYGA4pc69R,Treppen,MG_TH2/11:MG_TH2/1:3257265,True,0,0,29,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+204,"MG3_OG02_RDOK_+7,63",1i8SkSfxzDH9uYGA4pc6Dj,Treppen,MG_TH2/10:MG_TH2/1:3256967,True,0,0,23,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+205,"MG3_OG01_RDOK_+3,05",1i8SkSfxzDH9uYGA4pc614,Treppen,MG_TH2/9:MG_TH2/1:3256750,True,0,0,96,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+206,"MG3_OG01_RDOK_+3,05",1i8SkSfxzDH9uYGA4pc676,Treppen,MG_TH2/8:MG_TH2/1:3256364,True,0,0,107,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+207,"MG3_E00_RDOK_+0,17",1i8SkSfxzDH9uYGA4pc7my,Treppen,MG_TH2/7:MG_TH2/1:3255766,True,0,0,28,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+208,"MG5_OG03_RDOK_+12,27",2DpF1jdPfEhwyJeIx3QRq$,Treppen,MG_TH2/6:MG_TH2/1:3254401,True,0,0,95,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+209,"MG3_OG03_RDOK_+12,13",2DpF1jdPfEhwyJeIx3QRBA,Treppen,MG_TH2/5:MG_TH2/1:3254132,True,0,0,106,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+210,"MG3_OG02_RDOK_+7,63",2DpF1jdPfEhwyJeIx3QRC_,Treppen,MG_TH2/4:MG_TH2/1:3253888,True,0,0,96,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+211,"MG3_OG01_RDOK_+3,05",2DpF1jdPfEhwyJeIx3QR1b,Treppen,MG_TH2/3:MG_TH2/1:3253723,True,0,0,21,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+212,"MG3_E00_RDOK_+0,17",2DpF1jdPfEhwyJeIx3QR6K,Treppen,MG_TH2/2:MG_TH2/1:3253290,True,0,0,97,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+213,"MG3_E00_RDOK_-0,62",2DpF1jdPfEhwyJeIx3QROx,Treppen,MG_TH2/1:MG_TH2/1:3253125,True,0,0,63,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,7 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+214,"MG3_OG04_RDOK_+15,74=+42,21",1zG2Sk1gHA78rSRNs8rR5g,Wände,"Basic Wall:STB, d=20:3249178",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+215,"MG3_UG01_RDOK_-2,59",1KYXVzler11AFvNozAzXdD,Treppen,MG3_T9:MG3_T1:3247217,True,0,0,27,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+216,"MG3_E00_RDOK_+0,17",1KYXVzler11AFvNozAzXwC,Treppen,MG3_T8:MG3_T1:3246896,True,0,0,165,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+217,"MG3_OG01_RDOK_+3,05",1KYXVzler11AFvNozAzX_i,Treppen,MG3_T7:MG3_T1:3246608,True,0,0,151,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+218,"MG3_OG03_RDOK_+12,13",1KYXVzler11AFvNozAzXFm,Treppen,MG3_T6:MG3_T1:3245644,True,0,0,108,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+219,"MG5_OG03_RDOK_+12,27",2utj$9VLr3YPxjrtcvnBEk,Treppen,MG3_T5:MG3_T1:3242584,True,0,0,33,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+220,"MG3_OG02_RDOK_+7,63",2utj$9VLr3YPxjrtcvnB3q,Treppen,MG3_T4:MG3_T1:3242242,True,0,0,131,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+221,"MG3_OG01_RDOK_+3,05",2utj$9VLr3YPxjrtcvnBwF,Treppen,MG3_T3:MG3_T1:3241849,True,0,0,165,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+222,"MG3_E00_RDOK_+0,17",2utj$9VLr3YPxjrtcvnB$x,Treppen,MG3_T2:MG3_T1:3241485,True,0,0,178,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+223,"MG3_UG01_RDOK_-3,33",3XTMUsdaL7BA_bN63nySYd,Treppen,MG3_T1:MG3_T1:3240982,True,0,0,130,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+224,"MG3_UG01_RDOK_-3,33",0XDbYEg_X59hG1_$sXga2D,Wände,"Basic Wall:STB, d=20:3226745",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+225,"MG3_OG03_RDOK_+12,13",1tDXlPogT0hO$0YqdL7EYw,Mauerwerk,"Basic Wall:MW, d=38:3215672",False,0,0,0,,Outside concrete reinforcement scope,
+226,"MG3_OG03_RDOK_+12,13",1tDXlPogT0hO$0YqdL7FUX,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/48:3214883",True,0,0,24,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+227,"MG3_E00_RDOK_+0,17",19lq8I$XP7VOP3aRyR8ld_,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 30/35:3194720",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+228,"MG3_E00_RDOK_+0,17",0Yq03ioi59Oe0l6MP9S81I,Treppen,ramp:ramp:3191910,True,0,0,122,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+229,"MG5_UG01_RDOK_-4,52",19yaURT05CpB3YSNi7b_L5,Decken und Fundamente,"Foundation Slab:STB, d=30:3188066",True,0,0,598,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+230,"MG5_UG02_RDOK_-9,57",2PJdo66Y95u9Xmkp2dRyV7,Decken und Fundamente,"Foundation Slab:STB, d=60:3165306",True,0,0,115,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+231,"MG5_UG02_RDOK_-9,57",2W0Soarmn2TxZBzbxY6lex,Treppen,Treppe 10:Treppe 3:3164674,True,0,0,27,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+232,"MG3_UG02_RDOK_-5,95",2W0Soarmn2TxZBzbxY6lXb,Treppen,Treppe 9:Treppe 3:3164252,True,0,0,32,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+233,"MG3_E00_RDOK_-0,62",09FnDWjYvDXQQPmzoclMAZ,Treppen,Treppe 8:Treppe 3:3163841,True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+234,"MG5_UG02_RDOK_-9,57",0IcGmnqyz14vSAUYyb4pWA,Treppen,Treppe 7:Treppe 1:3153766,True,0,0,35,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,7 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+235,"MG5_UG02_RDOK_-9,57",0IcGmnqyz14vSAUYyb4phM,Treppen,Treppe 6:Treppe 1:3153338,True,0,0,27,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+236,"MG3_UG01_RDOK_-3,33",0IcGmnqyz14vSAUYyb4pvb,Treppen,Treppe 5:Treppe 1:3152137,True,0,0,33,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+237,"MG3_E00_RDOK_-0,62",2jzE9hSEP4WxzYVTft_67T,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 33.5/25:3144105",True,0,0,23,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+238,"MG3_E00_RDOK_-0,62",2jzE9hSEP4WxzYVTft_650,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 33.5/25:3143988",True,0,0,21,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+239,"MG3_E00_RDOK_-0,62",2jzE9hSEP4WxzYVTft_6_Z,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 33.5/25:3143639",True,0,0,40,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+240,"MG5_UG02_RDOK_-9,57",1yt4iHE7n5cQXmV4uKYld7,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 70/30:3116503",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+241,"MG3_UG01_RDOK_-3,88",01fEAxr8fAhe0UvOpxCUDX,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 35/40:3115074",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+242,"MG3_UG01_RDOK_-3,88",01fEAxr8fAhe0UvOpxCUp9,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 25/40:3114986",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+243,"MG3_UG01_RDOK_-3,88",01fEAxr8fAhe0UvOpxCUs$,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 25/40:3114652",True,0,0,12,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,1 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+244,"MG3_UG01_RDOK_-3,88",01fEAxr8fAhe0UvOpxCU_S,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 35/40:3114175",True,0,0,13,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+245,"MG3_UG01_RDOK_-3,88",13YC2TBD550wBQUfZNO_jg,Wände,"Basic Wall:STB, d=15_Nichttragend:3108711",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+246,"MG3_E00_RDOK_-0,62",3cSeK1i1z4cQM2nJ0Dt31x,Wände,"Basic Wall:STB, d=25:3107495",True,0,0,160,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+247,"MG3_E00_RDOK_-0,62",3cSeK1i1z4cQM2nJ0Dt39Y,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/50:3107006",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+251,"MG3_E00_RDOK_-0,62",0UqvovJgv8p9Tnv$Po9g_V,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:3100255",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+252,"MG3_E00_RDOK_-0,62",0UqvovJgv8p9Tnv$Po9gom,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:3100016",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+253,"MG3_OG01_RDOK_+3,05",3Esr4DmnnATf5dz3GI$3WJ,Wände,"Basic Wall:STB, d=45:3099192",True,0,0,26,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+254,"MG3_OG01_RDOK_+3,05",172ts6Dm5CbfAF4wwnOC42,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/101:3096505",True,0,0,102,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+255,"MG3_OG02_RDOK_+7,63",172ts6Dm5CbfAF4wwnOCCm,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/85:3095947",True,0,0,97,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+256,"MG3_OG01_RDOK_+3,05",172ts6Dm5CbfAF4wwnOCSJ,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/105:3094952",True,0,0,88,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+257,"MG3_OG02_RDOK_+7,63",172ts6Dm5CbfAF4wwnOCUS,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/135,5:3094823",True,0,0,111,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+258,"MG3_OG01_RDOK_+3,05",172ts6Dm5CbfAF4wwnOCbq,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 12,5/20:3094479",True,0,0,0,,OPEN — no plausible cage generated,Member section unsuitable for the assumed link cage; not filled with arbitrary rods.
+259,"MG3_OG02_RDOK_+7,63",2K1dsyxJj6EBWsSFGub7ch,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/105:3093597",True,0,0,117,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+260,"MG3_OG03_RDOK_+12,13",2K1dsyxJj6EBWsSFGub7wz,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/91:3093323",True,0,0,118,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+261,"MG5_OG03_RDOK_+12,27",2K1dsyxJj6EBWsSFGub7t2,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/98:3092532",True,0,0,128,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+262,"MG3_OG02_RDOK_+7,63",0HOUBdDZr4Auph0z8XCaJu,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 44/20:3092153",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+263,"MG3_OG02_RDOK_+7,63",0HOUBdDZr4Auph0z8XCaHB,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/105:3091978",True,0,0,62,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+264,"MG3_OG02_RDOK_+7,63",0HOUBdDZr4Auph0z8XCaTw,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/105:3091771",True,0,0,62,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+265,"MG3_OG03_RDOK_+12,13",0HOUBdDZr4Auph0z8XCaRs,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/131:3091639",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+266,"MG3_OG02_RDOK_+7,63",0HOUBdDZr4Auph0z8XCaOr,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 26/20:3091572",True,0,0,20,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+267,"MG5_OG03_RDOK_+12,27",3vSeluZJL9KBEWYQDd393J,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/101:3089855",True,0,0,121,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+268,"MG3_OG04_RDOK_+15,74=+42,21",3vSeluZJL9KBEWYQDd39PO,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/53:3089204",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+269,"MG3_OG04_RDOK_+15,74=+42,21",2h8CHTOVz6zPhc5$lGsLGp,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/104:3082669",True,0,0,27,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+270,"MG3_OG04_RDOK_+15,74=+42,21",2h8CHTOVz6zPhc5$lGsLKW,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/104:3082430",True,0,0,39,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+271,"MG3_OG04_RDOK_+15,74=+42,21",2h8CHTOVz6zPhc5$lGsLhe,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/104:3082102",True,0,0,39,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+272,"MG3_OG04_RDOK_+15,74=+42,21",2h8CHTOVz6zPhc5$lGsLa4,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/104:3081370",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+273,"MG3_E00_RDOK_-0,62",042TFbXjT0RgrFxW7XF85c,Wände,"Basic Wall:STB, d=20:3080427",True,0,0,82,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+274,"MG3_E00_RDOK_-0,62",042TFbXjT0RgrFxW7XFN$4,Wände,"Basic Wall:STB, d=45:3079753",True,0,0,16,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+275,"MG5_UG01_RDOK_-4,52",042TFbXjT0RgrFxW7XFNs7,Wände,"Basic Wall:STB, d=45:3079178",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+276,"MG5_UG01_RDOK_-4,52",042TFbXjT0RgrFxW7XFNh5,Wände,"Basic Wall:STB, d=45:3078984",True,0,0,66,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+277,"MG3_UG01_RDOK_-3,88",2TM8P3BYH5tAJ1FTwa5mGS,Wände,"Basic Wall:STB, d=30:3074860",True,0,0,59,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+278,"MG3_OG01_RDOK_+3,05",2UGzqpgL17chH4n7eDpQUI,Treppen,Treppe 4:Treppe 3:3065676,True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+279,"MG3_OG01_RDOK_+3,05",2UGzqpgL17chH4n7eDpQDA,Treppen,Treppe 3:Treppe 3:3064724,True,0,0,19,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+280,"MG3_E00_RDOK_+0,17",2UGzqpgL17chH4n7eDpTxI,Treppen,Treppe 2:Treppe 1:3063308,True,0,0,39,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+281,"MG3_OG01_RDOK_+3,05",3po729u$91XeRnGkaJ843O,Treppen,Treppe 1:Treppe 1:3063079,True,0,0,39,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+282,"MG3_E00_RDOK_+0,17",1kojseWMLBjRHaSaBiqQCT,Wände,"Basic Wall:STB, d=25:3059994",True,0,0,128,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+283,"MG3_E00_RDOK_+0,17",1kojseWMLBjRHaSaBiqQ8Q,Wände,"Basic Wall:STB, d=25:3059741",True,0,0,276,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+284,"MG3_E00_RDOK_+0,17",1kojseWMLBjRHaSaBiqRsL,Wände,"Basic Wall:STB, d=30:3059602",True,0,0,258,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+285,"MG3_E00_RDOK_+0,17",1kojseWMLBjRHaSaBiqRqi,Wände,"Basic Wall:STB, d=30:3059499",True,0,0,444,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+286,"MG3_E00_RDOK_+0,17",1kojseWMLBjRHaSaBiqRe6,Wände,"Basic Wall:STB, d=30:3057665",True,0,0,270,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+287,"MG3_UG01_RDOK_-3,88",0kgwY9bKT8je7_ZRqF99iP,Wände,"Basic Wall:STB, d=15_Nichttragend:3050150",True,0,0,95,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+288,"MG5_UG02_RDOK_-9,57",0M1yrao3r3OvK7u75cNNPC,Decken und Fundamente,"Foundation Slab:STB, d=60:3025419",True,0,0,972,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+289,"MG5_UG02_RDOK_-9,57",1faJzhKVjB6hsLrIaV12LG,Wände,"Basic Wall:STB, d=30:3019867",True,0,0,186,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+290,"MG5_UG02_RDOK_-9,57",1faJzhKVjB6hsLrIaV12AV,Wände,"Basic Wall:STB, d=30:3019668",True,0,0,177,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+291,"MG3_UG02_RDOK_-5,95",0IVVYvL$TFhuK4SnC7zGsb,Decken und Fundamente,"Foundation Slab:STB, d=140:2938482",True,0,0,34,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+292,"MG3_UG02_RDOK_-5,95",0IVVYvL$TFhuK4SnC7zGwG,Decken und Fundamente,"Foundation Slab:STB, d=225:2938183",True,0,0,89,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+293,"MG3_UG02_RDOK_-5,95",0IVVYvL$TFhuK4SnC7zG_D,Decken und Fundamente,"Foundation Slab:STB, d=250:2937946",True,0,0,126,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+294,"MG3_UG02_RDOK_-5,95",3T8sgr3y9DggnZZeleaXVt,Decken und Fundamente,"Foundation Slab:STB, d=100:2936251",True,0,0,148,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+295,"MG3_E00_RDOK_-0,62",2Z1UmLVT12LuEDuA6Qjwuz,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 75/115:2935680",True,0,0,0,,OPEN — no plausible cage generated,1 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+296,"MG3_E00_RDOK_-0,62",2Z1UmLVT12LuEDuA6QjwnG,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 75/115:2935277",True,0,0,43,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+297,"MG3_E00_RDOK_-0,62",2Z1UmLVT12LuEDuA6Qjwrn,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 80/80:2934988",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+298,"MG3_E00_RDOK_-0,62",3a2BBTEbLCQuaXuw03fHKM,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 107.5/80:2934399",True,0,0,18,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,1 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+299,"MG3_E00_RDOK_-0,62",0y9gPDyYnBcAb587LKBNnm,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 75/80:2933470",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+300,"MG3_UG01_RDOK_-3,33",0y9gPDyYnBcAb587LKBNvJ,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 75/80:2932989",True,0,0,39,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+301,"MG3_E00_RDOK_-0,62",0IF3MT7F9E589HKHNszrbv,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 103/80:2931844",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+302,"MG3_E00_RDOK_-0,62",0IF3MT7F9E589HKHNszrp4,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 80/80:2931001",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+303,"MG3_UG01_RDOK_-3,33",2svdCYF4X3CgqLlvTtLOvZ,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/127:2922777",True,0,0,37,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,2 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+304,"MG5_UG01_RDOK_-4,52",2svdCYF4X3CgqLlvTtLOyb,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/127:2922591",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+305,"MG5_UG01_RDOK_-4,52",2svdCYF4X3CgqLlvTtLOzp,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/127:2922505",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+306,"MG5_UG01_RDOK_-4,52",2svdCYF4X3CgqLlvTtLO2V,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/127:2922469",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+307,"MG5_UG02_RDOK_-9,57",1uUWn7mXT55gUFv$N64Dug,Wände,"Basic Wall:STB, d=50:2911846",True,0,0,22,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+308,"MG5_UG02_RDOK_-9,57",1uUWn7mXT55gUFv$N64Dsf,Wände,"Basic Wall:STB, d=25:2911717",True,0,0,32,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+309,"MG5_UG02_RDOK_-9,57",1uUWn7mXT55gUFv$N64DnI,Wände,"Basic Wall:STB, d=25:2911262",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+310,"MG5_UG02_RDOK_-9,57",1uUWn7mXT55gUFv$N64Dju,Wände,"Basic Wall:STB, d=25:2911028",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+311,"MG5_UG02_RDOK_-9,57",26XlnSy1P0Nhpbdf86lQ5L,Wände,"Basic Wall:STB, d=25:2910849",True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+312,"MG5_UG02_RDOK_-9,57",26XlnSy1P0Nhpbdf86lQ81,Wände,"Basic Wall:STB, d=25:2910677",True,0,0,24,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+313,"MG5_UG02_RDOK_-9,57",26XlnSy1P0Nhpbdf86lQni,Wände,"Basic Wall:STB, d=25:2910136",True,0,0,34,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+314,"MG5_UG02_RDOK_-9,57",26XlnSy1P0Nhpbdf86lQyu,Decken und Fundamente,"Foundation Slab:STB, d=35:2909420",True,0,0,54,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+315,"MG5_UG01_RDOK_-4,52",0AH3icB6vEffmtH0sD1Umd,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/50:2907066",True,0,0,47,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+316,"MG3_UG01_RDOK_-4,60",26Stjq3V12aAAepwRqNHQW,Wände,"Basic Wall:STB, d=30:2906083",True,0,0,40,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+317,"MG3_UG01_RDOK_-3,88",2Oqs$B$MbCxfAiCJg1tHLY,Wände,"Basic Wall:STB, d=30:2905554",True,0,0,235,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+318,"MG5_UG01_RDOK_-4,52",2Oqs$B$MbCxfAiCJg1tHIa,Wände,"Basic Wall:STB, d=30:2905108",True,0,0,128,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+319,"MG5_UG02_RDOK_-9,57",3Ml3UK2KXFvfklz$CmEBZJ,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 70/30:2904670",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+320,"MG5_UG02_RDOK_-9,57",3Ml3UK2KXFvfklz$CmEBlY,Wände,"Basic Wall:STB, d=30:2904431",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+321,"MG3_UG02_RDOK_-5,95",1lvq2oc_96bxQ3920EWjUE,Wände,"Basic Wall:STB, d=20:2904235",True,0,0,31,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+322,"MG5_UG01_RDOK_-4,52",1lvq2oc_96bxQ3920EWjTl,Wände,"Basic Wall:STB, d=15_Nichttragend:2904138",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+323,"MG5_UG02_RDOK_-9,57",1lvq2oc_96bxQ3920EWiWc,Wände,"Basic Wall:STB, d=30:2903811",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+324,"MG5_UG02_RDOK_-9,57",1lvq2oc_96bxQ3920EWicM,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 70/30:2903731",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+325,"MG3_UG01_RDOK_-4,60",3RWxwZBULCcw7bSir40Ib0,Wände,"Basic Wall:STB, d=30:2903596",True,0,0,269,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+326,"MG5_UG02_RDOK_-9,57",3RWxwZBULCcw7bSir40ImH,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 70/30:2902909",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+327,"MG5_UG01_RDOK_-4,52",3RWxwZBULCcw7bSir40IBE,Wände,"Basic Wall:STB, d=20:2901410",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+328,"MG3_UG01_RDOK_-4,60",3RWxwZBULCcw7bSir40IDM,Wände,"Basic Wall:STB, d=65:2901050",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+329,"MG3_UG01_RDOK_-4,60",3RWxwZBULCcw7bSir40IPJ,Wände,"Basic Wall:STB, d=33:2900287",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+330,"MG3_UG01_RDOK_-4,60",2qHMKzE8fFyvWajRaZQd$8,Wände,"Basic Wall:STB, d=25:2898555",True,0,0,122,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+331,"MG3_UG01_RDOK_-3,88",1l7pLRrhH1dvxabovhT9ZS,Wände,"Basic Wall:STB, d=65:2897060",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+332,"MG3_UG01_RDOK_-3,88",1l7pLRrhH1dvxabovhT9sN,Wände,"Basic Wall:STB, d=65:2896367",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+333,"MG3_UG01_RDOK_-3,88",1g$vG48PDFFvVYbKXB$Efg,Wände,"Basic Wall:STB, d=30:2895413",True,0,0,83,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+334,"MG3_UG01_RDOK_-3,88",1g$vG48PDFFvVYbKXB$E$G,Wände,"Basic Wall:STB, d=30:2894735",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+335,"MG3_UG01_RDOK_-3,88",1g$vG48PDFFvVYbKXB$Es0,Wände,"Basic Wall:STB, d=30:2894303",True,0,0,86,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+336,"MG3_UG01_RDOK_-4,60",01TTpQdnL93ONVSWN$sGr$,Wände,"Basic Wall:STB, d=25:2893601",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+337,"MG3_UG01_RDOK_-4,60",01TTpQdnL93ONVSWN$sGzq,Wände,"Basic Wall:STB, d=25:2893098",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+338,"MG3_UG01_RDOK_-4,60",01TTpQdnL93ONVSWN$sGvw,Wände,"Basic Wall:STB, d=25:2892836",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+339,"MG3_E00_RDOK_-0,62",2IhnHh1i9C$8SiQ0IseZhb,Wände,"Basic Wall:STB, d=30:2891192",True,0,0,68,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+340,"MG3_E00_RDOK_-0,62",3FQRAQjr1D3OOsbNysVmFu,Decken und Fundamente,"Foundation Slab:STB, d=30:2888948",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+341,"MG5_UG02_RDOK_-9,57",3NXUSV5cj1MgD78kS$7AMc,Decken und Fundamente,"Foundation Slab:STB, d=25:2887787",True,0,0,406,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+342,"MG3_UG01_RDOK_-3,88",3OQhuE6snDi8O_m7sbucHW,Wände,"Basic Wall:STB, d=30:2885392",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+343,"MG3_UG01_RDOK_-3,88",3OQhuE6snDi8O_m7sbucRp,Wände,"Basic Wall:STB, d=30:2884995",True,0,0,277,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+344,"MG3_UG01_RDOK_-4,60",3OQhuE6snDi8O_m7sbucUf,Wände,"Basic Wall:STB, d=30:2884825",True,0,0,214,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+345,"MG3_E00_RDOK_-0,62",3OQhuE6snDi8O_m7sbvPqx,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 89/153:2883147",True,0,0,132,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+346,"MG3_E00_RDOK_-0,62",3sEHvUlZXDbxyfpte_NAvy,Wände,"Basic Wall:STB, d=30:2881644",True,0,0,162,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+347,"MG5_UG01_RDOK_-4,52",3x4SHlNlbAruzFXeYD4Y4H,Wände,"Basic Wall:STB, d=30:2879499",True,0,0,280,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+348,"MG5_UG01_RDOK_-4,52",3x4SHlNlbAruzFXeYD4Z$v,Wände,"Basic Wall:STB, d=30:2879203",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+349,"MG3_UG01_RDOK_-3,88",00kfJ8aAX7mv5LzV0e38i1,Wände,"Basic Wall:STB, d=50:2878616",True,0,0,193,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+350,"MG3_UG01_RDOK_-3,88",00kfJ8aAX7mv5LzV0e38nj,Wände,"Basic Wall:STB, d=30:2878452",True,0,0,154,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+351,"MG3_UG01_RDOK_-3,88",00kfJ8aAX7mv5LzV0e38tx,Wände,"Basic Wall:STB, d=30:2878050",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+352,"MG3_UG01_RDOK_-3,88",0GjbcyddH1suJgmfU1L9Jm,Wände,"Basic Wall:STB, d=15_Nichttragend:2877524",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+353,"MG3_UG01_RDOK_-3,88",0GjbcyddH1suJgmfU1L9jd,Wände,"Basic Wall:STB, d=20:2877379",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+354,"MG3_UG01_RDOK_-3,88",0GjbcyddH1suJgmfU1L9kL,Wände,"Basic Wall:STB, d=20:2877233",True,0,0,193,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+355,"MG5_UG01_RDOK_-4,52",0GjbcyddH1suJgmfU1L9Zt,Wände,"Basic Wall:STB, d=30:2876499",True,0,0,398,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+356,"MG3_UG01_RDOK_-3,88",0GjbcyddH1suJgmfU1L9vI,Wände,"Basic Wall:STB, d=30:2876150",True,0,0,122,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+357,"MG3_UG01_RDOK_-4,60",0GjbcyddH1suJgmfU1L9qU,Wände,"Basic Wall:STB, d=30:2875834",True,0,0,77,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+358,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98ZtM,Wände,"Basic Wall:STB, d=15_Nichttragend:2874182",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+359,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98Zzt,Wände,"Basic Wall:STB, d=15_Nichttragend:2873831",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+360,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98Z$7,Wände,"Basic Wall:STB, d=15_Nichttragend:2873687",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+361,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98Z5I,Wände,"Basic Wall:STB, d=15_Nichttragend:2873282",True,0,0,98,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+362,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98Z3S,Wände,"Basic Wall:STB, d=30:2872908",True,0,0,257,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+363,"MG3_UG01_RDOK_-3,88",0STy86nJT1dwCGs5v98ZCl,Wände,"Basic Wall:STB, d=30:2872767",True,0,0,160,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+364,"MG3_E00_RDOK_-0,62",3iBmaGyw1EoOz8wQpOyYLo,Decken und Fundamente,"Floor:STB, d=30:2872059",True,0,0,1688,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+365,"MG5_UG02_RDOK_-9,57",3FooBzVhvEjgsApdh3yMoM,Wände,"Basic Wall:STB, d=15_Nichttragend:2871135",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+366,"MG5_UG02_RDOK_-9,57",3FooBzVhvEjgsApdh3yMqR,Wände,"Basic Wall:STB, d=15_Nichttragend:2870994",True,0,0,88,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+367,"MG3_UG01_RDOK_-4,60",00XrZcPNz6MgxlkLFUMRLf,Wände,"Basic Wall:STB, d=30:2868874",True,0,0,162,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+368,"MG3_UG01_RDOK_-4,60",00XrZcPNz6MgxlkLFUMRNG,Wände,"Basic Wall:STB, d=30:2868787",True,0,0,46,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+369,"MG3_UG01_RDOK_-4,60",00XrZcPNz6MgxlkLFUMRTL,Wände,"Basic Wall:STB, d=30:2868406",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+370,"MG3_UG01_RDOK_-4,60",00XrZcPNz6MgxlkLFUMRUc,Wände,"Basic Wall:STB, d=30:2868293",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+371,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq0UD,Wände,"Basic Wall:STB, d=40:2867020",True,0,0,185,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+372,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq0Ph,Wände,"Basic Wall:STB, d=15_Nichttragend:2866858",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+373,"MG5_UG01_RDOK_-4,52",11fO0E2TL8jhcsWrrpq0I6,Decken und Fundamente,"Floor:STB, d=30:2866247",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+374,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq08E,Wände,"Basic Wall:STB, d=30:2865871",True,0,0,338,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+375,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq0AO,Wände,"Basic Wall:STB, d=30:2865753",True,0,0,274,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+376,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq0B7,Wände,"Basic Wall:STB, d=30:2865670",True,0,0,466,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+377,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq06w,Wände,"Basic Wall:STB, d=30:2865531",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+378,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq07z,Wände,"Basic Wall:STB, d=30:2865468",True,0,0,118,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+379,"MG5_UG02_RDOK_-9,57",11fO0E2TL8jhcsWrrpq01N,Wände,"Basic Wall:STB, d=30:2865302",True,0,0,88,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+380,"MG5_UG02_RDOK_-9,57",3Swfj5r7rA4RcG99sseWRV,Decken und Fundamente,"Foundation Slab:STB, d=80:2863831:2",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+381,"MG5_UG02_RDOK_-9,57",0g6tdwE1DEARsdEtOfkd0I,Decken und Fundamente,"Foundation Slab:STB, d=80:2863831",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+382,"MG5_UG02_RDOK_-9,57",0g6tdwE1DEARsdEtOfkdDC,Decken und Fundamente,"Foundation Slab:STB, d=100:2863497",True,0,0,128,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+383,"MG5_UG02_RDOK_-9,57",3Ey0W8_2f0Cv2I8RGZbx5N,Decken und Fundamente,"Foundation Slab:STB, d=100:2863394",True,0,0,128,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+384,"MG5_UG02_RDOK_-9,57",3Ey0W8_2f0Cv2I8RGZbwO4,Decken und Fundamente,"Foundation Slab:STB, d=100:2860657",True,0,0,373,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+385,"MG5_UG02_RDOK_-9,57",0p4XKudWT0AAiJKnpBllHS,Wände,"Basic Wall:STB, d=25:2858844",True,0,0,94,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+386,"MG5_UG01_RDOK_-4,52",0p4XKudWT0AAiJKnpBllQI,Wände,"Basic Wall:STB, d=25:2858386",True,0,0,86,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+387,"MG3_UG01_RDOK_-4,60",2DaDB_dpT62AsL4Oa1SAgy,Decken und Fundamente,"Floor:STB, d=23:2845648",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+388,"MG3_UG02_RDOK_-5,95",1I9HSHyFrFaRClUPshxac$,Decken und Fundamente,"Floor:STB, d=23:2843312",True,0,0,57,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+389,"MG5_UG01_RDOK_-4,52",1I9HSHyFrFaRClUPshxabz,Decken und Fundamente,"Floor:STB, d=23:2843250",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+390,"MG3_OG04_RDOK_+15,74=+42,21",3OLJQutezFzA1wn8zpHaOw,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2841937",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+391,"MG3_OG04_RDOK_+15,74=+42,21",3OLJQutezFzA1wn8zpHaP2,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2841897",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+392,"MG5_UG02_RDOK_-9,57",3DXtIDNNXDbfAuZohZqJQT,Decken und Fundamente,"Foundation Slab:STB, d=35:2819991",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+393,"MG5_UG01_RDOK_-4,52",3gkmAlx_vB0PEm7Irs0qjU,Decken und Fundamente,"Floor:STB, d=30:2813914",True,0,0,698,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+394,"MG5_UG01_RDOK_-4,52",3gkmAlx_vB0PEm7Irs0qiE,Decken und Fundamente,"Floor:STB, d=20:2813834",True,0,0,494,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+401,"MG5_UG02_RDOK_-9,57",2XSX0kJAXCFgQ9Ufsue9aw,Wände,"Basic Wall:STB, d=30:2805221",True,0,0,308,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+402,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxY1n,Wände,"Basic Wall:STB, d=20:2802967",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+403,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxY6B,Wände,"Basic Wall:STB, d=20:2802925",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+404,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxY44,Wände,"Basic Wall:STB, d=20:2802786",True,0,0,62,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+405,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxY5e,Wände,"Basic Wall:STB, d=25:2802702",True,0,0,88,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+406,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxYPG,Wände,"Basic Wall:STB, d=25:2802486",True,0,0,94,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+407,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxYVa,Wände,"Basic Wall:STB, d=20:2802306",True,0,0,128,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+408,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxYTY,Wände,"Basic Wall:STB, d=25:2802180",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+409,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxYJ0,Wände,"Basic Wall:STB, d=50:2802086",True,0,0,62,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+410,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxYMR,Wände,"Basic Wall:STB, d=45:2801917",True,0,0,80,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+411,"MG5_UG02_RDOK_-9,57",1WmJFG3dT0oxfY8rjNxbg1,Wände,"Basic Wall:STB, d=50:2801639",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+412,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zraJX,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2801476",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+413,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zraLt,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2801362",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+414,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zraNm,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 42,5/45:2801237",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+415,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zraMZ,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2801158",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+416,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zraOz,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2801048",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+417,"MG5_UG02_RDOK_-9,57",2mSarpHu17EuyPQT1zra08,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2800557",True,0,0,32,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+418,"MG5_UG02_RDOK_-9,57",1mF4JGXvzBMfEiqDVtJ_EQ,Wände,"Basic Wall:STB, d=30:2796771",True,0,0,76,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+419,"MG5_UG02_RDOK_-9,57",1mF4JGXvzBMfEiqDVtJ_Cp,Wände,"Basic Wall:STB, d=30:2796618",True,0,0,332,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+420,"MG5_UG02_RDOK_-9,57",1mF4JGXvzBMfEiqDVtJ_HF,Wände,"Basic Wall:STB, d=30:2796342",True,0,0,127,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+421,"MG5_UG02_RDOK_-9,57",1mF4JGXvzBMfEiqDVtJ_Lf,Wände,"Basic Wall:STB, d=50:2796048",True,0,0,226,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+422,"MG5_UG02_RDOK_-9,57",2ubMynAT932QRRtHrZkqB6,Decken und Fundamente,"Foundation Slab:STB, d=45:2794242",True,0,0,1388,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+423,"MG3_OG01_RDOK_+3,05",3ru7PoEU5Cy9RDrSolehHM,Wände,"Basic Wall:STB, d=20:2791073",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+424,"MG3_OG01_RDOK_+3,05",1w7DX4W2vAne01MY9bjN0Y,Wände,"Basic Wall:STB, d=20:2788849",True,0,0,180,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+425,"MG3_E00_RDOK_-0,62",0eBgF5GFv4EveCuOcxO73e,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/50:2786616",True,0,0,79,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.; 2 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+426,"MG3_E00_RDOK_-0,62",0eBgF5GFv4EveCuOcxO7PV,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/50:2786191",True,0,0,64,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+427,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO7QO,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:2786120",True,0,0,33,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+428,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO7JZ,Wände,"Basic Wall:STB, d=20:2785587",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+429,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO7LO,Wände,"Basic Wall:STB, d=20:2785416",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+430,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO7Nn,Wände,"Basic Wall:STB, d=20:2785313",True,0,0,150,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+431,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO8es,Wände,"Basic Wall:STB, d=20:2785254",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+432,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO8g4,Wände,"Basic Wall:STB, d=20:2785108",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+433,"MG5_UG01_RDOK_-4,52",0eBgF5GFv4EveCuOcxO8jZ,Wände,"Basic Wall:STB, d=20:2784947",True,0,0,114,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+434,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOebpL,Wände,"Basic Wall:STB, d=20:2783313",True,0,0,66,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+435,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOebCm,Wände,"Basic Wall:STB, d=15_Nichttragend:2783156",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+436,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOebEr,Wände,"Basic Wall:STB, d=20:2783025",True,0,0,66,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+437,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOeb8k,Wände,"Basic Wall:STB, d=20:2782890",True,0,0,76,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+438,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOebBY,Wände,"Basic Wall:STB, d=15_Nichttragend:2782822",True,0,0,74,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+439,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOebAl,Wände,"Basic Wall:STB, d=15_Nichttragend:2782763",True,0,0,74,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+440,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOeb4A,Wände,"Basic Wall:STB, d=15_Nichttragend:2782606",True,0,0,74,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+441,"MG5_UG01_RDOK_-4,52",2fJyMjZ9X1C9oUiUaOeb6q,Wände,"Basic Wall:STB, d=15_Nichttragend:2782512",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+442,"MG5_OG03_RDOK_+12,27",0Go3x7Lmb4NhWLqnhasr6T,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:2770940",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+443,"MG3_OG04_RDOK_+15,74=+42,21",293w3_E1L8bAFYbueDNfzV,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2718874",True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+444,"MG3_OG04_RDOK_+15,74=+42,21",293w3_E1L8bAFYbueDNf_f,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2718828",True,0,0,13,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+445,"MG3_OG01_RDOK_+3,05",3Rj2fYsRn6agHXjTV$WN6_,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 20/20:2717286",True,0,0,19,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+446,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE0V,Decken und Fundamente,"Floor:STB, d=50:2716368",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+447,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE08,Decken und Fundamente,"Floor:STB, d=50:2716359",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+448,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1n,Decken und Fundamente,"Floor:STB, d=50:2716350",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+449,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1w,Decken und Fundamente,"Floor:STB, d=50:2716341",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+450,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1Z,Decken und Fundamente,"Floor:STB, d=50:2716332",True,0,0,9,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+451,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1i,Decken und Fundamente,"Floor:STB, d=50:2716323",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+452,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1L,Decken und Fundamente,"Floor:STB, d=50:2716314",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+453,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE1U,Decken und Fundamente,"Floor:STB, d=50:2716305",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+454,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE17,Decken und Fundamente,"Floor:STB, d=50:2716296",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+455,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE2m,Decken und Fundamente,"Floor:STB, d=50:2716287",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+456,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE3h,Decken und Fundamente,"Floor:STB, d=50:2716196",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+457,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE3K,Decken und Fundamente,"Floor:STB, d=50:2716187",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+458,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE3T,Decken und Fundamente,"Floor:STB, d=50:2716178",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+459,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE36,Decken und Fundamente,"Floor:STB, d=50:2716169",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+460,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHE3F,Decken und Fundamente,"Floor:STB, d=50:2716160",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+461,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHECG,Decken und Fundamente,"Floor:STB, d=50:2716127",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+462,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHEDu,Decken und Fundamente,"Floor:STB, d=50:2716087",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+463,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHED3,Decken und Fundamente,"Floor:STB, d=50:2716044",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+464,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHEEj,Decken und Fundamente,"Floor:STB, d=50:2716002",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+465,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHEFL,Decken und Fundamente,"Floor:STB, d=50:2715930",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+466,"MG5_EDD_RDOK_+18,91",1Qgth5clH96gbzAmtoHEAY,Decken und Fundamente,"Floor:STB, d=50:2715757",True,0,0,14,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+467,"MG3_OG04_RDOK_+15,74=+42,21",0nuvG9trH3If0uObzf7$wc,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 53/30:2714849,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+468,"MG3_OG04_RDOK_+15,74=+42,21",0nuvG9trH3If0uObzf7$dt,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 53/30:2714544,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+469,"MG5_OG03_RDOK_+12,27",2y3jUfUMD6Ge6JiSDQ1WOJ,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:2704540",True,0,0,0,,OPEN — no plausible cage generated,5 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+470,"MG5_OG03_RDOK_+12,27",2y3jUfUMD6Ge6JiSDQ1WON,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:2704536",True,0,0,15,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+471,"MG5_OG03_RDOK_+12,27",2y3jUfUMD6Ge6JiSDQ1WRW,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:2704495",True,0,0,6,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+472,"MG5_OG03_RDOK_+12,27",2y3jUfUMD6Ge6JiSDQ1WRa,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:2704491",True,0,0,15,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+473,"MG5_OG03_RDOK_+12,27",2y3jUfUMD6Ge6JiSDQ1W7K,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:2704219",True,0,0,0,,OPEN — no plausible cage generated,5 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+474,"MG3_OG04_RDOK_+15,74=+42,21",1nx8s3wG50dfvjTQwV1NPc,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 78/30:2699899,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+475,"MG3_OG04_RDOK_+15,74=+42,21",1nx8s3wG50dfvjTQwV1NIS,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 78/30:2699393,True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+476,"MG3_OG04_RDOK_+15,74=+42,21",1nx8s3wG50dfvjTQwV1MYI,Träger,AT_1_SFR_Unterzug-Ueberzug_R19-01:STB 78/30:2698383,True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+477,"MG3_E00_RDOK_-0,62",1uGWJyXYfCjAbRXMjzzsxq,Decken und Fundamente,"Floor:STB, d=30:2675954",True,0,0,553,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+478,"MG3_E00_RDOK_-0,62",17Vl25KobFdvCZ$sTXMUXD,Wände,"Basic Wall:STB, d=45:2674036",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+479,"MG3_OG04_RDOK_+15,74=+42,21",2AKZWsleD1heb1RTr2y7yl,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2668956",True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+480,"MG3_OG04_RDOK_+15,74=+42,21",2AKZWsleD1heb1RTr2y7$E,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2668925",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+481,"MG3_OG04_RDOK_+15,74=+42,21",2AKZWsleD1heb1RTr2y7uV,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:2668716",True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+482,"MG3_E00_RDOK_-0,62",3y5FxMZr9459O1A1HS5Zhe,Wände,"Basic Wall:STB, d=20:2659612",True,0,0,52,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+483,"MG3_OG04_RDOK_+15,74=+42,21",2Lqkgp4155dRWvJZ2lWgcd,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:2648684",True,0,0,0,,OPEN — no plausible cage generated,
+484,"MG3_OG03_RDOK_+12,13",2_mGPkzFP2eAikFDkEBMxO,Wände,"Basic Wall:BETON d=20,5:2603499",True,0,0,50,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+485,"MG3_OG02_RDOK_+7,63",2_mGPkzFP2eAikFDkEBM$r,Wände,Basic Wall:BETON d=24:2603206,True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+486,"MG3_OG01_RDOK_+3,05",2cF8D2E6fBrwSfHOmlGaJt,Wände,"Basic Wall:BETON d=20,5:2602813",True,0,0,36,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+487,"MG3_E00_RDOK_-0,62",2cF8D2E6fBrwSfHOmlGaKK,Wände,"Basic Wall:BETON d=6,5:2602718",True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+488,"MG3_E00_RDOK_-0,62",2cF8D2E6fBrwSfHOmlGaOP,Wände,"Basic Wall:BETON d=6,5:2602451",True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+489,"MG3_OG01_RDOK_+3,05",2cF8D2E6fBrwSfHOmlGaTW,Wände,"Basic Wall:BETON d=16,5:2602154",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+490,"MG3_OG02_RDOK_+7,63",2cF8D2E6fBrwSfHOmlGa2_,Wände,"Basic Wall:BETON d=25,5:2601844",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+491,"MG3_OG03_RDOK_+12,13",2cF8D2E6fBrwSfHOmlGa7a,Wände,"Basic Wall:BETON d=21,5:2601518",True,0,0,50,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+492,"MG3_OG04_RDOK_+15,74=+42,21",2cF8D2E6fBrwSfHOmlGaBF,Wände,Basic Wall:BETON d=46:2601221,True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+493,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAeIX,Mauerwerk,"Basic Wall:MW, d=23:2569939",False,0,0,0,,Outside concrete reinforcement scope,
+494,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAeUy,Mauerwerk,"Basic Wall:MW, d=33:2569678",False,0,0,0,,Outside concrete reinforcement scope,
+495,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAe6D,Mauerwerk,"Basic Wall:MW, d=48:2569215",False,0,0,0,,Outside concrete reinforcement scope,
+496,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAe7z,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 39/59:2569103",True,0,0,26,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,1 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+497,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAe0O,Mauerwerk,"Basic Wall:MW, d=49:2568810",False,0,0,0,,Outside concrete reinforcement scope,
+498,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAeDZ,Mauerwerk,"Basic Wall:MW, d=49:2568465",False,0,0,0,,Outside concrete reinforcement scope,
+499,"MG3_OG03_RDOK_+12,13",2J30Dpcz5D29SP46vXAfsI,Mauerwerk,"Basic Wall:MW, d=49:2568160",False,0,0,0,,Outside concrete reinforcement scope,
+500,"MG3_OG02_RDOK_+7,63",2J30Dpcz5D29SP46vXAfzS,Mauerwerk,"Basic Wall:MW, d=33:2567470",False,0,0,0,,Outside concrete reinforcement scope,
+501,"MG3_OG02_RDOK_+7,63",0Dab4mYufDNPE0zfji6oRp,Mauerwerk,"Basic Wall:MW, d=48:2566947",False,0,0,0,,Outside concrete reinforcement scope,
+502,"MG3_OG02_RDOK_+7,63",0Dab4mYufDNPE0zfji6oyI,Mauerwerk,"Basic Wall:MW, d=45:2564802",False,0,0,0,,Outside concrete reinforcement scope,
+503,"MG3_OG02_RDOK_+7,63",0Dab4mYufDNPE0zfji6o$P,Mauerwerk,"Basic Wall:MW, d=48:2564617",False,0,0,0,,Outside concrete reinforcement scope,
+504,"MG3_OG02_RDOK_+7,63",0Dab4mYufDNPE0zfji6ooq,Mauerwerk,"Basic Wall:MW, d=30:2564452",False,0,0,0,,Outside concrete reinforcement scope,
+505,"MG3_OG02_RDOK_+7,63",0EFPG9r41CLOkys$P4CCw7,Mauerwerk,"Basic Wall:MW, d=30:2563361",False,0,0,0,,Outside concrete reinforcement scope,
+506,"MG3_OG02_RDOK_+7,63",3gJBg9zs1EohZNjbq1mBvO,Mauerwerk,"Basic Wall:MW, d=45:2563209",False,0,0,0,,Outside concrete reinforcement scope,
+507,"MG3_OG02_RDOK_+7,63",3gJBg9zs1EohZNjbq1mBa7,Mauerwerk,"Basic Wall:MW, d=14:2563030",False,0,0,0,,Outside concrete reinforcement scope,
+508,"MG3_OG02_RDOK_+7,63",3gJBg9zs1EohZNjbq1mBcn,Mauerwerk,"Basic Wall:MW, d=34:2562912",False,0,0,0,,Outside concrete reinforcement scope,
+509,"MG3_OG02_RDOK_+7,63",1X0cyx3SPAFA3viKCGi7hl,Mauerwerk,"Basic Wall:MW, d=33:2561197",False,0,0,0,,Outside concrete reinforcement scope,
+510,"MG3_OG02_RDOK_+7,63",1X0cyx3SPAFA3viKCGi7eU,Mauerwerk,"Basic Wall:MW, d=20:2561116",False,0,0,0,,Outside concrete reinforcement scope,
+511,"MG3_OG02_RDOK_+7,63",1X0cyx3SPAFA3viKCGi7ts,Mauerwerk,"Basic Wall:MW, d=20:2560948",False,0,0,0,,Outside concrete reinforcement scope,
+512,"MG3_OG02_RDOK_+7,63",0lckjqtu5BaQCt82IvPgLw,Mauerwerk,"Basic Wall:MW, d=22:2560324",False,0,0,0,,Outside concrete reinforcement scope,
+513,"MG3_OG02_RDOK_+7,63",0lckjqtu5BaQCt82IvPgH5,Mauerwerk,"Basic Wall:MW, d=22:2560123",False,0,0,0,,Outside concrete reinforcement scope,
+514,"MG3_OG01_RDOK_+3,05",077wtLJrD00xJsXeHGxnco,Mauerwerk,"Basic Wall:MW, d=49:2558871",False,0,0,0,,Outside concrete reinforcement scope,
+515,"MG3_OG01_RDOK_+3,05",1zTScDl6f83wHsJJew4FI4,Mauerwerk,"Basic Wall:MW, d=49:2558504",False,0,0,0,,Outside concrete reinforcement scope,
+516,"MG3_OG02_RDOK_+7,63",2MLp9ufE9DWeS5Cc7XarVb,Wände,"Basic Wall:STB, d=22:2476159",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+517,"MG3_E00_RDOK_-0,62",1VNZpvoDj4v9PjV8c94RgW,Mauerwerk,"Basic Wall:MW, d=44:2454173",False,0,0,0,,Outside concrete reinforcement scope,
+518,"MG3_E00_RDOK_-0,62",2_sWayOFj1RvxG3eOv646I,Mauerwerk,"Basic Wall:MW, d=65:2441343",False,0,0,0,,Outside concrete reinforcement scope,
+519,"MG3_UG01_RDOK_-4,60",1$$bPYNtnDeR$ikUGhrQUG,Wände,"Basic Wall:STB, d=30:2419673",True,0,0,32,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+520,"MG3_UG01_RDOK_-4,60",1$$bPYNtnDeR$ikUGhrQSH,Wände,"Basic Wall:STB, d=30:2419544",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+521,"MG3_UG01_RDOK_-4,60",1$$bPYNtnDeR$ikUGhrQQy,Wände,"Basic Wall:STB, d=30:2419445",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+522,"MG3_UG01_RDOK_-4,60",1$$bPYNtnDeR$ikUGhrQO$,Wände,"Basic Wall:STB, d=30:2419318",True,0,0,52,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+523,"MG3_UG01_RDOK_-4,60",1tL3H7E2f8_hAx$oXT26vc,Wände,"Basic Wall:STB, d=30:2419022",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+524,"MG3_UG01_RDOK_-4,60",3ocRI7C_1BqOxTBuR5EKto,Wände,"Basic Wall:STB, d=20:2415571",True,0,0,68,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+602,"MG3_OG04_RDOK_+15,74=+42,21",3MEcMmH9L6QOiwCCr7VRnx,Wände,"Basic Wall:STB, d=20:2316094",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+603,"MG3_OG01_RDOK_+3,05",3MEcMmH9L6QOiwCCr7VRqn,Wände,"Basic Wall:STB, d=20:2315892",True,0,0,74,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+604,"MG3_E00_RDOK_-0,62",3MEcMmH9L6QOiwCCr7VRqI,Wände,"Basic Wall:STB, d=20:2315863",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+605,"MG3_OG03_RDOK_+12,13",3MEcMmH9L6QOiwCCr7VRrE,Wände,"Basic Wall:STB, d=20:2315787",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+606,"MG3_OG02_RDOK_+7,63",3MEcMmH9L6QOiwCCr7VRxx,Wände,"Basic Wall:STB, d=20:2315710",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+607,"MG3_OG04_RDOK_+15,74=+42,21",3MEcMmH9L6QOiwCCr7VRvy,Wände,"Basic Wall:STB, d=20:2315577",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+608,"MG3_OG01_RDOK_+3,05",1FcFbOSeL0LOk4OPBE6opf,Decken und Fundamente,"Floor:STB, d=20:2304577",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+609,"MG3_E00_RDOK_-0,62",0IBaSxN2fEbhYgezEE7yVi,Decken und Fundamente,"Floor:STB, d=23:2303534",True,0,0,63,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+610,"MG3_OG01_RDOK_+3,05",0IBaSxN2fEbhYgezEE7yGM,Decken und Fundamente,"Floor:STB, d=23:2303444",True,0,0,47,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+611,"MG3_OG02_RDOK_+7,63",0clNSMTZjCBP88KR$RWgNC,Decken und Fundamente,"Floor:STB, d=25:2295552",True,0,0,54,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+612,"MG3_OG02_RDOK_+7,63",0PcgM5SSX2uhRumLmjTo_E,Wände,"Basic Wall:STB, d=20:2288609",True,0,0,54,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+613,"MG3_OG01_RDOK_+3,05",0uRC21TPf3ruO7axVDyu6D,Wände,"Basic Wall:STB, d=30:2285958",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+614,"MG3_E00_RDOK_-0,62",2osdDzEiv1Q9LxTT40YUih,Wände,"Basic Wall:STB, d=30:2282803",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+617,"MG3_OG03_RDOK_+12,13",1snVSNnEbA6wwXFi9c63VE,Decken und Fundamente,"Floor:STB, Rippen d=12:2247043",True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+621,"MG3_OG03_RDOK_+12,13",1sr02SBLjF2PGHLQ2iz6gp,Decken und Fundamente,"Floor:STB, Rippen d=12:2244220",True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+622,"MG3_OG02_RDOK_+7,63",1P0a29Z8DCEvSDLbIXQGqd,Decken und Fundamente,"Floor:STB, d=23:2233422",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+623,"MG3_OG01_RDOK_+3,05",1Salr_vQ10KRB4pIZZLmYM,Decken und Fundamente,"Floor:STB, d=23:2233326",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+624,"MG3_OG02_RDOK_+7,63",1Salr_vQ10KRB4pIZZLmWS,Decken und Fundamente,"Floor:STB, d=23:2233188",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+625,"MG3_E00_RDOK_-0,62",1Salr_vQ10KRB4pIZZLmdz,Decken und Fundamente,"Floor:STB, d=23:2232965",True,0,0,50,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+626,"MG3_OG01_RDOK_+3,05",1Salr_vQ10KRB4pIZZLmbl,Decken und Fundamente,"Floor:STB, d=23:2232855",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+627,"MG3_E00_RDOK_-0,62",1Salr_vQ10KRB4pIZZLmfQ,Wände,"Basic Wall:STB, d=25:2232610",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+628,"MG3_E00_RDOK_-0,62",3eAmBvOrLBWfQ712Hf7J2d,Wände,"Basic Wall:STB, d=25:2231180",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+629,"MG3_OG04_RDOK_+15,74=+42,21",3U6nQscWHAMvFMYp7uaDip,Wände,"Basic Wall:STB, d=30:2195412",True,0,0,45,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+630,"MG3_OG04_RDOK_+15,74=+42,21",3U6nQscWHAMvFMYp7uaD$8,Mauerwerk,Basic Wall:HW_300:2194223,False,0,0,0,,Outside concrete reinforcement scope,
+631,"MG5_OG03_RDOK_+12,27",3U6nQscWHAMvFMYp7uaDsb,Mauerwerk,Basic Wall:HW_300:2193730,False,0,0,0,,Outside concrete reinforcement scope,
+632,"MG3_OG01_RDOK_+3,05",28sGELrJL8W9DEv_k_i6S3,Wände,"Basic Wall:STB, d=25:2187261",True,0,0,98,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+634,"MG3_OG01_RDOK_+3,05",1VK4ReirfDARmYCQvM304s,Wände,"Basic Wall:STB, d=25:2102824",True,0,0,88,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+635,"MG3_E00_RDOK_-0,62",1bYOn$UYL0Cx6MdQvqJp6w,Wände,"Basic Wall:STB, d=25:2102623",True,0,0,52,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+636,"MG3_OG01_RDOK_+3,05",1bYOn$UYL0Cx6MdQvqJp2p,Wände,"Basic Wall:STB, d=25:2102358",True,0,0,248,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+638,"MG3_UG01_RDOK_-4,60",11VReR2dnBtg0AqbHwEugh,Wände,"Basic Wall:STB, d=20:2050600",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+639,"MG3_UG01_RDOK_-4,60",3M8NTP1lH0sOfsClrpDCv4,Wände,"Basic Wall:STB, d=30:2016853",True,0,0,22,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+644,"MG3_OG03_RDOK_+12,13",0OlDIIvqb6LvgFMb4HXWpG,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 36/48:2010178",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+645,"MG3_OG03_RDOK_+12,13",0OlDIIvqb6LvgFMb4HXWpI,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 56/35.5:2010176",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+646,"MG3_OG02_RDOK_+7,63",3NgNUVErjDaxmpvxANJPng,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 36/45:2006386",True,0,0,29,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+651,"MG3_OG02_RDOK_+7,63",0DW_midknBBvpN6gaFNRe4,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 40/30:2002053",True,0,0,0,,OPEN — no plausible cage generated,9 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.; Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+652,"MG3_OG02_RDOK_+7,63",0DW_midknBBvpN6gaFNKCH,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 52/147:1996176",True,0,0,62,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,5 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+653,"MG3_OG01_RDOK_+3,05",0xPc219n57uuv2lOL4w0Gi,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 65/109:1994930",True,0,0,9,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,9 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+656,"MG3_OG01_RDOK_+3,05",039uzSkBX8gAb2h$qKgwuY,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/40:1992045",True,0,0,27,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+659,"MG3_OG01_RDOK_+3,05",2aO5QnMQTC69qlsyP48RW6,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 62/40:1978802",True,0,0,20,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+660,"MG3_OG02_RDOK_+7,63",2omDUcELfAPRxdSOOC5mmu,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 48/38:1977392",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+661,"MG3_OG03_RDOK_+12,13",3vlPJu0AT3jOKv1kJH13c0,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 44/30 2:1975495",True,0,0,24,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+662,"MG3_OG04_RDOK_+15,74=+42,21",0vMq844Uv3Dv1qU1NO8QHW,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 48/30:1973919",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+663,"MG3_E00_RDOK_-0,62",0DKysgY390dh_HD61v_Uc0,Decken und Fundamente,"Foundation Slab:STB, d=25:1971164",True,0,0,628,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+664,"MG3_E00_RDOK_-0,62",0DKysgY390dh_HD61v_Ua3,Decken und Fundamente,"Foundation Slab:STB, d=25:1971039",True,0,0,334,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+665,"MG3_E00_RDOK_-0,62",1NX9dnajH149LWJWtS7QTW,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 89/65:1963382",True,0,0,35,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,1 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+666,"MG3_E00_RDOK_-0,62",1NX9dnajH149LWJWtS7QS5,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 106/80:1963283",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+667,"MG3_E00_RDOK_-0,62",1NX9dnajH149LWJWtS7QQ2,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:Pfahlkopf STB, 103/80:1963156",True,0,0,25,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+668,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiaxgN,Mauerwerk,Basic Wall:HW_300:1959601,False,0,0,0,,Outside concrete reinforcement scope,
+669,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiaxg9,Wände,"Basic Wall:STB, d=30:1959599",True,0,0,0,,OPEN — no plausible cage generated,Section too thin for two separated assumed mats at 40 mm cover.
+670,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiaxpC,Mauerwerk,Basic Wall:HW_300:1958122,False,0,0,0,,Outside concrete reinforcement scope,
+671,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiau5_,Wände,"Basic Wall:STB, d=25:1957208",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+672,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiau5m,Wände,"Basic Wall:STB, d=25:1957206",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+673,"MG5_EDD_RDOK_+18,91",2n917l2cTAUuPrMEbiau4Y,Decken und Fundamente,"Floor:STB, d=25_variable on:1957124",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+674,"MG3_OG04_RDOK_+15,74=+42,21",2n917l2cTAUuPrMEbiauV5,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 30/30:1956835",True,0,0,10,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+675,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDAc,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 60/53:1956237",True,0,0,102,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+676,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDpK,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 40/53:1955839",True,0,0,67,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+677,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDpz,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:1955798",True,0,0,0,,OPEN — no plausible cage generated,
+678,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDo8,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:1955747",True,0,0,0,,OPEN — no plausible cage generated,
+679,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDoA,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:1955745",True,0,0,0,,OPEN — no plausible cage generated,
+680,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDoq,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:1955743",True,0,0,0,,OPEN — no plausible cage generated,
+681,"MG3_OG04_RDOK_+15,74=+42,21",1CLYM8NsT2buDS75cFGDos,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø30:1955741",True,0,0,0,,OPEN — no plausible cage generated,
+682,"MG5_OG03_RDOK_+12,27",0FAdXHvET3w8IrnZLBDxeg,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 35/35:1955408",True,0,0,15,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+683,"MG3_E00_RDOK_-0,62",2Jf3r579vAreqtvYjWjBmH,Wände,"Basic Wall:STB, d=30:1953833",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+684,"MG3_E00_RDOK_-0,62",2Jf3r579vAreqtvYjWjBmT,Mauerwerk,Basic Wall:HW_300:1953829,False,0,0,0,,Outside concrete reinforcement scope,
+685,"MG3_E00_RDOK_-0,62",2Jf3r579vAreqtvYjWjA8k,Decken und Fundamente,"Floor:STB, d=50:1953302",True,0,0,232,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+686,"MG5_UG01_RDOK_-4,52",13KpBuu_L6lhWo6bsqH3F_,Decken und Fundamente,"Foundation Slab:STB, d=30:1952405",True,0,0,1500,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+687,"MG3_E00_RDOK_-0,62",1yQlKNLAnEZwCGz5lQMM4O,Decken und Fundamente,"Floor:STB, d=25:1952081",True,0,0,800,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+688,"MG5_UG01_RDOK_-4,52",0GXQLEdbLA7e8TNFwlpbcS,Wände,"Basic Wall:STB, d=60:1949970",True,0,0,62,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+689,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBZT,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:1944995",True,0,0,25,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+690,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBur,Wände,"Basic Wall:STB, d=15_Nichttragend:1944395",True,0,0,150,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+691,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oB$w,Wände,"Basic Wall:STB, d=50:1944196",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+692,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBoT,Wände,"Basic Wall:STB, d=15_Nichttragend:1944035",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+693,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBmD,Wände,"Basic Wall:STB, d=20:1943923",True,0,0,116,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+694,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBtD,Wände,"Basic Wall:STB, d=25:1943731",True,0,0,86,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+695,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBqz,Wände,"Basic Wall:STB, d=25:1943619",True,0,0,158,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+696,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBAW,Wände,"Basic Wall:STB, d=25:1943518",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+697,"MG5_UG01_RDOK_-4,52",0vU3E0HvL9BhWy_T71oBBz,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 42,5/45:1943427",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+698,"MG5_UG01_RDOK_-4,52",2PeElYOS1AzhangrtLg5qg,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:1942788",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+699,"MG5_UG01_RDOK_-4,52",2PeElYOS1AzhangrtLg5po,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 45/45:1942748",True,0,0,28,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+700,"MG5_UG01_RDOK_-4,52",2PeElYOS1AzhangrtLg5o6,Stützen,"AT_1_SCO_Eckig_R19-01:STB, 60/45:1942696",True,0,0,27,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+701,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kui1,Wände,"Basic Wall:STB, d=25:1941787",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+702,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kueI,Wände,"Basic Wall:STB, d=50:1941512",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+703,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kxGY,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1941048",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+704,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kxGi,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1941046",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+705,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kxGk,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1941044",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+706,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kxGe,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1941042",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+707,"MG3_E00_RDOK_-0,62",3ag$HwAIH1W9UVvjW2kxGg,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1941040",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+708,"MG3_E00_RDOK_-0,62",0_oLo4l_PEr8bfzkROjlG7,Mauerwerk,Basic Wall:HW_300:1940521,False,0,0,0,,Outside concrete reinforcement scope,
+709,"MG3_E00_RDOK_-0,62",0_oLo4l_PEr8bfzkROjlEY,Wände,"Basic Wall:STB, d=50:1940364",True,0,0,90,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+710,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fO,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939324",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+711,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fU,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939322",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+712,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fS,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939320",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+713,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fx,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939295",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+714,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fv,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939293",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+715,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_f$,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939291",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+716,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fz,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939289",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+717,"MG5_OG03_RDOK_+12,27",3iPWqZ0c56fBxpLwZO6_fp,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1939287",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+718,"MG3_OG04_RDOK_+15,74=+42,21",3JvTzlFIz8bfV870ca1JJb,Decken und Fundamente,"Floor:STB, d=25:1938719",True,0,0,810,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+719,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J2q,Wände,"Basic Wall:STB, d=50:1937742",True,0,0,130,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+720,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J2s,Mauerwerk,Basic Wall:HW_300:1937740,False,0,0,0,,Outside concrete reinforcement scope,
+721,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J2o,Wände,"Basic Wall:STB, d=30:1937736",True,0,0,49,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+722,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J2_,Mauerwerk,Basic Wall:HW_300:1937732,False,0,0,0,,Outside concrete reinforcement scope,
+723,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J3l,Wände,"Basic Wall:STB, d=25:1937685",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+724,"MG5_OG03_RDOK_+12,27",3JvTzlFIz8bfV870ca1J3f,Wände,"Basic Wall:STB, d=25:1937683",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+725,"MG3_OG02_RDOK_+7,63",3JvTzlFIz8bfV870ca1J5M,Wände,"Basic Wall:STB, d=25:1937580",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+726,"MG3_OG02_RDOK_+7,63",3HrMVdbP56NxBOpnu1du_O,Wände,"Basic Wall:STB, d=25:1937306",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+727,"MG3_OG02_RDOK_+7,63",3HrMVdbP56NxBOpnu1duz1,Wände,"Basic Wall:STB, d=25:1937219",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+728,"MG3_OG02_RDOK_+7,63",3HrMVdbP56NxBOpnu1dux1,Wände,"Basic Wall:STB, d=25:1937091",True,0,0,54,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+729,"MG5_OG03_RDOK_+12,27",3RxWNgkJb4BgTC6fgJ6T1J,Decken und Fundamente,"Floor:STB, d=25:1936245",True,101,283,1026,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+730,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxY1,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931415",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+731,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxXW,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931382",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+732,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxXQ,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931340",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+733,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxWR,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931277",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+734,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxS6,Decken und Fundamente,"Floor:STB, d=25:1931024",True,0,0,1076,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+735,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSQ,Wände,"Basic Wall:STB, d=50:1931020",True,0,0,176,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+736,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSS,Mauerwerk,Basic Wall:HW_300:1931018,False,0,0,0,,Outside concrete reinforcement scope,
+737,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSG,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931014",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+738,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSI,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931012",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+739,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSK,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931010",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+740,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxSM,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931008",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+741,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRe,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931006",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+742,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRg,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931004",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+743,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRi,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1931002",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+744,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRa,Wände,"Basic Wall:STB, d=30:1930994",True,0,0,57,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+745,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRc,Wände,"Basic Wall:STB, d=30:1930992",True,0,0,27,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+746,"MG3_OG02_RDOK_+7,63",0Gox2pDT17pfbzRlKsDxRu,Mauerwerk,Basic Wall:HW_300:1930990,False,0,0,0,,Outside concrete reinforcement scope,
+747,"MG3_OG01_RDOK_+3,05",0Gox2pDT17pfbzRlKsDxKc,Decken und Fundamente,"Floor:STB, d=25:1930544",True,0,0,906,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+748,"MG3_OG01_RDOK_+3,05",2oTn09OYTEew0gm0n0w4jW,Wände,"Basic Wall:STB, d=50:1930392",True,0,0,110,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+749,"MG3_OG01_RDOK_+3,05",2oTn09OYTEew0gm0n0w4oE,Mauerwerk,Basic Wall:HW_300:1930102,False,0,0,0,,Outside concrete reinforcement scope,
+750,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hMh,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929965",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+751,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hMD,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929931",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+752,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hNN,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929873",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+753,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hKp,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929845",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+754,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hKK,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929810",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+755,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hLu,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929790",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+756,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hRk,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1929640",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+757,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hO6,Wände,"Basic Wall:STB, d=20:1929536",True,0,0,82,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+758,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6hTk,Wände,"Basic Wall:STB, d=50:1929256",True,0,0,57,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+759,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6gho,Wände,"Basic Wall:STB, d=25:1928628",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+760,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6ghF,Wände,"Basic Wall:STB, d=30:1928585",True,0,0,31,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+761,"MG3_OG01_RDOK_+3,05",2msSxabIP9CQoTmoci6gfO,Mauerwerk,Basic Wall:HW_300:1928478,False,0,0,0,,Outside concrete reinforcement scope,
+762,"MG3_OG04_RDOK_+15,74=+42,21",11SwzEPzv0nRC7V2_ttcKs,Decken und Fundamente,"Floor:STB, d=20:1913873",True,0,0,45,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+763,"MG3_EDD_RDOK_+18,87",11SwzEPzv0nRC7V2_ttd__,Decken und Fundamente,"Floor:STB, d=18:1912473",True,0,0,184,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+764,"MG3_EDD_RDOK_+18,87",0o$U2ScRn7Yvdbuo77J7yx,Decken und Fundamente,"Floor:STB, d=20:1910971",True,0,0,502,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+765,"MG3_EDD_RDOK_+18,87",0o$U2ScRn7Yvdbuo77J7C_,Decken und Fundamente,"Floor:STB, d=18:1909950",True,0,0,300,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+766,"MG3_OG04_RDOK_+15,74=+42,21",0nQ7SBkN56sQ9l9uPtpvxO,Decken und Fundamente,"Floor:STB, d=20:1908524",True,0,0,196,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+767,"MG3_OG04_RDOK_+15,74=+42,21",1H3yn2Avf4JOg0eirgqvZm,Decken und Fundamente,"Floor:STB, d=17:1907626",True,0,0,280,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+768,"MG3_OG04_RDOK_+15,74=+42,21",1H3yn2Avf4JOg0eirgqvH2,Decken und Fundamente,"Floor:STB, d=17:1906456",True,0,0,326,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+769,"MG3_OG01_RDOK_+3,05",3V_K3v1612g85CLKR1WWWH,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 40/30:1905414",True,0,0,13,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+770,"MG3_OG04_RDOK_+15,74=+42,21",0V1hvQ4JrC_96kWjXB9rYi,Decken und Fundamente,"Floor:STB, d=21:1903937",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+771,"MG3_OG03_RDOK_+12,13",0V1hvQ4JrC_96kWjXB9rbT,Decken und Fundamente,"Floor:STB, d=20:1903792",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+772,"MG3_OG03_RDOK_+12,13",3y0c8VAIn2zAbloaVY6dne,Decken und Fundamente,"Floor:STB, d=25:1903700",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+773,"MG3_OG02_RDOK_+7,63",1AEmyheKbAA94Bm282LS7I,Decken und Fundamente,"Floor:STB, d=20:1903435",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+774,"MG3_OG02_RDOK_+7,63",1AEmyheKbAA94Bm282LS64,Decken und Fundamente,"Floor:STB, d=20:1903389",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+775,"MG3_OG02_RDOK_+7,63",1V1mONmF986vzseoeMqkx7,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 48/40:1902570",True,0,0,12,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+776,"MG3_OG01_RDOK_+3,05",01XmajuHvDFRbHkJX7H$c7,Decken und Fundamente,"Floor:STB, d=20:1902350",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+777,"MG3_OG01_RDOK_+3,05",01XmajuHvDFRbHkJX7H$mJ,Decken und Fundamente,"Floor:STB, d=20:1901210",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+778,"MG3_E00_RDOK_-0,62",1RG5ZAAs56OhFukCbTucdD,Decken und Fundamente,"Floor:STB, d=20:1900035",True,0,0,45,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+779,"MG3_OG01_RDOK_+3,05",1Lz6LF5QP3vfAZJvDgrcj8,Decken und Fundamente,"Floor:STB, d=25:1899569",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+780,"MG3_OG01_RDOK_+3,05",1Lz6LF5QP3vfAZJvDgrc7h,Decken und Fundamente,"Floor:STB, d=25:1898130",True,0,0,208,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+783,"MG3_E00_RDOK_-0,62",27zZLc5TrDD9aev87xU6C_,Decken und Fundamente,"Floor:STB, d=25:1894393",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+784,"MG3_E00_RDOK_-0,62",27zZLc5TrDD9aev87xU66b,Decken und Fundamente,"Floor:STB, d=25:1893730",True,0,0,89,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+785,"MG3_UG01_RDOK_-4,60",1V7naqoZr2zOhJPeMaEBmY,Decken und Fundamente,"Foundation Slab:STB, d=30:1887985",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+786,"MG3_UG01_RDOK_-4,60",1V7naqoZr2zOhJPeMaEBiu,Decken und Fundamente,"Foundation Slab:STB, d=30:1886699",True,0,0,230,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+787,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhwbn,Wände,"Basic Wall:STB, d=20:1878115",True,0,0,41,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+788,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhvwD,Wände,"Basic Wall:STB, d=20:1875871",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+789,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhv$k,Wände,"Basic Wall:STB, d=20:1875708",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+790,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhvo$,Wände,"Basic Wall:STB, d=25:1875373",True,0,0,150,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+791,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhvqJ,Wände,"Basic Wall:STB, d=33:1874945",True,0,0,0,,OPEN — no plausible cage generated,Open or inconsistently oriented mesh: inside and cover cannot be inferred reliably.
+792,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhvdZ,Wände,"Basic Wall:STB, d=30:1874161",True,0,0,13,mat-V; mat-U,SCHEMATIC — category-oriented cage / mats,
+793,"MG3_UG01_RDOK_-4,60",2_QEpH0SH7B8Glw$WMhvRB,Wände,"Basic Wall:STB, d=25:1873881",True,0,0,36,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+797,"MG3_OG02_RDOK_+7,63",1s8VOlaH53nAZdgRkZkXbL,Decken und Fundamente,"Floor:STB, d=25:1867395",True,0,0,222,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+799,"MG3_OG01_RDOK_+3,05",0sDkAHE01CreimQ$6VCe8C,Decken und Fundamente,"Floor:STB, d=25:1865504",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+800,"MG3_OG01_RDOK_+3,05",0sDkAHE01CreimQ$6VCe5D,Decken und Fundamente,"Floor:STB, d=25:1864801",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+801,"MG3_OG02_RDOK_+7,63",3MlXu1R4fB$eANlMzRvbal,Decken und Fundamente,"Floor:STB, d=25:1864494",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+802,"MG3_OG02_RDOK_+7,63",3MlXu1R4fB$eANlMzRvaTn,Decken und Fundamente,"Floor:STB, d=25:1863024",True,0,0,45,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+803,"MG3_OG02_RDOK_+7,63",3MlXu1R4fB$eANlMzRvaOb,Decken und Fundamente,"Floor:STB, d=25:1862692",True,0,0,103,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+804,"MG3_OG04_RDOK_+15,74=+42,21",3Z1dx$oynAuxhyNDNoxqLx,Decken und Fundamente,"Floor:STB, d=18:1862010",True,0,0,83,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+805,"MG3_OG03_RDOK_+12,13",0sOlJBbjvElB4oh6r4QImi,Decken und Fundamente,"Floor:STB, d=25:1860146",True,0,0,86,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,2 proposed rods rejected by segment-to-mesh containment / 40 mm cover checks.
+806,"MG3_OG03_RDOK_+12,13",0sOlJBbjvElB4oh6r4QHAs,Decken und Fundamente,"Floor:STB, d=25:1858728",True,0,0,212,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,Some assumed lap offsets could not be fitted at 40 mm cover.
+809,"MG3_OG03_RDOK_+12,13",0sOlJBbjvElB4oh6r4QHWD,Träger,"AT_1_SFR_Unterzug-Ueberzug_R19-01:STB, 48/67:1857043",True,0,0,19,longitudinal; closed-link,SCHEMATIC — category-oriented cage / mats,
+810,"MG3_OG03_RDOK_+12,13",0uXHG1zHvEC8YKY29n9$jL,Decken und Fundamente,Floor:Dippelbaumdecke+StB:1854179,True,0,0,110,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+811,"MG3_OG03_RDOK_+12,13",0uXHG1zHvEC8YKY29n9$Zi,Decken und Fundamente,Floor:Dippelbaumdecke+StB:1853786,True,0,0,136,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+812,"MG3_OG03_RDOK_+12,13",0uXHG1zHvEC8YKY29n9$SL,Decken und Fundamente,"Floor:STB, d=25:1853091",True,0,0,103,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+813,"MG3_OG03_RDOK_+12,13",0uXHG1zHvEC8YKY29n9$Fi,Decken und Fundamente,Floor:Dippelbaumdecke+StB:1851994,True,0,0,384,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+816,"MG3_OG04_RDOK_+15,74=+42,21",2GJdNem7149RahsEIrbAKT,Wände,"Basic Wall:STB, d=20:1845787",True,0,0,50,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+817,"MG3_OG04_RDOK_+15,74=+42,21",0nKJW83xL0fxm0Df5GZazY,Wände,"Basic Wall:STB, d=20:1845399",True,0,0,40,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+818,"MG3_OG04_RDOK_+15,74=+42,21",0nKJW83xL0fxm0Df5GZa0y,Wände,"Basic Wall:STB, d=20:1845193",True,0,0,90,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+822,"MG3_OG01_RDOK_+3,05",1Onv79GUPCVer7K7gMbJC_,Wände,"Basic Wall:STB, d=20:1810381",True,0,0,142,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+824,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsi93,Wände,"Basic Wall:STB, d=25:1751336",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+825,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiEA,Wände,"Basic Wall:STB, d=20:1751265",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+826,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiEq,Wände,"Basic Wall:STB, d=20:1751263",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+827,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiEs,Wände,"Basic Wall:STB, d=20:1751261",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+828,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiEm,Wände,"Basic Wall:STB, d=20:1751259",True,0,0,86,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+829,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiFE,Wände,"Basic Wall:STB, d=25:1751205",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+830,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiF8,Wände,"Basic Wall:STB, d=25:1751203",True,0,0,52,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+831,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiFA,Wände,"Basic Wall:STB, d=25:1751201",True,0,0,126,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+832,"MG3_E00_RDOK_-0,62",1jgiLPsy54mRwINGrRsiFq,Wände,"Basic Wall:STB, d=25:1751199",True,0,0,90,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+833,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEMa,Wände,"Basic Wall:STB, d=20:1741942",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+834,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEMc,Wände,"Basic Wall:STB, d=20:1741940",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+835,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEMW,Wände,"Basic Wall:STB, d=20:1741938",True,0,0,48,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+836,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEMY,Wände,"Basic Wall:STB, d=20:1741936",True,0,0,38,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+837,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEAt,Wände,"Basic Wall:STB, d=20:1741669",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+838,"MG3_EDD_RDOK_+18,87",2eTIYjsdfFIumsSAYOTEDC,Wände,"Basic Wall:STB, d=25:1741470",True,0,0,58,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+839,"MG3_OG01_RDOK_+3,05",0myOk9K$TFQRoYmyOHHubL,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1736639",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+840,"MG3_OG01_RDOK_+3,05",0myOk9K$TFQRoYmyOHHubZ,Stützen,"AT_1_SCO_Rund_R19-01:STB, ø40:1736585",True,0,0,0,,OPEN — no plausible cage generated,Incomplete grid/cage suppressed: a plausible second direction or closed links could not be fitted.
+841,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLr,Wände,"Basic Wall:STB, d=25:1736408",True,0,0,110,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+842,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLu,Wände,"Basic Wall:STB, d=20:1736405",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+843,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNL_,Wände,"Basic Wall:STB, d=20:1736403",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+844,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLy,Wände,"Basic Wall:STB, d=20:1736401",True,0,0,118,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+845,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLY,Wände,"Basic Wall:STB, d=20:1736399",True,0,0,92,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+846,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLX,Wände,"Basic Wall:STB, d=20:1736396",True,0,0,80,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+847,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLb,Wände,"Basic Wall:STB, d=20:1736392",True,0,0,80,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+848,"MG3_OG01_RDOK_+3,05",2ClihiWWHElhYGrFSqoNLh,Wände,"Basic Wall:STB, d=20:1736390",True,0,0,96,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+849,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN3v,Wände,"Basic Wall:STB, d=20:1735508",True,0,0,114,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+850,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN3$,Wände,"Basic Wall:STB, d=25:1735506",True,0,0,112,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+851,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN3f,Wände,"Basic Wall:STB, d=20:1735492",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+852,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN3l,Wände,"Basic Wall:STB, d=20:1735490",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+853,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN3j,Wände,"Basic Wall:STB, d=20:1735488",True,0,0,70,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+854,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN2J,Wände,"Basic Wall:STB, d=20:1735486",True,0,0,94,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+855,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN2M,Wände,"Basic Wall:STB, d=20:1735483",True,0,0,78,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+856,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN2K,Wände,"Basic Wall:STB, d=20:1735481",True,0,0,72,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+857,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN2Q,Wände,"Basic Wall:STB, d=20:1735479",True,0,0,80,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+858,"MG3_OG02_RDOK_+7,63",2ClihiWWHElhYGrFSqoN2O,Wände,"Basic Wall:STB, d=20:1735477",True,0,0,96,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+859,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$Ybo81,Wände,"Basic Wall:STB, d=20:1734454",True,0,0,134,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+860,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$Ybo83,Wände,"Basic Wall:STB, d=25:1734452",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+861,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$Ybo3s,Wände,"Basic Wall:STB, d=25:1734081",True,0,0,127,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+862,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboV8,Wände,"Basic Wall:STB, d=20:1733375",True,0,0,42,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+863,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboVA,Wände,"Basic Wall:STB, d=20:1733373",True,0,0,50,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+864,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboVE,Wände,"Basic Wall:STB, d=20:1733369",True,0,0,98,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+865,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboV0,Wände,"Basic Wall:STB, d=20:1733367",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+866,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboSJ,Wände,"Basic Wall:STB, d=20:1733156",True,0,0,66,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+867,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboSL,Wände,"Basic Wall:STB, d=20:1733154",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+868,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboSN,Wände,"Basic Wall:STB, d=20:1733152",True,0,0,68,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+869,"MG3_OG03_RDOK_+12,13",12HaoHvFzFfP44AV$YboSf,Wände,"Basic Wall:STB, d=20:1733150",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+870,"MG3_EDD_RDOK_+20,16",0EvjzfvFH0fuDXm$Pt8a4Z,Decken und Fundamente,"Floor:STB, d=18:1732746",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+871,"MG3_EDD_RDOK_+20,16",0EvjzfvFH0fuDXm$Pt8bvo,Decken und Fundamente,"Floor:STB, d=20:1732571",True,0,0,60,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+872,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlKZ,Wände,"Basic Wall:STB, d=20:1730797",True,0,0,62,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+873,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlLc,Wände,"Basic Wall:STB, d=20:1730728",True,0,0,56,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+874,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlMj,Wände,"Basic Wall:STB, d=20:1730659",True,0,0,64,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+875,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlNL,Wände,"Basic Wall:STB, d=20:1730587",True,0,0,84,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+876,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlgk,Wände,"Basic Wall:STB, d=20:1730400",True,0,0,44,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+877,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlhE,Wände,"Basic Wall:STB, d=20:1730304",True,0,0,46,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+878,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYljh,Wände,"Basic Wall:STB, d=20:1730213",True,0,0,37,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+879,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlkH,Wände,"Basic Wall:STB, d=20:1730143",True,0,0,104,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+880,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlWZ,Wände,"Basic Wall:STB, d=20:1730029",True,0,0,106,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+881,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYldK,Wände,"Basic Wall:STB, d=20:1729562",True,0,0,94,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,
+882,"MG3_OG04_RDOK_+15,74=+42,21",2fc8CwxqT0SP7FjcTcYlwe,Wände,"Basic Wall:STB, d=25:1729382",True,0,0,98,mat-U; mat-V,SCHEMATIC — category-oriented cage / mats,

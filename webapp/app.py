@@ -13,7 +13,7 @@ import json
 import os
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,7 @@ app = FastAPI(title="Embodied Carbon – Pavillon Stockerau")
 
 @app.get("/")
 def index():
-    return FileResponse(os.path.join(STATIC, "index.html"))
+    return RedirectResponse(url="./static/index.html")
 
 
 @app.get("/api/data")
@@ -36,6 +36,11 @@ def get_data():
 
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+# Zusätzlich den static-Ordner unter "/" mounten (html=True): Die index.html
+# nutzt relative Pfade (plotly.min.js, data.json) und funktioniert damit auch,
+# wenn sie ueber einen beliebigen anderen Statik-Server ausgeliefert wird
+# (z.B. `python -m http.server` im static-Ordner) – ohne FastAPI-Backend.
+app.mount("/", StaticFiles(directory=STATIC, html=True), name="static_root")
 
 
 if __name__ == "__main__":

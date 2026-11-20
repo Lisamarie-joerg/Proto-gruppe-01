@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bewehrung · Projektimport</title>
+<link rel="stylesheet" href="./viewer.css">
+<script type="importmap">{"imports":{"three":"./three/three.module.js","three/addons/":"./three/addons/"}}</script>
+<script type="module" src="./viewport3d.js"></script>
+</head>
+<body>
+<header class="page-header">
+  <div><p class="project">Prototypenbau · Gruppe 01</p><h1 id="projectTitle">Projekt importieren</h1></div>
+  <a id="headerPlan" class="download" href="./bewehrungsplan.pdf" target="_blank" rel="noopener" hidden>Originalplan P-01 ↗</a>
+</header>
+<main>
+  <section class="viewer" aria-label="3D-Modell">
+    <div class="toolbar" aria-label="Darstellung">
+      <div class="switch">
+        <button data-mode="structure" aria-pressed="false">Tragwerk</button>
+        <button data-mode="combined" aria-pressed="true">Bewehrung im Tragwerk</button>
+        <button data-mode="rebar" aria-pressed="false">Nur Bewehrung</button>
+      </div>
+      <div class="switch">
+        <button id="reset">Gesamtansicht</button><button id="top">Draufsicht</button>
+        <button id="clearSelection" hidden>Alle Stäbe anzeigen</button>
+        <button id="emptyViewport">Viewport leeren</button>
+        <select id="sectionAxis" aria-label="Schnittachse"><option value="">Schnittachse …</option></select>
+      </div>
+    </div>
+    <div id="sectionControls" class="toolbar" aria-label="Achsschnitt" hidden>
+      <span id="sectionInfo" role="status"></span>
+      <div class="switch">
+        <button id="sectionMinus"></button><button id="sectionPlus"></button>
+        <span id="sectionZoom" class="switch" hidden>
+          <button id="sectionZoomOut" aria-label="Schnitt verkleinern">−</button>
+          <button id="sectionZoomIn" aria-label="Schnitt vergrößern">+</button>
+        </span>
+        <button id="sectionClear">Schnitt beenden</button>
+      </div>
+    </div>
+    <div id="viewport3d">
+      <p id="status" role="status">3D-Modell und Bewehrung werden geladen …</p>
+      <dialog id="detail" aria-labelledby="detailTitle">
+        <div class="detail-head"><h2 id="detailTitle"></h2><form method="dialog"><button aria-label="Detailfenster schließen">×</button></form></div>
+        <p id="detailText"></p>
+        <a id="detailOriginal" target="_blank" rel="noopener">
+          <img id="detailImage" alt="Originalausschnitt aus dem PDF-Bewehrungsplan">
+        </a>
+        <iframe id="detailPdf" title="Original-PDF zur gewählten Position" hidden style="width:100%;height:220px;border:0"></iframe>
+        <a id="detailPlanLink" href="./bewehrungsplan.pdf" target="_blank" rel="noopener">Vollständigen Originalplan öffnen ↗</a>
+      </dialog>
+    </div>
+    <div class="viewer-footer">
+      <div id="materialLegend" class="legend" aria-label="Materialien" hidden>
+        <span><i class="concrete"></i>Betonfundamente</span><span><i class="steel"></i>Stahlstützen</span>
+        <span><i class="wood"></i>Holzdach</span><span><i class="pink"></i>Gewählte Stabposition</span>
+      </div>
+      <small>Stab auswählen · Achsenlabel anklicken und Blickrichtung wählen · Draufsicht für Achsmaße</small>
+    </div>
+  </section>
+  <aside>
+    <section class="panel" id="stockPanel" hidden>
+      <p class="project">Mengen und Gewichte</p>
+      <h2>Bewehrung laut Plan</h2>
+      <p><a class="download" href="./Stockerau-Bewehrung-Import.3dm" download>3D-Bewehrung für Rhino laden ↓</a></p>
+      <p class="note">4 Positionslayer und Referenzachsen. Für die Übernahme in das Bestandsmodell in Rhino importieren.</p>
+      <p class="weight"><strong id="rebarMass">1.015,63</strong> kg</p>
+      <p class="note" id="modelSpec"></p>
+      <p id="selection" aria-live="polite">Stab im Modell oder Position in der Liste auswählen.</p>
+      <table>
+        <thead><tr><th>Pos.</th><th>Ø mm</th><th>Stk.</th><th>m/Stk.</th><th>kg ges.</th></tr></thead>
+        <tbody id="positions"></tbody>
+      </table>
+      <details><summary>Geschätztes Gewicht des Tragwerks</summary>
+        <dl id="structureMass"></dl>
+        <p class="note">Aus Modellvolumen und Dichte berechnet. Beton 2.400, Stahl 7.850 und Holz 450 kg/m³. Die tatsächliche Holzrohdichte hängt von Holzart und Feuchte ab.</p>
+      </details>
+      <p class="note">Die Stabformen folgen den Schnitten A–A und B–B sowie Detail 1. Die modellierten Zuschnitte und Stöße folgen den oben angegebenen Vorgaben. Die Tabelle enthält die unveränderten Planwerte.</p>
+    </section>
+    <section class="panel" id="importPanel" hidden>
+      <h2>Importierte Bewehrung</h2>
+      <div id="buildingControls" hidden>
+        <label for="buildingCategory">Bauteile</label>
+        <select id="buildingCategory">
+          <option value="">Gesamtes Gebäude</option>
+          <option>Treppen</option><option>Decken und Fundamente</option>
+          <option>Wände</option><option>Stützen</option><option>Träger</option>
+          <option>Mauerwerk</option>
+        </select>
+        <label for="buildingStorey">Geschoss laut Rhino</label>
+        <select id="buildingStorey"><option value="">Alle Geschosse</option></select>
+        <label for="buildingHost">Bauteil im Modell</label>
+        <select id="buildingHost"><option value="">Alle Bauteile</option></select>
+        <label><input id="showSchematic" type="checkbox" checked> Geometrische Ergänzungen anzeigen</label>
+        <label for="concreteOpacity">Betondeckkraft</label>
+        <input id="concreteOpacity" type="range" min="0.05" max="0.8" step="0.05" value="0.25">
+        <p class="note">Orange Ergänzungen folgen der Bauteilgeometrie. Durchmesser, Verlegung, Stöße und Biegeformen sind Annahmen und müssen mit den zugehörigen Ausführungsplänen abgeglichen werden.</p>
+        <p id="buildingCoverage" role="status"></p>
+        <p id="buildingHostInfo" class="note"></p>
+        <a href="./projekt6-bauteile.csv" download>Bauteilzuordnung und offene Geometrien als CSV ↓</a>
+      </div>
+      <p id="importSelection" aria-live="polite"></p>
+      <div id="projectPlans" hidden>
+        <p><a class="download" href="./Bauteil6-Bewehrung-Import.3dm" download>101 rekonstruierte Stäbe für Rhino laden ↓</a></p>
+        <label for="projectSheet">Planblatt E02</label>
+        <select id="projectSheet"></select>
+        <p id="projectCoverage" class="note"></p>
+        <div class="project-position-list"><table>
+          <thead><tr><th>Position</th><th>Soll</th><th>In 3D</th></tr></thead>
+          <tbody id="projectPositions"></tbody>
+        </table></div>
+      </div>
+      <div id="importGroups" class="switch"></div>
+      <p id="importMass" class="note"></p>
+    </section>
+    <section class="panel">
+      <h2>Eigene Dateien öffnen</h2>
+      <details>
+        <summary>Dateien für die Präsentation</summary>
+        <p>Im entpackten Ordner liegen die Dateien unter <strong>Praesentationsdateien</strong>.</p>
+        <p><a href="./model.glb" download="01-Pavillon.glb">Pavillon · GLB ↓</a> ·
+        <a href="./bewehrungsplan.pdf" download="01-Pavillon-Bewehrungsplan.pdf">Bewehrungsplan ↓</a></p>
+        <p><a href="./projekt6/Bauteil6.glb" download="02-Projekt6.glb">Projekt 6 · GLB ↓</a></p>
+      </details>
+      <div class="drop" id="modelDrop">
+        <label for="modelFile"><strong>3D-Modell ablegen</strong><span>GLB · Export aus Rhino</span></label>
+        <input id="modelFile" type="file" accept=".glb">
+      </div>
+      <div class="drop" id="planDrop">
+        <label for="planFile"><strong>Bewehrungspläne ablegen</strong><span>Ein oder mehrere PDFs</span></label>
+        <input id="planFile" type="file" accept=".pdf,application/pdf" multiple>
+      </div>
+      <div class="drop" id="rebarDrop">
+        <label for="rebarFile"><strong>Bewehrungsdaten zum GLB</strong><span>JSON mit Stabgeometrie, Positionen und optionalen Achsen</span></label>
+        <input id="rebarFile" type="file" accept=".json,application/json">
+      </div>
+      <div class="switch" id="importSettings" hidden>
+        <label><input type="checkbox" id="neutralImport"> Neutral anzeigen</label>
+        <label><input type="checkbox" id="zUpImport"> Z ist oben</label>
+      </div>
+      <p id="uploadStatus" class="note" role="status">Zuerst ein GLB-Modell importieren, danach den zugehörigen PDF-Bewehrungsplan.</p>
+      <div class="upload-links">
+        <a id="openPlan" target="_blank" rel="noopener" hidden>Eigenen Plan öffnen ↗</a>
+      </div>
+      <select id="planChoice" aria-label="Bewehrungsplan auswählen" hidden></select>
+      <iframe id="planPreview" title="Vorschau des eigenen Bewehrungsplans" hidden></iframe>
+    </section>
+  </aside>
+</main>
+</body>
+</html>
